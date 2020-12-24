@@ -11,7 +11,9 @@ export class EditarProjetosComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private projectService: ProjectService) { }
+  constructor(private projectService: ProjectService) { 
+    this._unsubscribeAll = new Subject();
+  }
 
   ngOnInit(): void {
   }

@@ -4,6 +4,7 @@ import { SmartTableData } from '../../../@core/data/smart-table';
 import {ClientService} from '../../services/client.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-listar-clientes',
@@ -57,7 +58,7 @@ export class ListarClientesComponent implements OnDestroy {
   source: LocalDataSource = new LocalDataSource();
   entities: any = [];
 
-  constructor(private service: SmartTableData, private _clientService: ClientService) {
+  constructor(private service: SmartTableData, private _clientService: ClientService, private _router: Router) {
     const data = this.service.getClients();
     //this.source.load(data);
 
@@ -76,7 +77,7 @@ export class ListarClientesComponent implements OnDestroy {
   }
 
   onEdit(event): void{
-    console.log(event);
+    this._router.navigateByUrl('/admin/editar-cliente/' + event.data.id);
   }
 
   onDeleteConfirm(event): void {

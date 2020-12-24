@@ -11,7 +11,9 @@ export class EditarAtividadesComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private activityService: ActivityService) { }
+  constructor(private activityService: ActivityService) { 
+    this._unsubscribeAll = new Subject();
+  }
 
   ngOnInit(): void {
   }

@@ -15,6 +15,7 @@ export class EchartsPieComponent implements AfterViewInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
 
   constructor(private theme: NbThemeService, private dashboardService: DashboardService) {
+    this._unsubscribeAll = new Subject();
   }
 
   ngAfterViewInit() {

@@ -11,7 +11,9 @@ export class EditarClientesComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private clientService: ClientService) { }
+  constructor(private clientService: ClientService) {
+    this._unsubscribeAll = new Subject();
+   }
 
   ngOnInit(): void {
   }

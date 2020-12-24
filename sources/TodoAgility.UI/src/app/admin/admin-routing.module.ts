@@ -23,7 +23,7 @@ const routes: Routes = [{
       component: ListarClientesComponent,
     },
     {
-      path: 'editar-cliente',
+      path: 'editar-cliente/:id',
       component: EditarClientesComponent,
     },
     {
@@ -31,7 +31,7 @@ const routes: Routes = [{
       component: ListarProjetosComponent,
     },
     {
-      path: 'editar-projeto',
+      path: 'editar-projeto/:id',
       component: EditarProjetosComponent,
     },
     {
@@ -39,7 +39,7 @@ const routes: Routes = [{
       component: ListarAtividadesComponent,
     },
     {
-      path: 'editar-atividade',
+      path: 'editar-atividade/:id',
       component: EditarAtividadesComponent,
     }
   ]
