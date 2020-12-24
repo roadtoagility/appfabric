@@ -1,0 +1,79 @@
+<div class="row">
+    <div class="col-md-12">
+      <nb-card class="inline-form-card">
+        <nb-card-header>Dados básicos</nb-card-header>
+        <nb-card-body>
+          <form class="form-inline">
+            <input type="text" nbInput fullWidth placeholder="Razão Social">
+            <input type="text" nbInput fullWidth placeholder="CNPJ">
+            <input type="text" nbInput fullWidth placeholder="Email Comercial">
+          </form>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+        <nb-card>
+            <nb-card-header></nb-card-header>
+            <nb-card-body>
+              <form>
+                <div class="row">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="inputFirstName" class="label">Endereço</label>
+                        <input type="text" nbInput fullWidth id="inputFirstName" placeholder="R$ 1.000.000,00">
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="inputLastName" class="label">Estado</label>
+                        <nb-select matRipple selected="1" fullWidth>
+                            <nb-option matRipple value="1">OS Aprovada</nb-option>
+                            <nb-option matRipple value="2">Option 2</nb-option>
+                          </nb-select>
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                          <label for="inputLastName" class="label">Cidade</label>
+                          <nb-select matRipple selected="1" fullWidth>
+                            <nb-option matRipple value="1">OS Aprovada</nb-option>
+                            <nb-option matRipple value="2">Option 2</nb-option>
+                          </nb-select>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                          <label for="inputLastName" class="label">CEP</label>
+                          <input type="text" nbInput fullWidth id="cep" placeholder="R$ 1.000.000,00">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="inputWebsite" class="label">Logradouro</label>
+                          <input type="text" nbInput fullWidth id="inputWebsite" placeholder="OS16122020-01">
+                        </div>
+                      </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="inputEmail" class="label">Email comercial</label>
+                        <input type="email" nbInput fullWidth id="inputEmail" placeholder="comercial@empresa.com.br">
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputEmail" class="label">Telefone comercial</label>
+                            <input type="email" nbInput fullWidth id="inputTelefone" placeholder="61 9999 9999">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" nbButton status="primary">Salvar</button>
+              </form>
+            </nb-card-body>
+          </nb-card>
+      </div>
+  </div>
