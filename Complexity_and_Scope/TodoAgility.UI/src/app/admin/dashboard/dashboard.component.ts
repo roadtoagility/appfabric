@@ -35,6 +35,7 @@ export class DashboardComponent implements OnDestroy{
 
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>, private dashboardService: DashboardService) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
+    this._unsubscribeAll = new Subject();
   }
 
   updateSort(sortRequest: NbSortRequest): void {

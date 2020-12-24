@@ -4,6 +4,7 @@ import { SmartTableData } from '../../../@core/data/smart-table';
 import {ActivityService} from '../../services/activity.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-listar-atividades',
@@ -79,7 +80,7 @@ export class ListarAtividadesComponent implements OnDestroy {
   source: LocalDataSource = new LocalDataSource();
   entities: any = [];
 
-  constructor(private service: SmartTableData, private _activityService: ActivityService) {
+  constructor(private service: SmartTableData, private _activityService: ActivityService, private _router: Router) {
     const data = this.service.getActivities();
     //this.source.load(data);
 
@@ -98,7 +99,7 @@ export class ListarAtividadesComponent implements OnDestroy {
   }
 
   onEdit(event): void{
-    console.log(event);
+    this._router.navigateByUrl('/admin/editar-atividade/' + event.data.id);
   }
 
   onDeleteConfirm(event): void {
