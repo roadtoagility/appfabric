@@ -17,11 +17,17 @@
 //
 
 using System;
+using FluentValidation;
 
-
-namespace TodoAgility.Tests
+namespace TodoAgility.Domain.BusinessObjects.Validations
 {
-    public class TestsTodoDomain
+    public sealed class DateAndTimeValidator: AbstractValidator<DateAndTime>
     {
+        public DateAndTimeValidator()
+        {
+            RuleFor(date => date.Value).NotNull();
+            RuleFor(date => date.Value).NotEmpty();
+            RuleFor(date => date.Value).GreaterThanOrEqualTo(DateTime.UnixEpoch);
+        }
     }
 }

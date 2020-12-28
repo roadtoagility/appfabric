@@ -4,6 +4,10 @@
         <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
     <ItemGroup>
       <ProjectReference Include="..\TodoAgility.Domain\TodoAgility.Domain.csproj" />
       <ProjectReference Include="..\TodoAgility.Persistence\TodoAgility.Persistence.csproj" />
