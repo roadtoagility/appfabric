@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentMediator" Version="0.4.7" />
+    <PackageReference Include="FluentMediator.Microsoft.Extensions.DependencyInjection" Version="0.4.7" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />

@@ -20,6 +20,7 @@ using System;
 using System.Globalization;
 using System.Threading;
 using TodoAgility.Domain.BusinessObjects;
+using TodoAgility.Domain.Framework.BusinessObjects;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
@@ -33,24 +34,27 @@ namespace TodoAgility.Tests
         private ProjectCode _projectCode;
         private DateAndTime _startDate;
         private Project _project;
+        private Money _budget;
+        private EntityId _clientId;
         
         public NewProjectRequest()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
         }
-        
-        [Given(@"Name ([\w\s]+), code (\w+) and start date ([\d\/]+)")]
-        public void The_project_parameters_request(string name, string code, DateTime date)
+        [Given(@"The client (\d+), requested a project named ([\w\s]+), code (\w+), budget ([\d\.\,]+), and start date ([\d\/]+)")]
+        public void The_project_parameters_request(uint clientId, string name, string code, decimal budget, DateTime date)
         {
             _projectName = ProjectName.From(name);
             _projectCode = ProjectCode.From(code);
             _startDate= DateAndTime.From(date);
+            _budget = Money.From(budget);
+            _clientId = EntityId.From(clientId);
         }
         
         [When(@"The client request a project")]
         public void The_client_request_a_project()
         {
-            _project = Project.From(_projectName, _projectCode, _startDate);
+            _project = Project.From(_projectName, _projectCode, _startDate,_budget, _clientId);
         }
 
         [Then(@"The client see a project request created equals (\w+)")]

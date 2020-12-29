@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace TodoAgility.Agile.Persistence.Framework.Model
+namespace TodoAgility.Persistence.Framework.Model
 {
     public class AggregateDbContext : DbContext
     {
