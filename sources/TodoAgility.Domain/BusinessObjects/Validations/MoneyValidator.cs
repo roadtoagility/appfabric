@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,20 +16,19 @@
 // Boston, MA  02110-1301, USA.
 //
 
-
 using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using TodoAgility.Agile.Domain.Framework.BusinessObjects;
-using TodoAgility.Domain.Framework.BusinessObjects;
+using FluentValidation;
 
-namespace TodoAgility.Persistence.Framework.Repositories
+namespace TodoAgility.Domain.BusinessObjects.Validations
 {
-    public interface IRepository<TState,TModel> where TModel : class
+    public sealed class MoneyValidator: AbstractValidator<Money>
     {
-        void Add(TModel entity);
-        void Remove(TModel entity);
-
-        IEnumerable<TModel> Find(Expression<Func<TState, bool>> predicate);
+        
+        public MoneyValidator()
+        {
+            RuleFor(quantity => quantity.Value).NotNull();
+            RuleFor(quantity => quantity.Value).GreaterThanOrEqualTo(Decimal.Zero);
+            RuleFor(quantity => quantity.Value).LessThanOrEqualTo(Decimal.MaxValue);
+        }
     }
 }

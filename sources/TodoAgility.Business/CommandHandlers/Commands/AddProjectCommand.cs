@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,20 +16,27 @@
 // Boston, MA  02110-1301, USA.
 //
 
-
 using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using TodoAgility.Agile.Domain.Framework.BusinessObjects;
+using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.BusinessObjects;
 
-namespace TodoAgility.Persistence.Framework.Repositories
+namespace TodoAgility.Business.CommandHandlers.Commands
 {
-    public interface IRepository<TState,TModel> where TModel : class
+    public class AddProjectCommand
     {
-        void Add(TModel entity);
-        void Remove(TModel entity);
+        public AddProjectCommand(string name, string code, DateTime startDate, decimal budget, uint clientId)
+        {
+            Name = ProjectName.From(name);
+            Code = ProjectCode.From(code);
+            StartDate = DateAndTime.From(startDate);
+            Budget = Money.From(budget);
+            ClientId = EntityId.From(clientId);
+        }
 
-        IEnumerable<TModel> Find(Expression<Func<TState, bool>> predicate);
+        public ProjectName Name { get; }
+        public ProjectCode Code { get; }
+        public DateAndTime StartDate { get; }
+        public Money Budget { get; }
+        public EntityId ClientId { get; }
     }
 }

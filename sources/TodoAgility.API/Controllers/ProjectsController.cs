@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
+using FluentMediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TodoAgility.API.Mock;
+using TodoAgility.Business.CommandHandlers.Commands;
+using TodoAgility.Business.Framework;
 
 namespace TodoAgility.API.Controllers
 {
@@ -39,12 +41,10 @@ namespace TodoAgility.API.Controllers
         }
 
         [HttpPost("save")]
-        public async Task<ActionResult<object>> Save([FromBody] ProjectDto entity)
+        public async Task<ActionResult<object>> Save([FromBody] AddProjectCommand entity)
         {
             //var query = ActivityByProjectFilter.For(dto.ProjectId);
-            //var result = await _mediator.Send(query);
-            //return result;
-            return await Task.FromResult("");
+            return await _mediator.SendAsync<ExecutionResult>(entity);
         }
     }
 }

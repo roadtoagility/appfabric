@@ -17,19 +17,17 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using TodoAgility.Agile.Domain.Framework.BusinessObjects;
-using TodoAgility.Domain.Framework.BusinessObjects;
+using TodoAgility.Persistence.Framework;
+using TodoAgility.Persistence.Model;
+using TodoAgility.Persistence.Repositories;
 
-namespace TodoAgility.Persistence.Framework.Repositories
+namespace TodoAgility.Persistence
 {
-    public interface IRepository<TState,TModel> where TModel : class
+    public class ProjectDbSession: DbSession<ProjectRepository>
     {
-        void Add(TModel entity);
-        void Remove(TModel entity);
-
-        IEnumerable<TModel> Find(Expression<Func<TState, bool>> predicate);
+        public ProjectDbSession(ProjectDbContext context, ProjectRepository repository)
+        :base(context,repository)
+        {
+        }
     }
 }

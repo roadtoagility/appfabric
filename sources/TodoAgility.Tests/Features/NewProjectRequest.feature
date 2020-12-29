@@ -4,16 +4,17 @@ Feature:NewProjectRequest
   I want to create a project request
 
   Scenario: Client Todo a Project Request
-    Given Name My Project, code MyProject and start date 12/31/2020
+    Given The client 10, requested a project named My Project, code MyProject, budget 5, and start date 12/31/2020
     When The client request a project
     Then The client see a project request created equals true
     
   Scenario Outline: Creating a Project Requests
-    Given Name <name>, code <code> and start date <date>
+    Given The client <clientId>, requested a project named <name>, code <code>, budget <budget>, and start date <date>
     When The client request a project
     Then The client see a project request created equals <created>
   
     Examples:
-    |name|code|date|created|
-    |My First Project | MyProject | 12/31/2020 | true|
-    |My First Project 1 | MyProject1 | 1/1/1900 | false|
+    |clientId|name|code|budget|date|created|
+    |10|My First Project | MyProject | 13| 12/31/2020 | true|
+    |10|My First Project | MyProject | 13.2| 12/31/2020 | true|
+    |1|My First Project 1 | MyProject1 | 13.4| 1/1/1900 | false|

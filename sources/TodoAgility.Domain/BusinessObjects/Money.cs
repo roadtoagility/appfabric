@@ -16,51 +16,43 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System;
 using System.Collections.Generic;
 using TodoAgility.Domain.BusinessObjects.Validations;
-using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Domain.Framework.Validation;
 
 namespace TodoAgility.Domain.BusinessObjects
 {
-    public sealed class Project : ValidationStatus
+    public sealed class Money : ValidationStatus
     {
-        private Project(ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        public decimal Value { get; }
+        
+        private Money(decimal quantity)
         {
-            Name = name;
-            Code = code;
-            StartDate = startDate;
-            Budget = budget;
-            ClientId = clientId;
+            Value = quantity;
         }
 
-        public ProjectName Name { get; }
-        public ProjectCode Code { get; }
-        
-        public Money Budget { get; }
-        
-        public EntityId ClientId { get; }
-
-        public DateAndTime StartDate { get; }
-        
-        public static Project From(ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        public static Money From(decimal quantity)
         {
-            var project = new Project(name, code, startDate, budget, clientId);
-            var validator = new ProjectValidator();
-            project.SetValidationResult(validator.Validate(project));
-            return project;        
+            var money = new Money(quantity);
+            var validator = new MoneyValidator();
+
+            money.SetValidationResult(validator.Validate(money));
+            
+            return money;
         }
-        
+
         public override string ToString()
         {
-            return $"[PROJECT]:[Code:{Code}, Name: {Name}, Start date: {StartDate}]";
+            return $"{Value}";
         }
+
+        #region IEquatable
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Code;
-            yield return Name;
-            yield return StartDate;
+            yield return Value;
         }
+        #endregion
     }
 }

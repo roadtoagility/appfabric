@@ -17,6 +17,7 @@
 //
 
 using FluentValidation;
+using TodoAgility.Domain.Framework.Validation;
 
 namespace TodoAgility.Domain.BusinessObjects.Validations
 {
@@ -26,6 +27,8 @@ namespace TodoAgility.Domain.BusinessObjects.Validations
         {
             RuleFor(project => project.Name).SetValidator(new ProjectNameValidator());
             RuleFor(project => project.StartDate).SetValidator(new DateAndTimeValidator());
+            RuleFor(project => project.Budget).SetValidator(new MoneyValidator());
+            RuleFor(project => project.ClientId).SetValidator(new EntityIdValidator());
 
             RuleFor(project => project.Code).SetValidator(new ProjectCodeValidator())
                 .DependentRules(() =>
