@@ -31,6 +31,7 @@ import { ClientService} from './services/client.service';
 import { ProjectService} from './services/project.service';
 import { ActivityService} from './services/activity.service';
 import { DashboardService} from './services/dashboard.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const materialModules = [
   MatFormFieldModule,
@@ -61,6 +62,8 @@ import {
 
 @NgModule({
   imports: [
+    FormsModule,
+    ReactiveFormsModule,
     AdminRoutingModule,
     ThemeModule,
     NbTreeGridModule,
