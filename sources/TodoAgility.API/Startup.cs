@@ -1,9 +1,13 @@
+using FluentMediator;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TodoAgility.Business.CommandHandlers;
+using TodoAgility.Business.CommandHandlers.Commands;
+using TodoAgility.Business.Framework;
 using TodoAgility.Persistence.Framework;
 
 
@@ -22,9 +26,17 @@ namespace TodoAgility.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddMediatR(typeof(Startup));
             services.AddSwaggerGen();
 
+            services.AddScoped<ICommandHandler<AddProjectCommand, ExecutionResult>, AddProjectCommandHandler>();
+
+            services.AddFluentMediator(builder =>
+            {
+                builder.On<AddProjectCommand>().Pipeline()
+                    .Return<ExecutionResult, ICommandHandler<AddProjectCommand,ExecutionResult>>(
+                        (handler, request) => handler.Execute(request));
+            });
+            
             //var taskOptionsBuilder = new DbContextOptionsBuilder<ManagementDbContext>();
             //taskOptionsBuilder.UseSqlite("Data Source=todoagility_add_test.db;");
             //var taskDbContext = new ManagementDbContext(taskOptionsBuilder.Options);
