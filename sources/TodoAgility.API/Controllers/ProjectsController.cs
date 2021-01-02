@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentMediator;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TodoAgility.API.Mock;
@@ -44,7 +44,8 @@ namespace TodoAgility.API.Controllers
         public async Task<ActionResult<object>> Save([FromBody] AddProjectCommand entity)
         {
             //var query = ActivityByProjectFilter.For(dto.ProjectId);
-            return await _mediator.SendAsync<ExecutionResult>(entity);
+            //return await _mediator.SendAsync<ExecutionResult>(entity);
+            return Task.CompletedTask;
         }
     }
 }

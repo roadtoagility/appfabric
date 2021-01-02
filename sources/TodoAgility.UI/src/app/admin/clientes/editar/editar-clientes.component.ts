@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {States} from '../../common/data/cityState';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'ngx-editar-clientes',
@@ -17,15 +19,29 @@ export class EditarClientesComponent implements OnInit, OnDestroy {
   private entity: any;
   form: FormGroup;
   statusForm: FormGroup;
+  statesData: States;
+  states: any[];
 
-  constructor(private clientService: ClientService, private actRoute: ActivatedRoute, private _formBuilder: FormBuilder) {
+  constructor(private clientService: ClientService, private actRoute: ActivatedRoute, private _formBuilder: FormBuilder, private _location: Location) {
     this._unsubscribeAll = new Subject();
     this.entity = {};
+
+    this.statesData = new States();
+    this.states = [];
+
+    this.statesData.getEstados().forEach(state => {
+      this.states.push({value: state.shortcut, viewValue: state.name});
+    });
+    
     
     this.statusForm = this._formBuilder.group({
       newStatus: ['']
     });
    }
+
+  backClicked() {
+    this._location.back();
+  }
 
   createForm(){
     this.form = this._formBuilder.group({

@@ -1,3 +1,9 @@
+@import '~bootstrap/scss/mixins/breakpoints';
+@import '~@nebular/theme/styles/global/breakpoints';
+
+@import '../../../@theme/styles/themes';
+
+
 nb-checkbox {
     margin-bottom: 1rem;
   }
@@ -13,4 +19,8 @@ nb-checkbox {
   nb-card.inline-form-card nb-card-body {
     padding-bottom: 0;
   }
+
+.client-search-modal{
+    width: 500px;
+}
   

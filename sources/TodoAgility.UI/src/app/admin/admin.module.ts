@@ -11,6 +11,7 @@ import { ListarClientesComponent } from './clientes/listar/listar-clientes.compo
 import { EditarClientesComponent } from './clientes/editar/editar-clientes.component';
 import { ListarAtividadesComponent } from './atividades/listar/listar-atividades.component';
 import { EditarAtividadesComponent } from './atividades/editar/editar-atividades.component';
+import { ClientSearchFormComponent} from './common/modals/client/client-modal.component';
 
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,10 +28,14 @@ import { FormsModule as ngFormsModule } from '@angular/forms';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { FsIconComponent } from './atividades/listar/listar-atividades.component';
 
+import { NbEvaIconsModule } from '@nebular/eva-icons';
+
 import { ClientService} from './services/client.service';
 import { ProjectService} from './services/project.service';
 import { ActivityService} from './services/activity.service';
 import { DashboardService} from './services/dashboard.service';
+import {ClientModalService} from './common/modals/client/client-modal.service';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const materialModules = [
@@ -57,6 +62,8 @@ import {
   NbSelectModule,
   NbUserModule,
   NbTreeGridModule,
+  NbWindowModule,
+  NbDialogRef
 } from '@nebular/theme';
 
 
@@ -77,11 +84,13 @@ import {
     NbDatepickerModule,
     NbSelectModule,
     NbIconModule,
+    NbEvaIconsModule,
     ngFormsModule,
     DashboardModule,
     NbInputModule,
     Ng2SmartTableModule,
-    ...materialModules,
+    //NbDialogRef,
+    ...materialModules
   ],
   declarations: [
     AdminComponent,
@@ -91,9 +100,10 @@ import {
     EditarClientesComponent,
     ListarAtividadesComponent,
     EditarAtividadesComponent,
-    FsIconComponent
+    FsIconComponent,
+    ClientSearchFormComponent
   ],
-  providers:[ClientService, ProjectService, DashboardService, ActivityService]
+  providers:[ClientService, ProjectService, DashboardService, ActivityService, ClientModalService]
 })
 export class AdminModule {
 }

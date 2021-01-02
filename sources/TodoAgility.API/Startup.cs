@@ -26,17 +26,18 @@ namespace TodoAgility.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddMediatR(typeof(Startup));
             services.AddSwaggerGen();
 
-            services.AddScoped<ICommandHandler<AddProjectCommand, ExecutionResult>, AddProjectCommandHandler>();
+            //services.AddScoped<ICommandHandler<AddProjectCommand, ExecutionResult>, AddProjectCommandHandler>();
 
-            services.AddFluentMediator(builder =>
-            {
-                builder.On<AddProjectCommand>().Pipeline()
-                    .Return<ExecutionResult, ICommandHandler<AddProjectCommand,ExecutionResult>>(
-                        (handler, request) => handler.Execute(request));
-            });
-            
+            //services.AddFluentMediator(builder =>
+            //{
+            //    builder.On<AddProjectCommand>().Pipeline()
+            //        .Return<ExecutionResult, ICommandHandler<AddProjectCommand, ExecutionResult>>(
+            //            (handler, request) => handler.Execute(request));
+            //});
+
             //var taskOptionsBuilder = new DbContextOptionsBuilder<ManagementDbContext>();
             //taskOptionsBuilder.UseSqlite("Data Source=todoagility_add_test.db;");
             //var taskDbContext = new ManagementDbContext(taskOptionsBuilder.Options);
@@ -46,7 +47,7 @@ namespace TodoAgility.API
             //    options.UseSqlite("Data Source=todoagility_add_test.db;");
             //});
 
-           
+
 
             services.AddScoped(typeof(IDbSession<>), typeof(DbSession<>));
 

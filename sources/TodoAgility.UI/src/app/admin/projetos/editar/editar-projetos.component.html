@@ -21,13 +21,13 @@
             <nb-card-body>
               <form>
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                       <div class="form-group">
                         <label for="inputFirstName" class="label">Budget</label>
                         <input type="text" nbInput fullWidth id="inputFirstName" placeholder="R$ 1.000.000,00">
                       </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                       <div class="form-group">
                         <label for="inputLastName" class="label">Status</label>
                         <nb-select matRipple selected="1" fullWidth>
@@ -36,12 +36,24 @@
                           </nb-select>
                       </div>
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
+                      <div class="form-group">
+                        <label for="inputLastName" class="label">Custo/Hora</label>
+                        <input type="text" nbInput fullWidth id="inputFirstName" placeholder="R$ 1.000.000,00">
+                      </div>
+                    </div>
+                    <div class="col-sm-2">
+                      <div class="form-group">
+                        <label for="inputLastName" class="label">Margem/Lucro</label>
+                        <input type="text" nbInput fullWidth id="inputFirstName" placeholder="R$ 1.000.000,00">
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
                         <div class="form-group">
                           <label for="inputLastName" class="label">Cliente</label>
                           <div class="input-group mb-3">
-                            <input type="text" readonly class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
-                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                            <input type="text" readonly class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" [(value)]="selectedClient.razaoSocial">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="selectClient()">
                                 <nb-icon class="search-icon" icon="search-outline" pack="eva"></nb-icon>
                             </button>
                           </div>
@@ -62,7 +74,14 @@
                       </div>
                     </div>
                 </div>
-                <button type="submit" nbButton status="primary">Salvar</button>
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <button type="button" nbButton matRipple status="primary" outline style="margin: 0px 10px" (click)="backClicked()">Cancelar</button>
+                    <button type="submit" nbButton status="primary">Salvar</button>
+                  </div>
+                </div>
+
               </form>
             </nb-card-body>
           </nb-card>

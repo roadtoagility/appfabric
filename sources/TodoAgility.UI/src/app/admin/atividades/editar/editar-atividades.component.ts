@@ -3,6 +3,7 @@ import {ActivityService} from '../../services/activity.service';
 import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'ngx-editar-atividades',
@@ -15,7 +16,7 @@ export class EditarAtividadesComponent implements OnInit, OnDestroy {
   private id: string;
   private entity: any;
 
-  constructor(private activityService: ActivityService, private actRoute: ActivatedRoute) { 
+  constructor(private activityService: ActivityService, private actRoute: ActivatedRoute, private _location: Location) { 
     this._unsubscribeAll = new Subject();
     this.entity = {};
     
@@ -33,6 +34,10 @@ export class EditarAtividadesComponent implements OnInit, OnDestroy {
       this.id = params.get('id');
       this.activityService.load(this.id);
     });
+  }
+
+  backClicked() {
+    this._location.back();
   }
 
   ngOnDestroy(): void {

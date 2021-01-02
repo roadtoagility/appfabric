@@ -3,6 +3,9 @@ import {ProjectService} from '../../services/project.service';
 import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
+import {Location} from '@angular/common';
+import { NbWindowService, NbDialogService } from '@nebular/theme';
+import {ClientSearchFormComponent} from '../../common/modals/client/client-modal.component';
 
 @Component({
   selector: 'ngx-editar-projetos',
@@ -14,11 +17,14 @@ export class EditarProjetosComponent implements OnInit, OnDestroy {
   private _unsubscribeAll: Subject<any>;
   private id: string;
   private entity: any;
+  selectedClient: any;
+  //private dialogRef: any;
 
-  constructor(private projectService: ProjectService, private actRoute: ActivatedRoute) { 
+  constructor(private projectService: ProjectService, private actRoute: ActivatedRoute,  private _location: Location, private dialogService: NbDialogService) { 
     this._unsubscribeAll = new Subject();
     this.entity = {};
-    
+    this.selectedClient = { razaoSocial: ""};
+
     this.projectService.onProjectChanged
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(response => {
@@ -33,6 +39,22 @@ export class EditarProjetosComponent implements OnInit, OnDestroy {
       this.id = params.get('id');
       this.projectService.load(this.id);
     });
+  }
+
+  selectClient(){
+    // this.dialogService
+    //   .open(ClientSearchFormComponent, { context: { title: `Search for clients`, windowClass:"client-search-modal" }})
+    //   .onClose.subscribe(client => console.log(client));
+    this.dialogService.open(ClientSearchFormComponent, {
+      context: {
+        title: 'Search for clients',
+      },
+    })
+    .onClose.subscribe(client => this.selectedClient = client);
+  }
+
+  backClicked() {
+    this._location.back();
   }
 
   ngOnDestroy(): void {

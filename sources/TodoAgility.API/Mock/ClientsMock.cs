@@ -15,8 +15,8 @@ namespace TodoAgility.API.Mock
         public string Estado { get; set; }
         public string Cidade { get; set; }
         public string Cep { get; set; }
-        public string Logradouro { get; set; }
-        public string Responsavel { get; set; }
+        public string Area { get; set; }
+        public string ResponsavelComercial { get; set; }
         public string TelefoneComercial { get; set; }
     }
 

@@ -27,7 +27,7 @@ namespace TodoAgility.API.Controllers
             var activities = ClientsMock.GetClients();
 
             if (!string.IsNullOrEmpty(razaoSocial))
-                activities = activities.Where(x => x.RazaoSocial.Contains(razaoSocial)).ToList();
+                activities = activities.Where(x => x.RazaoSocial.Contains(razaoSocial, StringComparison.OrdinalIgnoreCase)).ToList();
 
             return await Task.FromResult(activities);
         }

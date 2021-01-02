@@ -4,9 +4,9 @@
         <nb-card-header>Dados básicos</nb-card-header>
         <nb-card-body>
           <form class="form-inline">
-            <input type="text" nbInput fullWidth placeholder="Razão Social">
-            <input type="text" nbInput fullWidth placeholder="CNPJ">
-            <input type="text" nbInput fullWidth placeholder="Email Comercial">
+            <input type="text" nbInput fullWidth placeholder="Razão Social" name="socialName">
+            <input type="text" nbInput fullWidth placeholder="CNPJ" name="cnpj">
+            <input type="text" nbInput fullWidth placeholder="Email Comercial" name="businessEmail">
           </form>
         </nb-card-body>
       </nb-card>
@@ -22,56 +22,58 @@
                 <div class="row">
                     <div class="col-sm-3">
                       <div class="form-group">
-                        <label for="inputFirstName" class="label">Endereço</label>
-                        <input type="text" nbInput fullWidth id="inputFirstName" placeholder="R$ 1.000.000,00">
+                        <label for="address" class="label">Endereço</label>
+                        <input type="text" nbInput fullWidth id="address" name="address" placeholder="SGAN 900 Módulo F LT 01">
                       </div>
                     </div>
                     <div class="col-sm-3">
                       <div class="form-group">
-                        <label for="inputLastName" class="label">Estado</label>
-                        <nb-select matRipple selected="1" fullWidth>
-                            <nb-option matRipple value="1">OS Aprovada</nb-option>
-                            <nb-option matRipple value="2">Option 2</nb-option>
+                        <label for="state" class="label">Estado</label>
+                        <nb-select matRipple selected="AC" fullWidth required name="state">
+                            <nb-option *ngFor="let item of states" [value]="item.value">{{item.viewValue}}</nb-option>
                           </nb-select>
                       </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
-                          <label for="inputLastName" class="label">Cidade</label>
-                          <nb-select matRipple selected="1" fullWidth>
-                            <nb-option matRipple value="1">OS Aprovada</nb-option>
-                            <nb-option matRipple value="2">Option 2</nb-option>
-                          </nb-select>
+                          <label for="city" class="label">Cidade</label>
+                          <input type="text" nbInput fullWidth id="city" placeholder="Ex: Acrelândia">
                         </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
-                          <label for="inputLastName" class="label">CEP</label>
-                          <input type="text" nbInput fullWidth id="cep" placeholder="R$ 1.000.000,00">
+                          <label for="cep" class="label">CEP</label>
+                          <input type="text" nbInput fullWidth id="cep" placeholder="XXXXX-XXX">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="form-group">
-                          <label for="inputWebsite" class="label">Logradouro</label>
-                          <input type="text" nbInput fullWidth id="inputWebsite" placeholder="OS16122020-01">
+                          <label for="area" class="label">Area</label>
+                          <input type="text" nbInput fullWidth id="area" name="area" placeholder="Ex: Indústria Metalúrgica">
                         </div>
                       </div>
                     <div class="col-sm-4">
                       <div class="form-group">
-                        <label for="inputEmail" class="label">Email comercial</label>
-                        <input type="email" nbInput fullWidth id="inputEmail" placeholder="comercial@empresa.com.br">
+                        <label for="businessManager" class="label">Responsável Comercial</label>
+                        <input type="text" nbInput fullWidth id="businessManager" name="businessManager">
                       </div>
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label for="inputEmail" class="label">Telefone comercial</label>
-                            <input type="email" nbInput fullWidth id="inputTelefone" placeholder="61 9999 9999">
+                            <label for="businessTelefone" class="label">Telefone comercial</label>
+                            <input type="text" nbInput fullWidth id="businessTelefone" name="businessTelefone" placeholder="61 9999 9999">
                         </div>
                     </div>
                 </div>
-                <button type="submit" nbButton status="primary">Salvar</button>
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <button type="button" nbButton matRipple status="primary" outline style="margin: 0px 10px" (click)="backClicked()">Cancelar</button>
+                    <button type="submit" nbButton status="primary">Salvar</button>
+                  </div>
+                </div>
               </form>
             </nb-card-body>
           </nb-card>
