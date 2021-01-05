@@ -10,6 +10,9 @@ import { EditarProjetosComponent } from './projetos/editar/editar-projetos.compo
 import { EditarClientesComponent } from './clientes/editar/editar-clientes.component';
 import { EditarAtividadesComponent } from './atividades/editar/editar-atividades.component';
 
+import { ReleasesListComponent } from './releases/list/releases-list.component';
+import { BillingsListComponent } from './billings/list/billings-list.component';
+
 const routes: Routes = [{
   path: '',
   component: AdminComponent,
@@ -41,6 +44,14 @@ const routes: Routes = [{
     {
       path: 'editar-atividade/:id',
       component: EditarAtividadesComponent,
+    },
+    {
+      path: 'releases',
+      component: ReleasesListComponent,
+    },
+    {
+      path: 'billings',
+      component: BillingsListComponent,
     }
   ]
 }];

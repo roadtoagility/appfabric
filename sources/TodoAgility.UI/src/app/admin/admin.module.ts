@@ -12,6 +12,12 @@ import { EditarClientesComponent } from './clientes/editar/editar-clientes.compo
 import { ListarAtividadesComponent } from './atividades/listar/listar-atividades.component';
 import { EditarAtividadesComponent } from './atividades/editar/editar-atividades.component';
 import { ClientSearchFormComponent} from './common/modals/client/client-modal.component';
+import { ReleasesListComponent } from './releases/list/releases-list.component';
+import { BillingsListComponent } from './billings/list/billings-list.component';
+//BillingsListComponent
+
+
+//ReleasesListComponent
 
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,7 +40,10 @@ import { ClientService} from './services/client.service';
 import { ProjectService} from './services/project.service';
 import { ActivityService} from './services/activity.service';
 import { DashboardService} from './services/dashboard.service';
-import {ClientModalService} from './common/modals/client/client-modal.service';
+import { ClientModalService } from './common/modals/client/client-modal.service';
+import {ReleaseService} from './services/release.service';
+import {BillingService} from './services/billing.service';
+
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -101,9 +110,11 @@ import {
     ListarAtividadesComponent,
     EditarAtividadesComponent,
     FsIconComponent,
-    ClientSearchFormComponent
+    ClientSearchFormComponent,
+    ReleasesListComponent,
+    BillingsListComponent
   ],
-  providers:[ClientService, ProjectService, DashboardService, ActivityService, ClientModalService]
+  providers:[ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService]
 })
 export class AdminModule {
 }

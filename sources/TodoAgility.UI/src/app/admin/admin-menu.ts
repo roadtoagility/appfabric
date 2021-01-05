@@ -34,7 +34,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Financeiro',
     icon: 'trending-up-outline',
-    link: '/admin/financeiro',
+    link: '/admin/billings',
     home: true,
   }
 ];
