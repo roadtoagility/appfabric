@@ -17,15 +17,15 @@
 //
 
 using System;
+using TodoAgility.Domain.AggregationProject.Events;
 
 namespace TodoAgility.Domain.Framework.DomainEvents
 {
-    public abstract class DomainEventHandler : IDomainEventHandler
+    public abstract class DomainEventHandler<TDomainEvent> : IDomainEventHandler<TDomainEvent> where TDomainEvent:IDomainEvent
     {
         protected Exception Exception { get; set; }
-        public string HandlerId { get; protected set; }
 
-        public void Handle(IDomainEvent @event)
+        public void Handle(TDomainEvent @event)
         {
             try
             {
@@ -33,10 +33,11 @@ namespace TodoAgility.Domain.Framework.DomainEvents
             }
             catch (Exception ex)
             {
+                //TODO: log here
                 Exception = ex;
             }
         }
 
-        protected abstract void ExecuteHandle(IDomainEvent @event);
+        protected abstract void ExecuteHandle(TDomainEvent @event);
     }
 }

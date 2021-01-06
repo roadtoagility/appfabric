@@ -19,10 +19,8 @@
 
 namespace TodoAgility.Domain.Framework.DomainEvents
 {
-    public interface IDomainEventHandler
+    public interface IDomainEventHandler<in TDomainEvent> where TDomainEvent:IDomainEvent
     {
-        string HandlerId { get; }
-
-        void Handle(IDomainEvent @event);
+        void Handle(TDomainEvent @event);
     }
 }

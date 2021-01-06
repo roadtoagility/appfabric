@@ -19,7 +19,6 @@
 
 using System;
 using Microsoft.EntityFrameworkCore;
-using TodoAgility.Agile.Persistence.Framework;
 
 namespace TodoAgility.Persistence.Framework
 {

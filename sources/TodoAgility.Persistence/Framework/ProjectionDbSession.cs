@@ -18,20 +18,21 @@
 
 
 using System;
-using TodoAgility.Persistence.Framework.Projections;
+using TodoAgility.Persistence.Framework.ProjectionModel;
 
 namespace TodoAgility.Persistence.Framework
 {
-    public class ProjectionDbSession<TProjection> : IDbSession<TProjection>, IDisposable
+    public class ProjectionDbSession<TRepository> : IDbSession<TRepository>, IDisposable
     {
-        public ProjectionDbSession(ProjectionDbContext context, TProjection repository)
+
+        public ProjectionDbSession(ProjectionDbContext context, TRepository repository)
         {
             Context = context;
             Repository = repository;
         }
 
         private ProjectionDbContext Context { get; }
-        public TProjection Repository { get; }
+        public TRepository Repository { get; }
 
         public void SaveChanges()
         {

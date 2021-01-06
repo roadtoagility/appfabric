@@ -17,17 +17,27 @@
 //
 
 
-using TodoAgility.Persistence.Framework;
+using TodoAgility.Domain.BusinessObjects;
+using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.Model;
-using TodoAgility.Persistence.Repositories;
 
-namespace TodoAgility.Persistence
+namespace TodoAgility.Persistence.ExtensionMethods
 {
-    public class ProjectDbSession: DbSession<ProjectRepository>
+    public static class BusinessObjectsExtensions
     {
-        public ProjectDbSession(TodoAgilityDbContext context, ProjectRepository repository)
-        :base(context,repository)
-        {
-        }
+        public static ProjectState ToProjectState(this Project project)
+            => new ProjectState(project.Name.Value, 
+                project.Code.Value, 
+                project.Budget.Value,
+                project.StartDate.Value, 
+                project.ClientId.Value);
+
+        public static Project ToProject(this ProjectState state)
+            => Project.From(
+                ProjectName.From(state.Name),
+                ProjectCode.From(state.Code),
+                DateAndTime.From(state.StartDate),
+                Money.From(state.Budget),
+                EntityId.From(state.ClientId));
     }
 }

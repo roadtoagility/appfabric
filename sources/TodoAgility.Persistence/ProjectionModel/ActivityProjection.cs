@@ -16,15 +16,25 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Generic;
 
-namespace TodoAgility.Domain.Framework.DomainEvents
+namespace TodoAgility.Persistence.ProjectionModel
 {
-    public interface IEventDispatcher
+    public class ActivityProjection
     {
-        void Subscribe(string eventType, IDomainEventHandler handler);
-        void Publish(IDomainEvent @event);
+        public ActivityProjection()
+        {
+        }
+        public ActivityProjection(string status, string description, uint activityId, uint projectId)
+        {
+            ActivityId = activityId;
+            Status = status;
+            Description = description;
+            ProjectId = projectId;
+        }
 
-        void Publish(IReadOnlyList<IDomainEvent> events);
+        public uint ActivityId { get; set; }
+        public string Status { get; set; }
+        public string Description { get; set; }
+        public uint ProjectId { get; set; }
     }
 }

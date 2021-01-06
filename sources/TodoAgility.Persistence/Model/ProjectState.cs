@@ -18,7 +18,7 @@
 
 
 using System;
-using TodoAgility.Agile.Persistence.Framework.Model;
+using TodoAgility.Persistence.Framework.Model;
 
 namespace TodoAgility.Persistence.Model
 {

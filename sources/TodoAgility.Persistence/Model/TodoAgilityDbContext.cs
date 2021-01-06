@@ -3,9 +3,9 @@ using TodoAgility.Persistence.Framework.Model;
 
 namespace TodoAgility.Persistence.Model
 {
-    public class ProjectDbContext : AggregateDbContext
+    public class TodoAgilityDbContext : AggregateDbContext
     {
-        public ProjectDbContext(DbContextOptions options)
+        public TodoAgilityDbContext(DbContextOptions options)
             : base(options)
         {
         }

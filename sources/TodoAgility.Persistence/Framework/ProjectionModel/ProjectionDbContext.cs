@@ -1,6 +1,6 @@
 using LiteDB;
 
-namespace TodoAgility.Persistence.Framework.Projections
+namespace TodoAgility.Persistence.Framework.ProjectionModel
 {
     public abstract class ProjectionDbContext
     {

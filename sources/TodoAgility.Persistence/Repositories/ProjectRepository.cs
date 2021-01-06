@@ -22,9 +22,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using TodoAgility.Agile.Domain.Framework.BusinessObjects;
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.BusinessObjects;
+using TodoAgility.Persistence.ExtensionMethods;
 using TodoAgility.Persistence.Model;
 
 
@@ -34,19 +34,18 @@ namespace TodoAgility.Persistence.Repositories
     {
         public ProjectRepository(DbContext context)
         {
-            DbContext = context as ProjectDbContext;
+            DbContext = context as TodoAgilityDbContext;
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
         }
 
-        private ProjectDbContext DbContext { get; }
+        private TodoAgilityDbContext DbContext { get; }
 
         // https://docs.microsoft.com/en-us/ef/core/saving/disconnected-entities
 
         public void Add(Project entity)
         {
-            var entry = new ProjectState(entity.Name.Value, entity.Code.Value, entity.Budget.Value,
-                entity.StartDate.Value, entity.ClientId.Value);
+            var entry = entity.ToProjectState();
             var oldState =
                 DbContext.Projects.FirstOrDefault(b => b.Code == entry.Code);
 
@@ -62,8 +61,7 @@ namespace TodoAgility.Persistence.Repositories
 
         public void Remove(Project entity)
         {
-            var entry = new ProjectState(entity.Name.Value, entity.Code.Value, entity.Budget.Value,
-                entity.StartDate.Value, entity.ClientId.Value);
+            var entry = entity.ToProjectState();
 
             DbContext.Entry(entity).State = EntityState.Deleted;
         }
@@ -73,25 +71,13 @@ namespace TodoAgility.Persistence.Repositories
             var project = DbContext.Projects.AsNoTracking()
                 .OrderByDescending(ob => ob.Code)
                 .First(t => t.Code == code.Value);
-
-            return Project.From(
-                ProjectName.From(project.Name),
-                ProjectCode.From(project.Code), 
-                DateAndTime.From(project.StartDate),
-                Money.From(project.Budget), 
-                EntityId.From(project.ClientId)
-            );
+            return project.ToProject();
         }
 
         public IEnumerable<Project> Find(Expression<Func<ProjectState, bool>> predicate)
         {
             return DbContext.Projects.Where(predicate).AsNoTracking()
-                .Select(t =>  Project.From(
-                ProjectName.From(t.Name),
-                ProjectCode.From(t.Code),
-                DateAndTime.From(t.StartDate),
-                Money.From(t.Budget),
-                EntityId.From(t.ClientId)));
+                .Select(t =>  t.ToProject());
             ;
         }
     }

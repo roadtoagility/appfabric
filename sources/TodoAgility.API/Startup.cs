@@ -2,13 +2,20 @@ using FluentMediator;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TodoAgility.Business.CommandHandlers;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
+using TodoAgility.Domain.AggregationProject.Events;
+using TodoAgility.Domain.Framework.DomainEvents;
+using TodoAgility.Persistence;
 using TodoAgility.Persistence.Framework;
+using TodoAgility.Persistence.Framework.Repositories;
+using TodoAgility.Persistence.Model;
+using TodoAgility.Persistence.Repositories;
 
 
 namespace TodoAgility.API
@@ -27,26 +34,25 @@ namespace TodoAgility.API
         {
             services.AddControllers();
             services.AddSwaggerGen();
+            
+            services.AddDbContext<TodoAgilityDbContext>(options =>
+                options.UseSqlite(
+                    Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<ICommandHandler<AddProjectCommand, ExecutionResult>, AddProjectCommandHandler>();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IDbSession<IProjectRepository>, ProjectDbSession>();
+            services.AddScoped<AddProjectCommandHandler>();
 
             services.AddFluentMediator(builder =>
             {
                 builder.On<AddProjectCommand>().Pipeline()
                     .Return<ExecutionResult, ICommandHandler<AddProjectCommand,ExecutionResult>>(
                         (handler, request) => handler.Execute(request));
+
+                builder.On<ProjectAddedEvent>().Pipeline()
+                    .Call<IDomainEventHandler<ProjectAddedEvent>>(
+                        (handler, request) => handler.Handle(request));
             });
-            
-            //var taskOptionsBuilder = new DbContextOptionsBuilder<ManagementDbContext>();
-            //taskOptionsBuilder.UseSqlite("Data Source=todoagility_add_test.db;");
-            //var taskDbContext = new ManagementDbContext(taskOptionsBuilder.Options);
-
-            //services.AddDbContext<ManagementDbContext>(options =>
-            //{
-            //    options.UseSqlite("Data Source=todoagility_add_test.db;");
-            //});
-
-           
 
             services.AddScoped(typeof(IDbSession<>), typeof(DbSession<>));
 

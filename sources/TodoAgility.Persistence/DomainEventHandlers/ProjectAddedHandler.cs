@@ -17,17 +17,31 @@
 //
 
 
+using TodoAgility.Domain.AggregationProject.Events;
+using TodoAgility.Domain.Framework.DomainEvents;
 using TodoAgility.Persistence.Framework;
-using TodoAgility.Persistence.Model;
 using TodoAgility.Persistence.Repositories;
 
-namespace TodoAgility.Persistence
+namespace TodoAgility.Persistence.DomainEventHandlers
 {
-    public class ProjectDbSession: DbSession<ProjectRepository>
+    public class ProjectAddedHandler : DomainEventHandler<ProjectAddedEvent>
     {
-        public ProjectDbSession(TodoAgilityDbContext context, ProjectRepository repository)
-        :base(context,repository)
+        private readonly IDbSession<IProjectRepository> _projectSession;
+
+        public ProjectAddedHandler(IDbSession<IProjectRepository> projectSession)
         {
+            _projectSession = projectSession;
+        }
+
+        protected override void ExecuteHandle(ProjectAddedEvent @event)
+        {
+            var project = _projectSession.Repository.Get(@event.Code);
+
+            // var activity = new List<EntityId> {ev?.Id};
+            // var projectWithTasks = Project.CombineProjectAndActivities(project, activity);
+            
+            //_projectSession.Repository.Add(projectWithTasks);
+            _projectSession.SaveChanges();
         }
     }
 }

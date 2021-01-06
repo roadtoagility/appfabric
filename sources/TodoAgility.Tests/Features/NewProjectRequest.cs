@@ -41,6 +41,7 @@ namespace TodoAgility.Tests
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
         }
+
         [Given(@"The client (\d+), requested a project named ([\w\s]+), code (\w+), budget ([\d\.\,]+), and start date ([\d\/]+)")]
         public void The_project_parameters_request(uint clientId, string name, string code, decimal budget, DateTime date)
         {

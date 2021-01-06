@@ -16,15 +16,16 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using FluentMediator;
 using TodoAgility.Domain.Framework.DomainEvents;
 
 namespace TodoAgility.Business.Framework
 {
     public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TCommand, TResult>
     {
-        protected IEventDispatcher Publisher { get; }
+        protected IMediator Publisher { get; }
         
-        protected CommandHandler(IEventDispatcher publisher)
+        protected CommandHandler(IMediator publisher)
         {
             Publisher = publisher;
         }

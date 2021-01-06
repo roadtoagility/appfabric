@@ -17,6 +17,7 @@
 //
 
 using System.Collections.Immutable;
+using FluentMediator;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
 using TodoAgility.Domain.AggregationProject;
@@ -32,7 +33,7 @@ namespace TodoAgility.Business.CommandHandlers
     {
         private readonly IDbSession<IProjectRepository> _dbSession;
         
-        public AddProjectCommandHandler(IEventDispatcher publisher, IDbSession<IProjectRepository> dbSession)
+        public AddProjectCommandHandler(IMediator publisher, IDbSession<IProjectRepository> dbSession)
             :base(publisher)
         {
             _dbSession = dbSession;
@@ -48,7 +49,7 @@ namespace TodoAgility.Business.CommandHandlers
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 _dbSession.SaveChanges();
-                //Publisher.Publish(agg.GetEvents());
+                agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));
                 isSucceed = true;
             }
             
