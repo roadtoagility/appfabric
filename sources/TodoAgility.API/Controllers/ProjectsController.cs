@@ -41,10 +41,11 @@ namespace TodoAgility.API.Controllers
         }
 
         [HttpPost("save")]
-        public async Task<ActionResult<object>> Save([FromBody] AddProjectCommand entity)
+        public IActionResult Save([FromBody] AddProjectCommand entity)
         {
-            //var query = ActivityByProjectFilter.For(dto.ProjectId);
-            return await _mediator.SendAsync<ExecutionResult>(entity);
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
         }
     }
 }

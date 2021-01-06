@@ -9,14 +9,11 @@ using TodoAgility.Business.CommandHandlers;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
 using TodoAgility.Domain.AggregationProject.Events;
-using TodoAgility.Domain.BusinessObjects;
-using TodoAgility.Persistence;
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Framework.ReadModel.Projections;
-using TodoAgility.Persistence.Framework.ReadModel.Repositories;
-using TodoAgility.Persistence.Framework.Repositories;
 using TodoAgility.Persistence.Model;
 using TodoAgility.Persistence.Model.Repositories;
+using TodoAgility.Persistence.ReadModel;
 using TodoAgility.Persistence.ReadModel.Projections;
 using TodoAgility.Persistence.ReadModel.Repositories;
 using TodoAgility.Persistence.SyncModels.DomainEventHandlers;
@@ -36,20 +33,28 @@ namespace TodoAgility.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            });
+            
             services.AddSwaggerGen();
-
-            services.AddSingleton<ProjectionDbContext, TodoAgilityProjectionsDbContext>();
+            
+            services.Configure<ProjectionDbOptions>(Configuration.GetSection(
+                ProjectionDbOptions.ProjectionConnectionStrings));
+            
+            services.AddSingleton<TodoAgilityProjectionsDbContext>();
             services.AddDbContext<TodoAgilityDbContext>(options =>
                 options.UseSqlite(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("ModelConnection")));
 
             services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IProjectProjectionRepository, ProjectProjectionRepository>();
             services.AddScoped<IDbSession<IProjectRepository>, DbSession<IProjectRepository>>();
-            // services.AddScoped<IDbSession<IProjectProjectionRepository>, ProjectionDbSession<IProjectProjectionRepository>>();
-            // services.AddScoped<AddProjectCommandHandler>();
-            // services.AddScoped<UpdateProjectProjectionHandler>();
-
+            services.AddScoped<IDbSession<IProjectProjectionRepository>, ProjectionDbSession<IProjectProjectionRepository>>();
+            services.AddScoped<AddProjectCommandHandler>();
+            services.AddScoped<UpdateProjectProjectionHandler>();
+           
             services.AddFluentMediator(builder =>
             {
                 builder.On<AddProjectCommand>().Pipeline()
@@ -60,7 +65,8 @@ namespace TodoAgility.API
                     .Call<UpdateProjectProjectionHandler>(
                         (handler, request) => handler.Handle(request));
             });
-
+            
+           
             services.AddCors(options =>
             {
                 options.AddPolicy("default", policy =>
@@ -93,7 +99,7 @@ namespace TodoAgility.API
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            // app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

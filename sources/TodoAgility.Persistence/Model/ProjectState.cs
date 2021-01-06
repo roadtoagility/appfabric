@@ -24,7 +24,7 @@ namespace TodoAgility.Persistence.Model
 {
     public class ProjectState : PersistentState
     {
-        public ProjectState(uint id, string name, string code, decimal budget, DateTime startDate, uint clientId)
+        public ProjectState(long id, string name, string code, decimal budget, DateTime startDate, long clientId)
         :base(startDate)
         {
             Id = id;
@@ -35,8 +35,8 @@ namespace TodoAgility.Persistence.Model
             Budget = budget;
         }
 
-        public uint Id { get; }
-        public uint ClientId { get; }
+        public long Id { get; }
+        public long ClientId { get; }
         public string Name { get; }
         public string Code { get; }
         public DateTime StartDate { get; }

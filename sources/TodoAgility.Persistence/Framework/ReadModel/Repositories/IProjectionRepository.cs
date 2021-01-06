@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using TodoAgility.Agile.Domain.Framework.BusinessObjects;
+using TodoAgility.Domain.Framework.BusinessObjects;
 
 namespace TodoAgility.Persistence.Framework.ReadModel.Repositories
 {
@@ -28,7 +29,7 @@ namespace TodoAgility.Persistence.Framework.ReadModel.Repositories
     {
         void Add(TModel entity);
         void Remove(TModel entity);
-        TModel Get(IExposeValue<uint> id);
+        TModel Get(EntityId id);
         IEnumerable<TModel> Find(Expression<Func<TModel, bool>> predicate);
     }
 }

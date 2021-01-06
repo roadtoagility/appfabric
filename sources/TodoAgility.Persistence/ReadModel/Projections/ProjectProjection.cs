@@ -17,6 +17,8 @@
 //
 
 
+using System;
+
 namespace TodoAgility.Persistence.ReadModel.Projections
 {
     public class ProjectProjection
@@ -24,17 +26,21 @@ namespace TodoAgility.Persistence.ReadModel.Projections
         public ProjectProjection()
         {
         }
-        public ProjectProjection(string status, string description, uint activityId, uint projectId)
+        public ProjectProjection(long id, string name, string code, decimal budget, DateTime startDate, long clientId)
         {
-            ActivityId = activityId;
-            Status = status;
-            Description = description;
-            ProjectId = projectId;
+            Id = id;
+            ClientId = clientId;
+            Name = name;
+            Code = code;
+            StartDate = startDate;
+            Budget = budget;
         }
 
-        public uint ActivityId { get; set; }
-        public string Status { get; set; }
-        public string Description { get; set; }
-        public uint ProjectId { get; set; }
+        public long Id { get; set; }
+        public long ClientId { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public DateTime StartDate { get; set; }
+        public decimal Budget { get; set; }
     }
 }

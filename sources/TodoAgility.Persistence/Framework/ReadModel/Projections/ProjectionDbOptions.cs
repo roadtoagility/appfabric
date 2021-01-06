@@ -4,8 +4,8 @@ namespace TodoAgility.Persistence.Framework.ReadModel.Projections
 {
     public class ProjectionDbOptions
     {
-        public const string ProjectionDb = "ProjectionDb";
+        public const string ProjectionConnectionStrings = "ProjectionConnectionStrings";
 
-        public string ConnectionString { get; set; }
+        public string DefaultConnection { get; set; }
     }
 }

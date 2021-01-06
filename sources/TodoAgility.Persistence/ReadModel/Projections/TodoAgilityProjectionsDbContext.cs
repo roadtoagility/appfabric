@@ -21,19 +21,14 @@ namespace TodoAgility.Persistence.ReadModel.Projections
         private void OnModelCreating(BsonMapper modelBuilder)
         {
             #region ConfigureView
-
-            modelBuilder.Entity<ActivityProjection>()
-                .Field(k => k.ActivityId,"activityId")
-                .Field(p=> p.ProjectId, "projectId")
-                .Field(p=> p.Description,"description")
-                .Field(p=> p.Status, "status")
-                ;
             
             modelBuilder.Entity<ProjectProjection>()
-                .Field(k => k.ActivityId,"activityId")
-                .Field(p=> p.ProjectId, "projectId")
-                .Field(p=> p.Description,"description")
-                .Field(p=> p.Status, "status")
+                .Field(p=> p.Id, "projectId")
+                .Field(p=> p.Name, "name")
+                .Field(p=> p.Code, "code")
+                .Field(p=> p.StartDate, "startDate")
+                .Field(p=> p.Budget, "budget")
+                .Field(p=> p.ClientId, "clientId")
                 ;
 
             #endregion

@@ -26,32 +26,32 @@ using TodoAgility.Persistence.ReadModel.Projections;
 
 namespace TodoAgility.Persistence.ReadModel.Repositories
 {
-    public sealed class ActivityProjectionRepository : IActivityProjectionRepository
+    public sealed class ProjectProjectionRepository : IProjectProjectionRepository
     {
-        private TodoAgilityProjectionsDbContext Context { get; }
-        public ActivityProjectionRepository(TodoAgilityProjectionsDbContext context)
+        private readonly TodoAgilityProjectionsDbContext _context;
+        public ProjectProjectionRepository(TodoAgilityProjectionsDbContext context)
         {
-            Context = context;
+            _context = context;
         }
 
-        public ActivityProjection Get(EntityId id)
+        public ProjectProjection Get(EntityId id)
         {
-            return Context.Activities.FindOne(ac => ac.ActivityId == id.Value);
+            return _context.Projects.FindOne(ac => ac.Id == id.Value);
         }
 
-        public void Add(ActivityProjection entity)
+        public void Add(ProjectProjection entity)
         {
-            Context.Activities.Upsert(entity);
+            _context.Projects.Upsert(entity);
         }
 
-        public void Remove(ActivityProjection entity)
+        public void Remove(ProjectProjection entity)
         {
-            Context.Activities.Delete( new BsonValue(BitConverter.GetBytes(entity.ActivityId)));
+            _context.Projects.Delete( new BsonValue(BitConverter.GetBytes(entity.Id)));
         }
 
-        public IEnumerable<ActivityProjection> Find(Expression<Func<ActivityProjection, bool>> predicate)
+        public IEnumerable<ProjectProjection> Find(Expression<Func<ProjectProjection, bool>> predicate)
         {
-            return Context.Activities.Query().Where(predicate).ToList();
+            return _context.Projects.Query().Where(predicate).ToList();
         }
     }
 }

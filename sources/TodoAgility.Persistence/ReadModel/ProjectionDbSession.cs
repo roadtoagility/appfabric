@@ -18,20 +18,21 @@
 
 
 using System;
-using TodoAgility.Persistence.Framework.ReadModel.Projections;
+using TodoAgility.Persistence.Framework;
+using TodoAgility.Persistence.ReadModel.Projections;
 
-namespace TodoAgility.Persistence.Framework
+namespace TodoAgility.Persistence.ReadModel
 {
     public class ProjectionDbSession<TRepository> : IDbSession<TRepository>, IDisposable
     {
 
-        public ProjectionDbSession(ProjectionDbContext context, TRepository repository)
+        public ProjectionDbSession(TodoAgilityProjectionsDbContext context, TRepository repository)
         {
             Context = context;
             Repository = repository;
         }
 
-        private ProjectionDbContext Context { get; }
+        private TodoAgilityProjectionsDbContext Context { get; }
         public TRepository Repository { get; }
 
         public void SaveChanges()

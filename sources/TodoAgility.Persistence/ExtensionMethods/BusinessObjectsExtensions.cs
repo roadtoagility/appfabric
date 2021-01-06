@@ -17,7 +17,6 @@
 //
 
 
-using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.Model;

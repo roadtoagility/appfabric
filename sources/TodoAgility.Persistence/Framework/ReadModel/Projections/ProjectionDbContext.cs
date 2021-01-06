@@ -7,7 +7,7 @@ namespace TodoAgility.Persistence.Framework.ReadModel.Projections
     {
         protected ProjectionDbContext(IOptions<ProjectionDbOptions> options)
         {
-            Database = new LiteDatabase(options.Value.ConnectionString);
+            Database = new LiteDatabase(options.Value.DefaultConnection);
         }
 
         public ILiteDatabase Database { get; }

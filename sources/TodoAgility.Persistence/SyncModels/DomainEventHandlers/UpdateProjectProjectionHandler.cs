@@ -20,7 +20,7 @@
 using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Domain.Framework.DomainEvents;
 using TodoAgility.Persistence.Framework;
-using TodoAgility.Persistence.Model.Repositories;
+using TodoAgility.Persistence.ReadModel.Projections;
 using TodoAgility.Persistence.ReadModel.Repositories;
 
 namespace TodoAgility.Persistence.SyncModels.DomainEventHandlers
@@ -36,14 +36,21 @@ namespace TodoAgility.Persistence.SyncModels.DomainEventHandlers
 
         protected override void ExecuteHandle(ProjectAddedEvent @event)
         {
-            var project = _projectSession.Repository.Get(@event.Id);
+            var projection = new ProjectProjection(
+                @event.Id.Value,
+                @event.Name.Value,
+                @event.Code.Value,
+                @event.Budget.Value,
+                @event.StartDate.Value,
+                @event.ClientId.Value);
+            
+            _projectSession.Repository.Add(projection);
             
             //count releases
             // available budget
             // active tasks
             //finished tasks
             
-            //_projectSession.Repository.Add(projectWithTasks);
             _projectSession.SaveChanges();
         }
     }

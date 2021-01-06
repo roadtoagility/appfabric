@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+using FluentMediator;
 using Microsoft.AspNetCore.Mvc;
 using TodoAgility.API.Mock;
-using TodoAgility.API.Models;
 
 namespace TodoAgility.API.Controllers
 {
