@@ -19,7 +19,7 @@
 
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Model;
-using TodoAgility.Persistence.Repositories;
+using TodoAgility.Persistence.Model.Repositories;
 
 namespace TodoAgility.Persistence
 {

@@ -25,16 +25,14 @@ using Microsoft.EntityFrameworkCore;
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.ExtensionMethods;
-using TodoAgility.Persistence.Model;
 
-
-namespace TodoAgility.Persistence.Repositories
+namespace TodoAgility.Persistence.Model.Repositories
 {
     public class ProjectRepository : IProjectRepository
     {
-        public ProjectRepository(DbContext context)
+        public ProjectRepository(TodoAgilityDbContext context)
         {
-            DbContext = context as TodoAgilityDbContext;
+            DbContext = context;
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
         }
@@ -47,7 +45,7 @@ namespace TodoAgility.Persistence.Repositories
         {
             var entry = entity.ToProjectState();
             var oldState =
-                DbContext.Projects.FirstOrDefault(b => b.Code == entry.Code);
+                DbContext.Projects.FirstOrDefault(b => b.Id == entry.Id);
 
             if (oldState == null)
             {
@@ -66,11 +64,11 @@ namespace TodoAgility.Persistence.Repositories
             DbContext.Entry(entity).State = EntityState.Deleted;
         }
 
-        public Project Get(ProjectCode code)
+        public Project Get(EntityId id)
         {
             var project = DbContext.Projects.AsNoTracking()
-                .OrderByDescending(ob => ob.Code)
-                .First(t => t.Code == code.Value);
+                .OrderByDescending(ob => ob.Id)
+                .First(t => t.Id == id.Value);
             return project.ToProject();
         }
 

@@ -16,30 +16,12 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using TodoAgility.Persistence.Framework.ReadModel.Repositories;
+using TodoAgility.Persistence.ReadModel.Projections;
 
-using System;
-using TodoAgility.Persistence.Framework.Model;
-
-namespace TodoAgility.Persistence.Model
+namespace TodoAgility.Persistence.ReadModel.Repositories
 {
-    public class ProjectState : PersistentState
+    public interface IActivityProjectionRepository : IProjectionRepository<ActivityProjection>
     {
-        public ProjectState(uint id, string name, string code, decimal budget, DateTime startDate, uint clientId)
-        :base(startDate)
-        {
-            Id = id;
-            ClientId = clientId;
-            Name = name;
-            Code = code;
-            StartDate = startDate;
-            Budget = budget;
-        }
-
-        public uint Id { get; }
-        public uint ClientId { get; }
-        public string Name { get; }
-        public string Code { get; }
-        public DateTime StartDate { get; }
-        public decimal Budget { get; }
     }
 }

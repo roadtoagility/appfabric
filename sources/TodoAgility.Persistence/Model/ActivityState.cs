@@ -22,24 +22,21 @@ using TodoAgility.Persistence.Framework.Model;
 
 namespace TodoAgility.Persistence.Model
 {
-    public class ProjectState : PersistentState
+    public class ActivityState : PersistentState
     {
-        public ProjectState(uint id, string name, string code, decimal budget, DateTime startDate, uint clientId)
-        :base(startDate)
+        public ActivityState(int status, string description, uint activityId, uint projectId)
+            : base(DateTime.Now)
         {
-            Id = id;
-            ClientId = clientId;
-            Name = name;
-            Code = code;
-            StartDate = startDate;
-            Budget = budget;
+            ActivityId = activityId;
+            Status = status;
+            Description = description;
+            ProjectId = projectId;
         }
 
-        public uint Id { get; }
-        public uint ClientId { get; }
-        public string Name { get; }
-        public string Code { get; }
-        public DateTime StartDate { get; }
-        public decimal Budget { get; }
+        public uint ActivityId { get; set; }
+        public int Status { get; set; }
+        public string Description { get; set; }
+        
+        public uint ProjectId { get; set; }
     }
 }

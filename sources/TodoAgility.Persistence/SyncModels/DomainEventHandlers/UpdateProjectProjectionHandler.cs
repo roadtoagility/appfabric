@@ -20,25 +20,28 @@
 using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Domain.Framework.DomainEvents;
 using TodoAgility.Persistence.Framework;
-using TodoAgility.Persistence.Repositories;
+using TodoAgility.Persistence.Model.Repositories;
+using TodoAgility.Persistence.ReadModel.Repositories;
 
-namespace TodoAgility.Persistence.DomainEventHandlers
+namespace TodoAgility.Persistence.SyncModels.DomainEventHandlers
 {
-    public class ProjectAddedHandler : DomainEventHandler<ProjectAddedEvent>
+    public class UpdateProjectProjectionHandler : DomainEventHandler<ProjectAddedEvent>
     {
-        private readonly IDbSession<IProjectRepository> _projectSession;
+        private readonly IDbSession<IProjectProjectionRepository> _projectSession;
 
-        public ProjectAddedHandler(IDbSession<IProjectRepository> projectSession)
+        public UpdateProjectProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession)
         {
             _projectSession = projectSession;
         }
 
         protected override void ExecuteHandle(ProjectAddedEvent @event)
         {
-            var project = _projectSession.Repository.Get(@event.Code);
-
-            // var activity = new List<EntityId> {ev?.Id};
-            // var projectWithTasks = Project.CombineProjectAndActivities(project, activity);
+            var project = _projectSession.Repository.Get(@event.Id);
+            
+            //count releases
+            // available budget
+            // active tasks
+            //finished tasks
             
             //_projectSession.Repository.Add(projectWithTasks);
             _projectSession.SaveChanges();

@@ -17,6 +17,7 @@
 //
 
 
+using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.Model;
@@ -26,7 +27,8 @@ namespace TodoAgility.Persistence.ExtensionMethods
     public static class BusinessObjectsExtensions
     {
         public static ProjectState ToProjectState(this Project project)
-            => new ProjectState(project.Name.Value, 
+            => new ProjectState(project.Id.Value,
+                project.Name.Value, 
                 project.Code.Value, 
                 project.Budget.Value,
                 project.StartDate.Value, 
@@ -34,10 +36,12 @@ namespace TodoAgility.Persistence.ExtensionMethods
 
         public static Project ToProject(this ProjectState state)
             => Project.From(
+                EntityId.From(state.Id),
                 ProjectName.From(state.Name),
                 ProjectCode.From(state.Code),
                 DateAndTime.From(state.StartDate),
                 Money.From(state.Budget),
                 EntityId.From(state.ClientId));
+       
     }
 }

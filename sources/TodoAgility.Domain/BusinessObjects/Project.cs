@@ -25,15 +25,17 @@ namespace TodoAgility.Domain.BusinessObjects
 {
     public sealed class Project : ValidationStatus
     {
-        private Project(ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        private Project(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
         {
+            Id = id;
             Name = name;
             Code = code;
             StartDate = startDate;
             Budget = budget;
             ClientId = clientId;
         }
-
+        public EntityId Id { get; }
+        
         public ProjectName Name { get; }
         public ProjectCode Code { get; }
         
@@ -43,9 +45,9 @@ namespace TodoAgility.Domain.BusinessObjects
 
         public DateAndTime StartDate { get; }
         
-        public static Project From(ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        public static Project From(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
         {
-            var project = new Project(name, code, startDate, budget, clientId);
+            var project = new Project(id, name, code, startDate, budget, clientId);
             var validator = new ProjectValidator();
             project.SetValidationResult(validator.Validate(project));
             return project;        
@@ -53,13 +55,16 @@ namespace TodoAgility.Domain.BusinessObjects
         
         public override string ToString()
         {
-            return $"[PROJECT]:[Code:{Code}, Name: {Name}, Start date: {StartDate}]";
+            return $"[PROJECT]:[ID: {Id} Code:{Code}, Name: {Name}, Budget: {Budget} Start date: {StartDate}]";
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
+            yield return Id;
             yield return Code;
             yield return Name;
+            yield return Budget;
+            yield return ClientId;
             yield return StartDate;
         }
     }

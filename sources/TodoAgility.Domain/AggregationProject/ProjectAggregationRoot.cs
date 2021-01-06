@@ -24,19 +24,16 @@ namespace TodoAgility.Domain.AggregationProject
 {
     public sealed class ProjectAggregationRoot : AggregationRoot<Project>
     {
-        /// <summary>
-        ///     load an aggregate from store
-        /// </summary>
-        /// <param name="currentActivity"></param>
+
         private ProjectAggregationRoot(Project current)
         :base(current)
         {
             
         }
         
-        private ProjectAggregationRoot(ProjectName name, ProjectCode code, 
+        private ProjectAggregationRoot(EntityId id, ProjectName name, ProjectCode code, 
             Money budget, DateAndTime startDate, EntityId clientId )
-            : this(Project.From(name,code,startDate,budget,clientId))
+            : this(Project.From(id, name,code,startDate,budget,clientId))
         {
             Change(_entityRoot);
         }
@@ -50,9 +47,9 @@ namespace TodoAgility.Domain.AggregationProject
         }
 
         
-        public static ProjectAggregationRoot CreateFrom(ProjectName name, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
+        public static ProjectAggregationRoot CreateFrom(EntityId id, ProjectName name, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
         {
-            return new ProjectAggregationRoot(name,code,budget,startDate,clientId);
+            return new ProjectAggregationRoot(id, name,code,budget,startDate,clientId);
         }
 
         #endregion

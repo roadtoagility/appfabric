@@ -21,11 +21,12 @@ using FluentMediator;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
 using TodoAgility.Domain.AggregationProject;
+using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Domain.Framework.DomainEvents;
 using TodoAgility.Persistence;
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Framework.Repositories;
-using TodoAgility.Persistence.Repositories;
+using TodoAgility.Persistence.Model.Repositories;
 
 namespace TodoAgility.Business.CommandHandlers
 {
@@ -41,7 +42,7 @@ namespace TodoAgility.Business.CommandHandlers
         
         protected override ExecutionResult ExecuteCommand(AddProjectCommand command)
         {
-            var agg = ProjectAggregationRoot.CreateFrom(command.Name,
+            var agg = ProjectAggregationRoot.CreateFrom(EntityId.GetNext(), command.Name,
                 command.Code, command.Budget, command.StartDate, command.ClientId);
             var isSucceed = false;
       

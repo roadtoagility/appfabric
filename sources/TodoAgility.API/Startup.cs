@@ -1,5 +1,4 @@
 using FluentMediator;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +9,17 @@ using TodoAgility.Business.CommandHandlers;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
 using TodoAgility.Domain.AggregationProject.Events;
-using TodoAgility.Domain.Framework.DomainEvents;
+using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Persistence;
 using TodoAgility.Persistence.Framework;
+using TodoAgility.Persistence.Framework.ReadModel.Projections;
+using TodoAgility.Persistence.Framework.ReadModel.Repositories;
 using TodoAgility.Persistence.Framework.Repositories;
 using TodoAgility.Persistence.Model;
-using TodoAgility.Persistence.Repositories;
+using TodoAgility.Persistence.Model.Repositories;
+using TodoAgility.Persistence.ReadModel.Projections;
+using TodoAgility.Persistence.ReadModel.Repositories;
+using TodoAgility.Persistence.SyncModels.DomainEventHandlers;
 
 
 namespace TodoAgility.API
@@ -34,27 +38,28 @@ namespace TodoAgility.API
         {
             services.AddControllers();
             services.AddSwaggerGen();
-            
+
+            services.AddSingleton<ProjectionDbContext, TodoAgilityProjectionsDbContext>();
             services.AddDbContext<TodoAgilityDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<IProjectRepository, ProjectRepository>();
-            services.AddScoped<IDbSession<IProjectRepository>, ProjectDbSession>();
-            services.AddScoped<AddProjectCommandHandler>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IDbSession<IProjectRepository>, DbSession<IProjectRepository>>();
+            // services.AddScoped<IDbSession<IProjectProjectionRepository>, ProjectionDbSession<IProjectProjectionRepository>>();
+            // services.AddScoped<AddProjectCommandHandler>();
+            // services.AddScoped<UpdateProjectProjectionHandler>();
 
             services.AddFluentMediator(builder =>
             {
                 builder.On<AddProjectCommand>().Pipeline()
-                    .Return<ExecutionResult, ICommandHandler<AddProjectCommand,ExecutionResult>>(
+                    .Return<ExecutionResult, AddProjectCommandHandler>(
                         (handler, request) => handler.Execute(request));
 
                 builder.On<ProjectAddedEvent>().Pipeline()
-                    .Call<IDomainEventHandler<ProjectAddedEvent>>(
+                    .Call<UpdateProjectProjectionHandler>(
                         (handler, request) => handler.Handle(request));
             });
-
-            services.AddScoped(typeof(IDbSession<>), typeof(DbSession<>));
 
             services.AddCors(options =>
             {

@@ -19,12 +19,11 @@
 
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Persistence.Framework.Repositories;
-using TodoAgility.Persistence.Model;
 
-namespace TodoAgility.Persistence.Repositories
+namespace TodoAgility.Persistence.Model.Repositories
 {
     public interface IProjectRepository: IRepository<ProjectState, Project>
     {
-        Project Get(ProjectCode code);
+
     }
 }

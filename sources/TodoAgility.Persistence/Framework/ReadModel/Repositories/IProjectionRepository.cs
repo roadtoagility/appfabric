@@ -18,28 +18,17 @@
 
 
 using System;
-using TodoAgility.Persistence.Framework.Model;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using TodoAgility.Agile.Domain.Framework.BusinessObjects;
 
-namespace TodoAgility.Persistence.Model
+namespace TodoAgility.Persistence.Framework.ReadModel.Repositories
 {
-    public class ProjectState : PersistentState
+    public interface IProjectionRepository<TModel> where TModel : class
     {
-        public ProjectState(uint id, string name, string code, decimal budget, DateTime startDate, uint clientId)
-        :base(startDate)
-        {
-            Id = id;
-            ClientId = clientId;
-            Name = name;
-            Code = code;
-            StartDate = startDate;
-            Budget = budget;
-        }
-
-        public uint Id { get; }
-        public uint ClientId { get; }
-        public string Name { get; }
-        public string Code { get; }
-        public DateTime StartDate { get; }
-        public decimal Budget { get; }
+        void Add(TModel entity);
+        void Remove(TModel entity);
+        TModel Get(IExposeValue<uint> id);
+        IEnumerable<TModel> Find(Expression<Func<TModel, bool>> predicate);
     }
 }

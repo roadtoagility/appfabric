@@ -17,14 +17,14 @@
 //
 
 
-namespace TodoAgility.Persistence.ProjectionModel
+namespace TodoAgility.Persistence.ReadModel.Projections
 {
-    public class ActivityProjection
+    public class ProjectProjection
     {
-        public ActivityProjection()
+        public ProjectProjection()
         {
         }
-        public ActivityProjection(string status, string description, uint activityId, uint projectId)
+        public ProjectProjection(string status, string description, uint activityId, uint projectId)
         {
             ActivityId = activityId;
             Status = status;

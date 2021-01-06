@@ -25,6 +25,7 @@ namespace TodoAgility.Domain.BusinessObjects.Validations
     {
         public ProjectValidator()
         {
+            RuleFor(project => project.Id).SetValidator(new EntityIdValidator());
             RuleFor(project => project.Name).SetValidator(new ProjectNameValidator());
             RuleFor(project => project.StartDate).SetValidator(new DateAndTimeValidator());
             RuleFor(project => project.Budget).SetValidator(new MoneyValidator());

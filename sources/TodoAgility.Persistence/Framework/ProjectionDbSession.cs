@@ -18,7 +18,7 @@
 
 
 using System;
-using TodoAgility.Persistence.Framework.ProjectionModel;
+using TodoAgility.Persistence.Framework.ReadModel.Projections;
 
 namespace TodoAgility.Persistence.Framework
 {

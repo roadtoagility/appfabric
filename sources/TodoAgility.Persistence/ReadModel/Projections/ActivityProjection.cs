@@ -17,18 +17,24 @@
 //
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using TodoAgility.Agile.Domain.Framework.BusinessObjects;
-
-namespace TodoAgility.Persistence.Framework.Repositories
+namespace TodoAgility.Persistence.ReadModel.Projections
 {
-    public interface IProjectionRepository<TModel> where TModel : class
+    public class ActivityProjection
     {
-        void Add(TModel entity);
-        void Remove(TModel entity);
-        TModel Get(IExposeValue<uint> id);
-        IEnumerable<TModel> Find(Expression<Func<TModel, bool>> predicate);
+        public ActivityProjection()
+        {
+        }
+        public ActivityProjection(string status, string description, uint activityId, uint projectId)
+        {
+            ActivityId = activityId;
+            Status = status;
+            Description = description;
+            ProjectId = projectId;
+        }
+
+        public uint ActivityId { get; set; }
+        public string Status { get; set; }
+        public string Description { get; set; }
+        public uint ProjectId { get; set; }
     }
 }

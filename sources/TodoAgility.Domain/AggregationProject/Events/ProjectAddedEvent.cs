@@ -25,16 +25,17 @@ namespace TodoAgility.Domain.AggregationProject.Events
 {
     public class ProjectAddedEvent : DomainEvent
     {
-        private ProjectAddedEvent(ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        private ProjectAddedEvent(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
             : base(DateTime.Now)
         {
+            Id = Id;
             Code = code;
             Name = name;
             Budget = budget;
             StartDate = startDate;
             ClientId = clientId;
         }
-
+        public EntityId Id { get; }
         public ProjectName Name { get; }
         public ProjectCode Code { get; }
         
@@ -45,7 +46,9 @@ namespace TodoAgility.Domain.AggregationProject.Events
         public DateAndTime StartDate { get; }
         public static ProjectAddedEvent For(Project project)
         {
-            return new ProjectAddedEvent(project.Name,
+            return new ProjectAddedEvent(
+                project.Id,
+                project.Name,
                 project.Code,
                 project.StartDate, 
                 project.Budget, 
