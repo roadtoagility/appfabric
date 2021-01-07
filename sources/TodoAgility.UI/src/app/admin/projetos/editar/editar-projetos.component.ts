@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import {Location} from '@angular/common';
-import { NbWindowService, NbDialogService } from '@nebular/theme';
+import { NbDialogService } from '@nebular/theme';
 import {ClientSearchFormComponent} from '../../common/modals/client/client-modal.component';
 
 @Component({

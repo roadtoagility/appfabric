@@ -77,7 +77,7 @@ export class BillingsListComponent implements OnDestroy {
   }
 
   onEdit(event): void{
-    this._router.navigateByUrl('/admin/edit-billing/' + event.data.id);
+    this._router.navigateByUrl('/admin/billings-edit/' + event.data.id);
   }
 
   onDeleteConfirm(event): void {

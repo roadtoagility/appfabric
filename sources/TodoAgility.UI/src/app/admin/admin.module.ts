@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbMenuModule } from '@nebular/theme';
+import { NbAccordionModule, NbMenuModule } from '@nebular/theme';
 
 import { ThemeModule } from '../@theme/theme.module';
 import { AdminComponent } from './admin.component';
@@ -13,7 +13,9 @@ import { ListarAtividadesComponent } from './atividades/listar/listar-atividades
 import { EditarAtividadesComponent } from './atividades/editar/editar-atividades.component';
 import { ClientSearchFormComponent} from './common/modals/client/client-modal.component';
 import { ReleasesListComponent } from './releases/list/releases-list.component';
+import { ReleasesEditComponent } from './releases/edit/releases-edit.component';
 import { BillingsListComponent } from './billings/list/billings-list.component';
+import { BillingsEditComponent } from './billings/edit/billings-edit.component';
 //BillingsListComponent
 
 
@@ -71,8 +73,7 @@ import {
   NbSelectModule,
   NbUserModule,
   NbTreeGridModule,
-  NbWindowModule,
-  NbDialogRef
+  NbListModule
 } from '@nebular/theme';
 
 
@@ -98,6 +99,8 @@ import {
     DashboardModule,
     NbInputModule,
     Ng2SmartTableModule,
+    NbListModule,
+    NbAccordionModule,
     //NbDialogRef,
     ...materialModules
   ],
@@ -112,7 +115,9 @@ import {
     FsIconComponent,
     ClientSearchFormComponent,
     ReleasesListComponent,
-    BillingsListComponent
+    BillingsListComponent,
+    ReleasesEditComponent,
+    BillingsEditComponent
   ],
   providers:[ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService]
 })
