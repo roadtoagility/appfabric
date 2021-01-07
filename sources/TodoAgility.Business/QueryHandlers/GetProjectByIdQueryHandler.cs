@@ -16,15 +16,29 @@
 // Boston, MA  02110-1301, USA.
 //
 
-namespace TodoAgility.Business.Framework
+using System;
+using TodoAgility.Business.Framework;
+using TodoAgility.Domain.Framework.BusinessObjects;
+using TodoAgility.Persistence.Framework;
+using TodoAgility.Persistence.ReadModel.Repositories;
+
+namespace TodoAgility.Business.QueryHandlers
 {
-    public class QueryResult<TResult>: ExecutionResult
+    public sealed class GetProjectByIdQueryHandler : QueryHandler<GetProjectByIdFilter, GetProjectResponse>
     {
-        public QueryResult(bool isSucceed, TResult items)
-            :base(isSucceed)
+        public GetProjectByIdQueryHandler(IDbSession<IProjectProjectionRepository> session)
+        :base(session)
         {
-            Items = items;
         }
-        public TResult Items { get;}
+
+        protected override GetProjectResponse ExecuteQuery(GetProjectByIdFilter filter)
+        {
+            //we need a validation like a commandhandler here
+            
+            var project = DbSession.Repository
+                .Get(EntityId.From(filter.ProjectId));
+           
+            return GetProjectResponse.From(true, project);
+        }
     }
 }

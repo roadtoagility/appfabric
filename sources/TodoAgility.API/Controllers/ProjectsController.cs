@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using TodoAgility.API.Mock;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
+using TodoAgility.Business.QueryHandlers;
 
 namespace TodoAgility.API.Controllers
 {
@@ -23,21 +24,17 @@ namespace TodoAgility.API.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<object>> List([FromQuery] string name)
+        public IActionResult List([FromQuery] string name)
         {
-            var projects = ProjectsMock.GetProjects();
-
-            if (!string.IsNullOrEmpty(name))
-                projects = projects.Where(x => x.Nome.Contains(name)).ToList();
-
-            return await Task.FromResult(projects);
+            var result = _mediator.Send<GetProjectsResponse>(GetProjectsByFilter.From(name));
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<dynamic>> Get(int id)
+        public IActionResult Get(int id)
         {
-            var entity = ProjectsMock.GetProjects().FirstOrDefault(x => x.Id == id);
-            return await Task.FromResult(entity);
+            var result = _mediator.Send<GetProjectResponse>(GetProjectByIdFilter.From(id));
+            return Ok(result);
         }
 
         [HttpPost("save")]

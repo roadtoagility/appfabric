@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,13 +16,22 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using TodoAgility.Persistence.Framework.ReadModel.Repositories;
+using System.Collections.Generic;
+using TodoAgility.Business.Framework;
 using TodoAgility.Persistence.ReadModel.Projections;
 
-namespace TodoAgility.Persistence.ReadModel.Repositories
+namespace TodoAgility.Business.QueryHandlers
 {
-    public interface IProjectProjectionRepository : IProjectionRepository<ProjectProjection>
+    public class GetProjectResponse:QueryResult<ProjectProjection>
     {
-        
+        private GetProjectResponse(bool isSucceed, ProjectProjection item)
+        :base(isSucceed, item)
+        {
+        }
+
+        public static GetProjectResponse From(bool isSucceed, ProjectProjection item)
+        {
+            return new GetProjectResponse(isSucceed,item);
+        }
     }
 }

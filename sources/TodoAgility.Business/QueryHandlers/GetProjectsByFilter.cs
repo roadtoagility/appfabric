@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,13 +16,24 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using TodoAgility.Persistence.Framework.ReadModel.Repositories;
-using TodoAgility.Persistence.ReadModel.Projections;
+using System;
+using System.ComponentModel.DataAnnotations;
+using TodoAgility.Domain.Framework.Validation;
 
-namespace TodoAgility.Persistence.ReadModel.Repositories
+namespace TodoAgility.Business.QueryHandlers
 {
-    public interface IProjectProjectionRepository : IProjectionRepository<ProjectProjection>
+    public class GetProjectsByFilter
     {
+        private GetProjectsByFilter(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; }
         
+        public static GetProjectsByFilter From(string name)
+        {
+            return new GetProjectsByFilter(name);
+        }
     }
 }

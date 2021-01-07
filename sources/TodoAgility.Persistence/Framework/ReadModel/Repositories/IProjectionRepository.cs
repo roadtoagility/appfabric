@@ -30,6 +30,6 @@ namespace TodoAgility.Persistence.Framework.ReadModel.Repositories
         void Add(TModel entity);
         void Remove(TModel entity);
         TModel Get(EntityId id);
-        IEnumerable<TModel> Find(Expression<Func<TModel, bool>> predicate);
+        IReadOnlyList<TModel> Find(Expression<Func<TModel, bool>> predicate);
     }
 }

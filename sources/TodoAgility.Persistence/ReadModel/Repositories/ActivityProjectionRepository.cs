@@ -49,7 +49,7 @@ namespace TodoAgility.Persistence.ReadModel.Repositories
             Context.Activities.Delete( new BsonValue(BitConverter.GetBytes(entity.ActivityId)));
         }
 
-        public IEnumerable<ActivityProjection> Find(Expression<Func<ActivityProjection, bool>> predicate)
+        public IReadOnlyList<ActivityProjection> Find(Expression<Func<ActivityProjection, bool>> predicate)
         {
             return Context.Activities.Query().Where(predicate).ToList();
         }

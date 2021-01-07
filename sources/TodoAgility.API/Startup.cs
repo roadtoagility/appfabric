@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using TodoAgility.Business.CommandHandlers;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
+using TodoAgility.Business.QueryHandlers;
 using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Framework.ReadModel.Projections;
@@ -53,12 +54,21 @@ namespace TodoAgility.API
             services.AddScoped<IDbSession<IProjectRepository>, DbSession<IProjectRepository>>();
             services.AddScoped<IDbSession<IProjectProjectionRepository>, ProjectionDbSession<IProjectProjectionRepository>>();
             services.AddScoped<AddProjectCommandHandler>();
+            services.AddScoped<GetProjectsByQueryHandler>();
             services.AddScoped<UpdateProjectProjectionHandler>();
            
             services.AddFluentMediator(builder =>
             {
                 builder.On<AddProjectCommand>().Pipeline()
                     .Return<ExecutionResult, AddProjectCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+                
+                builder.On<GetProjectByIdFilter>().Pipeline()
+                    .Return<GetProjectResponse, GetProjectByIdQueryHandler>(
+                        (handler, request) => handler.Execute(request));
+                
+                builder.On<GetProjectsByFilter>().Pipeline()
+                    .Return<GetProjectsResponse, GetProjectsByQueryHandler>(
                         (handler, request) => handler.Execute(request));
 
                 builder.On<ProjectAddedEvent>().Pipeline()

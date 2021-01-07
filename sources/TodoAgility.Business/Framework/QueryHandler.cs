@@ -16,10 +16,20 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using TodoAgility.Persistence.Framework;
+using TodoAgility.Persistence.ReadModel.Repositories;
+
 namespace TodoAgility.Business.Framework
 {
     public abstract class QueryHandler<TFilter, TResult> : ICommandHandler<TFilter, TResult>
     {
+        protected IDbSession<IProjectProjectionRepository> DbSession { get; }
+        
+        protected QueryHandler(IDbSession<IProjectProjectionRepository> session)
+        {
+            DbSession = session;
+        }
+        
         public TResult Execute(TFilter filter)
         {
             return ExecuteQuery(filter);
