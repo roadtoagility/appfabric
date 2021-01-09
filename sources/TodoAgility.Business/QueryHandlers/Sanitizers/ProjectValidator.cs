@@ -16,30 +16,25 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
-using TodoAgility.Business.Framework;
+using FluentValidation;
 using TodoAgility.Business.QueryHandlers.Filters;
+using TodoAgility.Domain.BusinessObjects;
+using TodoAgility.Domain.BusinessObjects.Validations;
 using TodoAgility.Domain.Framework.BusinessObjects;
-using TodoAgility.Persistence.Framework;
-using TodoAgility.Persistence.ReadModel.Repositories;
+using TodoAgility.Domain.Framework.Validation;
 
-namespace TodoAgility.Business.QueryHandlers
+namespace TodoAgility.Business.QueryHandlers.Sanitizers
 {
-    public sealed class GetProjectByIdQueryHandler : QueryHandler<GetProjectByIdFilter, GetProjectResponse>
+    public sealed class ProjectSanitizer: AbstractValidator<GetProjectByIdFilter>
     {
-        public GetProjectByIdQueryHandler(IDbSession<IProjectProjectionRepository> session)
-        :base(session)
+        public ProjectSanitizer()
         {
-        }
-
-        protected override GetProjectResponse ExecuteQuery(GetProjectByIdFilter filter)
-        {
-            //we need a validation like a commandhandler here
+            RuleFor(input => EntityId.From(input.ProjectId)).SetValidator(new EntityIdValidator())
+                .DependentRules(() =>
+            {
+                
+            });
             
-            var project = DbSession.Repository
-                .Get(EntityId.From(filter.ProjectId));
-           
-            return GetProjectResponse.From(true, project);
         }
     }
 }

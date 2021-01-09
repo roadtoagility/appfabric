@@ -9,6 +9,7 @@ using TodoAgility.API.Mock;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
 using TodoAgility.Business.QueryHandlers;
+using TodoAgility.Business.QueryHandlers.Filters;
 
 namespace TodoAgility.API.Controllers
 {
@@ -39,6 +40,14 @@ namespace TodoAgility.API.Controllers
 
         [HttpPost("save")]
         public IActionResult Save([FromBody] AddProjectCommand entity)
+        {
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
+        }
+        
+        [HttpPut("save/{id}")]
+        public IActionResult Update(uint id, [FromBody] UpdateProjectCommand entity)
         {
             var result = _mediator.Send<ExecutionResult>(entity);
 

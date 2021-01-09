@@ -17,8 +17,4 @@
       <PackageReference Include="FluentMediator" Version="0.4.7" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="CommandHandlers\Commands" />
-    </ItemGroup>
-
 </Project>

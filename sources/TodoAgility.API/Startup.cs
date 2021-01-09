@@ -9,6 +9,7 @@ using TodoAgility.Business.CommandHandlers;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
 using TodoAgility.Business.QueryHandlers;
+using TodoAgility.Business.QueryHandlers.Filters;
 using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Framework.ReadModel.Projections;
@@ -62,7 +63,11 @@ namespace TodoAgility.API
                 builder.On<AddProjectCommand>().Pipeline()
                     .Return<ExecutionResult, AddProjectCommandHandler>(
                         (handler, request) => handler.Execute(request));
-                
+
+                builder.On<UpdateProjectCommand>().Pipeline()
+                    .Return<ExecutionResult, UpdateProjectCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+
                 builder.On<GetProjectByIdFilter>().Pipeline()
                     .Return<GetProjectResponse, GetProjectByIdQueryHandler>(
                         (handler, request) => handler.Execute(request));
@@ -73,6 +78,10 @@ namespace TodoAgility.API
 
                 builder.On<ProjectAddedEvent>().Pipeline()
                     .Call<UpdateProjectProjectionHandler>(
+                        (handler, request) => handler.Handle(request));
+                
+                builder.On<ProjectDetailUpdatedEvent>().Pipeline()
+                    .Call<UpdateDetailsProjectProjectionHandler>(
                         (handler, request) => handler.Handle(request));
             });
             

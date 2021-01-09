@@ -16,29 +16,18 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
-using TodoAgility.Business.Framework;
-using TodoAgility.Business.QueryHandlers.Filters;
-using TodoAgility.Persistence.Framework;
-using TodoAgility.Persistence.ReadModel.Repositories;
+using FluentValidation;
 
-namespace TodoAgility.Business.QueryHandlers
+namespace TodoAgility.Domain.BusinessObjects.Validations
 {
-    public sealed class GetProjectsByQueryHandler : QueryHandler<GetProjectsByFilter, GetProjectsResponse>
+    public sealed class ServiceOrderNumberValidator: AbstractValidator<ServiceOrderNumber>
     {
-        public GetProjectsByQueryHandler(IDbSession<IProjectProjectionRepository> session)
-        :base(session)
+        public ServiceOrderNumberValidator()
         {
-        }
-
-        protected override GetProjectsResponse ExecuteQuery(GetProjectsByFilter filter)
-        {
-            //we need a validation like a commandhandler here
-            
-            var projects = DbSession.Repository
-                .Find(p=> p.Name.Contains(filter.Name));
-           
-            return GetProjectsResponse.From(true, projects);
+            RuleFor(item => item.Value).NotNull()
+                .When(item=> !item.Equals(ServiceOrderNumber.Empty()));
+            RuleFor(item => item.Value).NotEmpty()
+                .When(item=> !item.Equals(ServiceOrderNumber.Empty()));;
         }
     }
 }

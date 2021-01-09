@@ -16,49 +16,73 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
 using System.Collections.Generic;
 using TodoAgility.Domain.BusinessObjects.Validations;
 using TodoAgility.Domain.Framework.Validation;
 
 namespace TodoAgility.Domain.BusinessObjects
 {
-    public sealed class Money : ValidationStatus
+    public sealed class ProjectStatus :ValidationStatus
     {
-        public decimal Value { get; }
-        
-        private Money(decimal quantity)
+        public enum Status
         {
-            Value = quantity;
+            ToAprove,
+            Aproved,
+            Finished
         }
 
-        public static Money From(decimal quantity)
-        {
-            var money = new Money(quantity);
-            var validator = new MoneyValidator();
+        private readonly Status _status;
 
-            money.SetValidationResult(validator.Validate(money));
+        public int Value { get; }
+        
+        private ProjectStatus(Status status)
+        {
+            _status = status;
+            Value = (int) status;
+        }
+
+        public static ProjectStatus From(int status)
+        {
+            var ps = new ProjectStatus((Status) status);
+            var validator = new ProjectStatusValidator();
+
+            ps.SetValidationResult(validator.Validate(ps));
             
-            return money;
+            return ps;
         }
-
-        public static Money Zero()
-        {
-            return new Money(0);
-        }
-
         
+        public static ProjectStatus Default()
+        {
+            return new ProjectStatus(Status.ToAprove);
+        }
+
         public override string ToString()
         {
-            return $"{Value}";
+            return $"{_status}";
         }
-
-        #region IEquatable
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Value;
+            yield return _status;
         }
+
+        #region IComparable
+
+        public int CompareTo(ProjectStatus other)
+        {
+            if (ReferenceEquals(this, other))
+            {
+                return 0;
+            }
+
+            if (ReferenceEquals(null, other))
+            {
+                return 1;
+            }
+
+            return _status.CompareTo(other._status);
+        }
+
         #endregion
     }
 }

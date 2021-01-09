@@ -26,22 +26,33 @@ namespace TodoAgility.Domain.AggregationProject
     public sealed class ProjectAggregationRoot : AggregationRoot<Project>
     {
 
-        private ProjectAggregationRoot(Project current)
-        :base(current)
+        private ProjectAggregationRoot(Project project)
         {
-            if (current.ValidationResults.IsValid)
+            if (project.ValidationResults.IsValid)
             {
-                Change(current);
-                Raise(ProjectAddedEvent.For(current));
+                Apply(project);
+                Raise(ProjectAddedEvent.For(project));
             }
 
-            ValidationResults = current.ValidationResults;
+            ValidationResults = project.ValidationResults;
         }
         
         private ProjectAggregationRoot(EntityId id, ProjectName name, ProjectCode code, 
             Money budget, DateAndTime startDate, EntityId clientId )
-            : this(Project.From(id, name,code,startDate,budget,clientId))
+            : this(Project.NewRequest(id, name,code,startDate,budget,clientId))
         {
+        }
+
+        public void UpdateDetail(Project.ProjectDetail detail)
+        {
+            var change = Project.CombineWith(GetChange(), detail);
+            if (change.ValidationResults.IsValid)
+            {
+                Apply(change);
+                Raise(ProjectDetailUpdatedEvent.For(change));
+            }
+
+            ValidationResults = change.ValidationResults;
         }
 
         #region Aggregation contruction

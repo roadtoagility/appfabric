@@ -16,39 +16,48 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using FluentValidation.Results;
-using TodoAgility.Agile.Domain.Framework.Aggregates;
-using TodoAgility.Domain.Framework.DomainEvents;
+using TodoAgility.Domain.BusinessObjects.Validations;
+using TodoAgility.Domain.Framework.Validation;
 
-namespace TodoAgility.Domain.Framework.Aggregates
+namespace TodoAgility.Domain.BusinessObjects
 {
-    public abstract class AggregationRoot<TChange> : IChangeSet<TChange>
+    public sealed class Email : ValidationStatus
     {
-        protected TChange AggregateRootEntity { get; set; }
-        private readonly IList<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+        public string Value { get; }
         
-        protected void Apply(TChange item)
+        private Email(string name)
         {
-            AggregateRootEntity = item;
-        }
-        
-        protected void Raise(IDomainEvent @event)
-        {
-            _domainEvents.Add(@event);
-        }
-        
-        public TChange GetChange()
-        {
-            return AggregateRootEntity;
+            Value = name;
         }
 
-        public IReadOnlyList<IDomainEvent> GetEvents()
+        public static Email From(string name)
         {
-            return _domainEvents.ToImmutableList();
+            var email = new Email(name);
+            var validator = new EmailValidator();
+
+            email.SetValidationResult(validator.Validate(email));
+            
+            return email;
         }
         
-        public ValidationResult ValidationResults { get; protected set; }
+        public static Email Empty()
+        {
+            return new Email(String.Empty);
+        }
+        
+        public override string ToString()
+        {
+            return $"{Value}";
+        }
+
+        #region IEquatable
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return Value;
+        }
+        #endregion
     }
 }

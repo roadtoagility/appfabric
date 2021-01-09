@@ -16,23 +16,17 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.ComponentModel.DataAnnotations;
-using TodoAgility.Domain.Framework.Validation;
+using System;
 
-namespace TodoAgility.Business.QueryHandlers
+namespace TodoAgility.Business.CommandHandlers.Commands
 {
-    public class GetProjectByIdFilter
+    public class UpdateProjectCommand
     {
-        private GetProjectByIdFilter(long id)
-        {
-            ProjectId = id;
-        }
-
-        public long ProjectId { get; }
-
-        public static GetProjectByIdFilter From(long id)
-        {
-            return new GetProjectByIdFilter(id);
-        }
+        public uint Id { get; set; }
+        public string Name { get; set; }
+        public decimal Budget { get; set; }
+        public string Owner { get; set; }
+        public string OrderNumber { get; set; }
+        public int Status { get; set; }
     }
 }

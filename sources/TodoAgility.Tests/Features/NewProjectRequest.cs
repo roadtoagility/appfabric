@@ -55,7 +55,7 @@ namespace TodoAgility.Tests
         [When(@"The client request a project")]
         public void The_client_request_a_project()
         {
-            _project = Project.From(EntityId.GetNext(), _projectName, _projectCode, _startDate,_budget, _clientId);
+            _project = Project.NewRequest(EntityId.GetNext(), _projectName, _projectCode, _startDate,_budget, _clientId);
         }
 
         [Then(@"The client see a project request created equals (\w+)")]

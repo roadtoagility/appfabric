@@ -16,6 +16,7 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System;
 using FluentMediator;
 using TodoAgility.Domain.Framework.DomainEvents;
 
@@ -32,7 +33,14 @@ namespace TodoAgility.Business.Framework
 
         public TResult Execute(TCommand command)
         {
-            return ExecuteCommand(command);
+            // try
+            // {
+                return ExecuteCommand(command);
+            // }
+            // catch (Exception ex)
+            // {
+            //     //logar e deixar seguir
+            // }
         }
 
         protected abstract TResult ExecuteCommand(TCommand command);

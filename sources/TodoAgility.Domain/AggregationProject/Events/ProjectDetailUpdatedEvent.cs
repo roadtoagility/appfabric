@@ -23,44 +23,38 @@ using TodoAgility.Domain.Framework.DomainEvents;
 
 namespace TodoAgility.Domain.AggregationProject.Events
 {
-    public class ProjectAddedEvent : DomainEvent
+    public class ProjectDetailUpdatedEvent : DomainEvent
     {
-        private ProjectAddedEvent(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        private ProjectDetailUpdatedEvent(EntityId id, ProjectName name, Email owner, ProjectStatus status, Money budget, ServiceOrderNumber orderNumber)
             : base(DateTime.Now)
         {
             Id = Id;
-            Code = code;
             Name = name;
+            Owner = owner;
+            Status = status;
+            OrderNumber = orderNumber;
             Budget = budget;
-            StartDate = startDate;
-            ClientId = clientId;
-            Owner = Email.Empty();
-            Status = ProjectStatus.Default();
-            OrderNumber = ServiceOrderNumber.Empty();
         }
+        
         public EntityId Id { get; }
         public ProjectName Name { get; }
-        public ProjectCode Code { get; }
+        public ProjectStatus Status { get; }
         
         public Money Budget { get; }
         
-        public EntityId ClientId { get; }
-
-        public DateAndTime StartDate { get; }
-        
         public Email Owner { get; }
+
         public ServiceOrderNumber OrderNumber { get; }
-        public ProjectStatus Status { get; }
         
-        public static ProjectAddedEvent For(Project project)
+        public static ProjectDetailUpdatedEvent For(Project project)
         {
-            return new ProjectAddedEvent(
+            return new ProjectDetailUpdatedEvent(
                 project.Id,
                 project.Name,
-                project.Code,
-                project.StartDate, 
+                project.Owner,
+                project.Status, 
                 project.Budget, 
-                project.ClientId);
+                project.OrderNumber);
         }
     }
 }

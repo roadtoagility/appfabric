@@ -25,37 +25,58 @@ namespace TodoAgility.Domain.BusinessObjects
 {
     public sealed class Project : ValidationStatus
     {
-        private Project(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        private Project(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate
+            , Money budget, EntityId clientId, Email owner, ProjectStatus status
+            , ServiceOrderNumber orderNumber)
         {
             Id = id;
             Name = name;
             Code = code;
             StartDate = startDate;
-            Budget = budget;
             ClientId = clientId;
+            Budget = budget;
+            Status = status;
+            OrderNumber = orderNumber;
+            Owner = owner;
         }
         public EntityId Id { get; }
         
         public ProjectName Name { get; }
         public ProjectCode Code { get; }
         
-        public Money Budget { get; }
-        
         public EntityId ClientId { get; }
 
         public DateAndTime StartDate { get; }
+                
+        public Money Budget { get; }
+                
+        public Email Owner { get; }
+                
+        public ProjectStatus Status { get; }
         
-        public static Project From(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        public ServiceOrderNumber OrderNumber { get; }
+        
+        public static Project From(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner, ProjectStatus status, ServiceOrderNumber orderNumber)
         {
-            var project = new Project(id, name, code, startDate, budget, clientId);
+            var project = new Project(id, name, code, startDate, budget, clientId, owner, status, orderNumber);
             var validator = new ProjectValidator();
             project.SetValidationResult(validator.Validate(project));
             return project;        
         }
+
+        public static Project NewRequest(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        {
+            return Project.From(id, name, code, startDate, budget, clientId, Email.Empty(), ProjectStatus.Default(), ServiceOrderNumber.Empty());
+        }
+        
+        public static Project CombineWith(Project current, ProjectDetail detail)
+        {
+            return Project.From(current.Id, detail.Name, current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, detail.Status, detail.OrderNumber);
+        }
         
         public override string ToString()
         {
-            return $"[PROJECT]:[ID: {Id} Code:{Code}, Name: {Name}, Budget: {Budget} Start date: {StartDate}]";
+            return $"[PROJECT]:[ID: {Id} Code:{Code}, Name: {Name}, Budget: {Budget} Start date: {StartDate}, Owner: {Owner}, Status: {Status}, Order Number: {OrderNumber}]";
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
@@ -66,6 +87,32 @@ namespace TodoAgility.Domain.BusinessObjects
             yield return Budget;
             yield return ClientId;
             yield return StartDate;
+            yield return Owner;
+            yield return Status;
+            yield return OrderNumber;
+        }
+
+        public class ProjectDetail
+        {
+            public ProjectDetail(ProjectName name, Money budget, Email owner, ProjectStatus status,
+                ServiceOrderNumber orderNumber)
+            {
+                Name = name;
+                Budget = budget;
+                Owner = owner;
+                Status = status;
+                OrderNumber = orderNumber;
+            }
+            
+            public ProjectName Name { get; }
+        
+            public Money Budget { get; }
+                
+            public Email Owner { get; }
+                
+            public ProjectStatus Status { get; }
+        
+            public ServiceOrderNumber OrderNumber { get; }
         }
     }
 }

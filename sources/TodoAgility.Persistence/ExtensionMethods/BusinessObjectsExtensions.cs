@@ -31,7 +31,10 @@ namespace TodoAgility.Persistence.ExtensionMethods
                 project.Code.Value, 
                 project.Budget.Value,
                 project.StartDate.Value, 
-                project.ClientId.Value);
+                project.ClientId.Value,
+                project.Owner.Value,
+                project.OrderNumber.Value,
+                project.Status.Value);
 
         public static Project ToProject(this ProjectState state)
             => Project.From(
@@ -40,7 +43,10 @@ namespace TodoAgility.Persistence.ExtensionMethods
                 ProjectCode.From(state.Code),
                 DateAndTime.From(state.StartDate),
                 Money.From(state.Budget),
-                EntityId.From(state.ClientId));
+                EntityId.From(state.ClientId),
+                Email.From(state.Owner),
+                ProjectStatus.From(state.Status),
+                ServiceOrderNumber.From(state.OrderNumber));
        
     }
 }

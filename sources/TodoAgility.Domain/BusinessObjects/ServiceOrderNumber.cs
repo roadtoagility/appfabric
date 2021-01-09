@@ -23,30 +23,30 @@ using TodoAgility.Domain.Framework.Validation;
 
 namespace TodoAgility.Domain.BusinessObjects
 {
-    public sealed class Money : ValidationStatus
+    public sealed class ServiceOrderNumber : ValidationStatus
     {
-        public decimal Value { get; }
+        public string Value { get; }
         
-        private Money(decimal quantity)
+        private ServiceOrderNumber(string name)
         {
-            Value = quantity;
+            Value = name;
         }
 
-        public static Money From(decimal quantity)
+        public static ServiceOrderNumber From(string name)
         {
-            var money = new Money(quantity);
-            var validator = new MoneyValidator();
+            var son = new ServiceOrderNumber(name);
+            var validator = new ServiceOrderNumberValidator();
 
-            money.SetValidationResult(validator.Validate(money));
+            son.SetValidationResult(validator.Validate(son));
             
-            return money;
+            return son;
         }
-
-        public static Money Zero()
+        
+        public static ServiceOrderNumber Empty()
         {
-            return new Money(0);
+            var son = new ServiceOrderNumber(String.Empty);
+            return son;
         }
-
         
         public override string ToString()
         {

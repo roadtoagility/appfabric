@@ -16,24 +16,22 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using TodoAgility.Domain.Framework.Validation;
+using FluentValidation;
 
-namespace TodoAgility.Business.QueryHandlers
+namespace TodoAgility.Domain.BusinessObjects.Validations
 {
-    public class GetProjectsByFilter
+    public sealed class EmailValidator: AbstractValidator<Email>
     {
-        private GetProjectsByFilter(string name)
+        private static readonly string EmailFormat = @"^(([a-zA-Z0-9]+([-+.][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-.][a-zA-Z0-9]+)*\.[a-zA-Z0-9]+([-.][a-zA-Z0-9]+)))+$";
+        public EmailValidator()
         {
-            Name = name;
-        }
-
-        public string Name { get; }
-        
-        public static GetProjectsByFilter From(string name)
-        {
-            return new GetProjectsByFilter(name);
+            RuleFor(item => item.Value).NotNull()
+                .When(item=> !item.Equals(Email.Empty()));
+            RuleFor(item => item.Value).NotEmpty()
+                .When(item=> !item.Equals(Email.Empty()));
+            
+            RuleFor(item => item.Value).EmailAddress()
+                .When(item=> !item.Equals(Email.Empty()));
         }
     }
 }
