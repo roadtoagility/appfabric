@@ -6,6 +6,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Location} from '@angular/common';
 import { NbDialogService } from '@nebular/theme';
 import { ClientSearchFormComponent} from '../../common/modals/client/client-modal.component';
+import { ReleaseSearchFormComponent} from '../../common/modals/release/release-modal.component';
+
 
 @Component({
   selector: 'billings-edit',
@@ -16,17 +18,18 @@ export class BillingsEditComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
   private id: string;
-  private releases: any[];
+  releases: any[];
   private entity: any;
-  selectedClient: any;
 
+  selectedClient: any;
   selectedReleases: any[];
   //private dialogRef: any;
 
   constructor(private billingService: BillingService, private actRoute: ActivatedRoute,  private _location: Location, private dialogService: NbDialogService) { 
     this._unsubscribeAll = new Subject();
     this.entity = {};
-    this.selectedClient = { name: "" };
+    this.selectedClient = { name: "", id: 0 };
+    this.releases = [];
 
     this.selectedReleases = [{
       name: "Release-1",
@@ -57,16 +60,27 @@ export class BillingsEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  removeRelease(releaseToRemove){
+    this.releases = this.releases.filter(release => release.id != releaseToRemove.id);
+  }
+
   selectClient(){
-    // this.dialogService
-    //   .open(ClientSearchFormComponent, { context: { title: `Search for clients`, windowClass:"client-search-modal" }})
-    //   .onClose.subscribe(client => console.log(client));
-    // this.dialogService.open(ClientSearchFormComponent, {
-    //   context: {
-    //     title: 'Search for releases',
-    //   },
-    // })
-    // .onClose.subscribe(client => this.selectedRelease = client);
+    this.dialogService.open(ClientSearchFormComponent, {
+      context: {
+        title: 'Search for clients',
+      },
+    })
+    .onClose.subscribe(client => this.selectedClient = client);
+  }
+
+  selectRelease(){
+    this.dialogService.open(ReleaseSearchFormComponent, {
+      context: {
+        title: 'Search for releases',
+        clientId: this.selectedClient.id
+      },
+    })
+    .onClose.subscribe(release => this.releases.push(release));
   }
 
   backClicked() {

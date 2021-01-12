@@ -33,6 +33,17 @@ namespace TodoAgility.API.Controllers
             return await Task.FromResult(releases);
         }
 
+        [HttpGet("list/{clientId}/{status?}")]
+        public async Task<ActionResult<object>> List(int clientId, string status = "")
+        {
+            var releases = ReleaseMock.GetReleases();
+
+            if (!string.IsNullOrEmpty(status))
+                releases = releases.Where(x => x.Id == clientId && x.Status.Contains(status, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            return await Task.FromResult(releases);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<object>> Get(int id)
         {

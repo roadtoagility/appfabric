@@ -18,7 +18,7 @@
                         <div class="form-group">
                           <label for="inputLastName" class="label">Cliente</label>
                           <div class="input-group mb-3">
-                            <input type="text" readonly class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" [(value)]="selectedClient.name">
+                            <input type="text" readonly class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" [(value)]="selectedClient.razaoSocial">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="selectClient()">
                                 <nb-icon class="search-icon" icon="search-outline" pack="eva"></nb-icon>
                             </button>
@@ -32,29 +32,13 @@
       </div>
   </div>
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
         <nb-card>
             <nb-card-header>Manage Releases</nb-card-header>
             <nb-card-body>
               <form>
-                
-                <!-- <div class="lists row">
-                    <div class="col-md-12 col-lg-6 col-xxxl-6">
-                      <nb-card class="list-card" size="small">
-                        <nb-card-header>Selected Releases</nb-card-header>
-                        <nb-card-body>
-                          <nb-list>
-                            <nb-list-item *ngFor="let release of selectedReleases">
-                              <nb-user [name]="release.name" [title]="release.totalEffort">
-                              </nb-user>
-                            </nb-list-item>
-                          </nb-list>
-                        </nb-card-body>
-                      </nb-card>
-                    </div>
-                </div> -->
 
-                <a href="javascript:void(0);">Add Release</a>
+                <a href="javascript:void(0);" (click)="selectRelease()">Add Release</a>
 
                 <br />
                 <br />
@@ -62,43 +46,17 @@
                 <div class="accordions-container row">
                     <div class="accordion-container col-md-12 col-lg-6 col-xxxl-6">
 
-                      <nb-accordion>
-                        <nb-accordion-item #item>
+                      <nb-accordion>                  
+                        <nb-accordion-item *ngFor="let release of releases">
                           <nb-accordion-item-header matRipple>
-                            Release 1
+                            Release-{{release.id}}
                           </nb-accordion-item-header>
                           <nb-accordion-item-body>
-                            <b>Total Effort:</b> 250 hours <br />
-                            <b>Resume</b> Lorem ipsum indollor siamet
+                            <b>Total Effort:</b> {{release.totalEffort}} hours <br />
+                            <b>Resume</b> {{release.resume}}
                             <br />
                             <br />
-                            <button type="button" nbButton matRipple status="danger" outline (click)="backClicked()">Remove</button>
-                          </nb-accordion-item-body>
-                        </nb-accordion-item>
-                  
-                        <nb-accordion-item>
-                          <nb-accordion-item-header matRipple>
-                            Release 2
-                          </nb-accordion-item-header>
-                          <nb-accordion-item-body>
-                            <b>Total Effort:</b> 250 hours <br />
-                            <b>Resume</b> Lorem ipsum indollor siamet
-                            <br />
-                            <br />
-                            <button type="button" nbButton matRipple status="danger" outline (click)="backClicked()">Remove</button>
-                          </nb-accordion-item-body>
-                        </nb-accordion-item>
-                  
-                        <nb-accordion-item>
-                          <nb-accordion-item-header matRipple>
-                            Release 3
-                          </nb-accordion-item-header>
-                          <nb-accordion-item-body>
-                            <b>Total Effort:</b> 250 hours <br />
-                            <b>Resume</b> Lorem ipsum indollor siamet
-                            <br />
-                            <br />
-                            <button type="button" nbButton matRipple status="danger" outline (click)="backClicked()">Remove</button>
+                            <button type="button" nbButton matRipple status="danger" outline (click)="removeRelease(release)">Remove</button>
                           </nb-accordion-item-body>
                         </nb-accordion-item>
                       </nb-accordion>
@@ -107,16 +65,25 @@
                   
                 <br />
                 <br />
-                
-                <div class="row">
-                  <div class="col-sm-12">
-                    <button type="button" nbButton matRipple status="primary" outline style="margin-right: 10px" (click)="backClicked()">Cancelar</button>
-                    <button type="submit" nbButton status="primary">Salvar</button>
-                  </div>
-                </div>
 
               </form>
             </nb-card-body>
           </nb-card>
-      </div>
+    </div>
+    <div class="col-md-6">
+      <nb-card>
+          <nb-card-header>Billing stats</nb-card-header>
+          <nb-card-body>
+            Total Effort:  <br />
+            Due value:  <br />
+          </nb-card-body>
+        </nb-card>
+  </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <button type="button" nbButton matRipple status="primary" outline style="margin-right: 10px" (click)="backClicked()">Cancelar</button>
+      <button type="submit" nbButton status="primary">Salvar</button>
+    </div>
   </div>

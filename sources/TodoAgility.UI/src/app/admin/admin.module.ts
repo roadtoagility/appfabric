@@ -12,6 +12,7 @@ import { EditarClientesComponent } from './clientes/editar/editar-clientes.compo
 import { ListarAtividadesComponent } from './atividades/listar/listar-atividades.component';
 import { EditarAtividadesComponent } from './atividades/editar/editar-atividades.component';
 import { ClientSearchFormComponent} from './common/modals/client/client-modal.component';
+import { ReleaseSearchFormComponent} from './common/modals/release/release-modal.component';
 import { ReleasesListComponent } from './releases/list/releases-list.component';
 import { ReleasesEditComponent } from './releases/edit/releases-edit.component';
 import { BillingsListComponent } from './billings/list/billings-list.component';
@@ -43,6 +44,7 @@ import { ProjectService} from './services/project.service';
 import { ActivityService} from './services/activity.service';
 import { DashboardService} from './services/dashboard.service';
 import { ClientModalService } from './common/modals/client/client-modal.service';
+import { ReleaseModalService } from './common/modals/release/release-modal.service';
 import {ReleaseService} from './services/release.service';
 import {BillingService} from './services/billing.service';
 
@@ -114,12 +116,13 @@ import {
     EditarAtividadesComponent,
     FsIconComponent,
     ClientSearchFormComponent,
+    ReleaseSearchFormComponent,
     ReleasesListComponent,
     BillingsListComponent,
     ReleasesEditComponent,
     BillingsEditComponent
   ],
-  providers:[ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService]
+  providers:[ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService, ReleaseModalService]
 })
 export class AdminModule {
 }
