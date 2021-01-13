@@ -19,7 +19,7 @@
 
 using System;
 
-namespace TodoAgility.Agile.Persistence.Framework.Model
+namespace TodoAgility.Persistence.Framework.Model
 {
     internal interface IPersistentState
     {

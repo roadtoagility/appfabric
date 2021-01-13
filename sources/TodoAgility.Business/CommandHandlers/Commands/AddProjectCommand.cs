@@ -17,26 +17,15 @@
 //
 
 using System;
-using TodoAgility.Domain.BusinessObjects;
-using TodoAgility.Domain.Framework.BusinessObjects;
 
 namespace TodoAgility.Business.CommandHandlers.Commands
 {
     public class AddProjectCommand
     {
-        public AddProjectCommand(string name, string code, DateTime startDate, decimal budget, uint clientId)
-        {
-            Name = ProjectName.From(name);
-            Code = ProjectCode.From(code);
-            StartDate = DateAndTime.From(startDate);
-            Budget = Money.From(budget);
-            ClientId = EntityId.From(clientId);
-        }
-
-        public ProjectName Name { get; }
-        public ProjectCode Code { get; }
-        public DateAndTime StartDate { get; }
-        public Money Budget { get; }
-        public EntityId ClientId { get; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public DateTime StartDate { get; set; }
+        public decimal Budget { get; set; }
+        public uint ClientId { get; set; }
     }
 }

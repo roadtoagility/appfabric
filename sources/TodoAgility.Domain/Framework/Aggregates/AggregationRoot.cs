@@ -26,18 +26,12 @@ namespace TodoAgility.Domain.Framework.Aggregates
 {
     public abstract class AggregationRoot<TChange> : IChangeSet<TChange>
     {
-        protected TChange _entityRoot;
-        private readonly IList<IDomainEvent> _domainEvents;
+        protected TChange AggregateRootEntity { get; set; }
+        private readonly IList<IDomainEvent> _domainEvents = new List<IDomainEvent>();
         
-        protected AggregationRoot(TChange entityRoot)
+        protected void Apply(TChange item)
         {
-            _entityRoot = entityRoot;
-            _domainEvents = new List<IDomainEvent>();
-        } 
-        
-        protected void Change(TChange item)
-        {
-            _entityRoot = item;
+            AggregateRootEntity = item;
         }
         
         protected void Raise(IDomainEvent @event)
@@ -47,7 +41,7 @@ namespace TodoAgility.Domain.Framework.Aggregates
         
         public TChange GetChange()
         {
-            return _entityRoot;
+            return AggregateRootEntity;
         }
 
         public IReadOnlyList<IDomainEvent> GetEvents()

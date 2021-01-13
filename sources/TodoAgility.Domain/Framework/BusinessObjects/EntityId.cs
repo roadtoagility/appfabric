@@ -23,24 +23,19 @@ using TodoAgility.Domain.Framework.Validation;
 
 namespace TodoAgility.Domain.Framework.BusinessObjects
 {
-    public sealed class EntityId : ValidationStatus, IExposeValue<uint>
+    public sealed class EntityId : ValidationStatus
     {
-        private readonly uint _id;
+        private readonly long _id;
 
-        public uint Value { get; }
+        public long Value { get; }
         
-        private EntityId(uint id)
+        private EntityId(long id)
         {
             _id = id;
             Value = _id;
         }
 
-        uint IExposeValue<uint>.GetValue()
-        {
-            return _id;
-        }
-
-        public static EntityId From(uint id)
+        public static EntityId From(long id)
         {
             var entityId = new EntityId(id);
             var validator = new EntityIdValidator();
@@ -52,7 +47,7 @@ namespace TodoAgility.Domain.Framework.BusinessObjects
 
         public static EntityId GetNext()
         {
-            return From((uint)DateTime.UnixEpoch.Millisecond);
+            return From(DateTime.Now.Ticks);
         }
         public override string ToString()
         {

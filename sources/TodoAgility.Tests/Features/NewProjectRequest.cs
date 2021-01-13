@@ -41,6 +41,7 @@ namespace TodoAgility.Tests
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
         }
+
         [Given(@"The client (\d+), requested a project named ([\w\s]+), code (\w+), budget ([\d\.\,]+), and start date ([\d\/]+)")]
         public void The_project_parameters_request(uint clientId, string name, string code, decimal budget, DateTime date)
         {
@@ -54,7 +55,7 @@ namespace TodoAgility.Tests
         [When(@"The client request a project")]
         public void The_client_request_a_project()
         {
-            _project = Project.From(_projectName, _projectCode, _startDate,_budget, _clientId);
+            _project = Project.NewRequest(EntityId.GetNext(), _projectName, _projectCode, _startDate,_budget, _clientId);
         }
 
         [Then(@"The client see a project request created equals (\w+)")]

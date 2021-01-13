@@ -17,14 +17,14 @@
 //
 
 using System.Collections.Immutable;
+using FluentMediator;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
 using TodoAgility.Domain.AggregationProject;
-using TodoAgility.Domain.Framework.DomainEvents;
-using TodoAgility.Persistence;
+using TodoAgility.Domain.BusinessObjects;
+using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.Framework;
-using TodoAgility.Persistence.Framework.Repositories;
-using TodoAgility.Persistence.Repositories;
+using TodoAgility.Persistence.Model.Repositories;
 
 namespace TodoAgility.Business.CommandHandlers
 {
@@ -32,7 +32,7 @@ namespace TodoAgility.Business.CommandHandlers
     {
         private readonly IDbSession<IProjectRepository> _dbSession;
         
-        public AddProjectCommandHandler(IEventDispatcher publisher, IDbSession<IProjectRepository> dbSession)
+        public AddProjectCommandHandler(IMediator publisher, IDbSession<IProjectRepository> dbSession)
             :base(publisher)
         {
             _dbSession = dbSession;
@@ -40,15 +40,21 @@ namespace TodoAgility.Business.CommandHandlers
         
         protected override ExecutionResult ExecuteCommand(AddProjectCommand command)
         {
-            var agg = ProjectAggregationRoot.CreateFrom(command.Name,
-                command.Code, command.Budget, command.StartDate, command.ClientId);
+            var agg = ProjectAggregationRoot.CreateFrom(
+                EntityId.GetNext(), 
+                ProjectName.From(command.Name),
+                ProjectCode.From(command.Code), 
+                Money.From(command.Budget), 
+                DateAndTime.From(command.StartDate), 
+                EntityId.From(command.ClientId));
+            
             var isSucceed = false;
       
             if (agg.ValidationResults.IsValid)
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 _dbSession.SaveChanges();
-                //Publisher.Publish(agg.GetEvents());
+                agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));
                 isSucceed = true;
             }
             

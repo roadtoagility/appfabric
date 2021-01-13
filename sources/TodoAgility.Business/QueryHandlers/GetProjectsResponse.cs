@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,33 +16,22 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System.Collections.Generic;
+using TodoAgility.Business.Framework;
+using TodoAgility.Persistence.ReadModel.Projections;
 
-using System;
-using TodoAgility.Agile.Persistence.Framework;
-using TodoAgility.Persistence.Framework.Projections;
-
-namespace TodoAgility.Persistence.Framework
+namespace TodoAgility.Business.QueryHandlers
 {
-    public class DbProjectionSession<TRepository> : IDbSession<TRepository>, IDisposable
+    public class GetProjectsResponse:QueryResult<IReadOnlyList<ProjectProjection>>
     {
-
-        public DbProjectionSession(ProjectionDbContext context, TRepository repository)
+        private GetProjectsResponse(bool isSucceed, IReadOnlyList<ProjectProjection> items)
+        :base(isSucceed, items)
         {
-            Context = context;
-            Repository = repository;
         }
 
-        private ProjectionDbContext Context { get; }
-        public TRepository Repository { get; }
-
-        public void SaveChanges()
+        public static GetProjectsResponse From(bool isSucceed, IReadOnlyList<ProjectProjection> items)
         {
-            Context.Database.Commit();
-        }
-
-        public void Dispose()
-        {
-            Context?.Database.Dispose();
+            return new GetProjectsResponse(isSucceed,items);
         }
     }
 }

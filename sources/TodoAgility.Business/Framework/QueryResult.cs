@@ -16,17 +16,15 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Generic;
-
 namespace TodoAgility.Business.Framework
 {
     public class QueryResult<TResult>: ExecutionResult
     {
-        public QueryResult(bool isSucceed, IEnumerable<TResult> items)
-        :base(isSucceed)
+        public QueryResult(bool isSucceed, TResult items)
+            :base(isSucceed)
         {
             Items = items;
         }
-        public IEnumerable<TResult> Items { get;}
+        public TResult Items { get;}
     }
 }

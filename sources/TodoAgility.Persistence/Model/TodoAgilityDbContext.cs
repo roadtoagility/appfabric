@@ -3,9 +3,9 @@ using TodoAgility.Persistence.Framework.Model;
 
 namespace TodoAgility.Persistence.Model
 {
-    public class ProjectDbContext : AggregateDbContext
+    public class TodoAgilityDbContext : AggregateDbContext
     {
-        public ProjectDbContext(DbContextOptions options)
+        public TodoAgilityDbContext(DbContextOptions options)
             : base(options)
         {
         }
@@ -21,8 +21,11 @@ namespace TodoAgility.Persistence.Model
             modelBuilder.Entity<ProjectState>(
                 b =>
                 {
-                    b.Property(e => e.Code).ValueGeneratedNever().IsRequired();
-                    b.HasKey(e => e.Name);
+                    b.Property(e => e.Id).ValueGeneratedNever().IsRequired();
+                    b.Property(e => e.Code).IsRequired();
+                    b.Property(e => e.Name).IsRequired();
+                    b.Property(e => e.Budget).IsRequired();
+                    b.HasKey(e => e.Id);
                     b.Property(e => e.ClientId).IsRequired();
                     b.Property(e => e.StartDate).IsRequired();
                     b.Property(p => p.PersistenceId);

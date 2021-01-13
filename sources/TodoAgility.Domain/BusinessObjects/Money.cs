@@ -42,6 +42,12 @@ namespace TodoAgility.Domain.BusinessObjects
             return money;
         }
 
+        public static Money Zero()
+        {
+            return new Money(0);
+        }
+
+        
         public override string ToString()
         {
             return $"{Value}";

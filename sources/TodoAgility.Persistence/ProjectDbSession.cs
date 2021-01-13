@@ -19,13 +19,13 @@
 
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Model;
-using TodoAgility.Persistence.Repositories;
+using TodoAgility.Persistence.Model.Repositories;
 
 namespace TodoAgility.Persistence
 {
     public class ProjectDbSession: DbSession<ProjectRepository>
     {
-        public ProjectDbSession(ProjectDbContext context, ProjectRepository repository)
+        public ProjectDbSession(TodoAgilityDbContext context, ProjectRepository repository)
         :base(context,repository)
         {
         }

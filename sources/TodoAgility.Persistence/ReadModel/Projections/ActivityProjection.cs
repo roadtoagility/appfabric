@@ -17,14 +17,24 @@
 //
 
 
-using TodoAgility.Domain.BusinessObjects;
-using TodoAgility.Persistence.Framework.Repositories;
-using TodoAgility.Persistence.Model;
-
-namespace TodoAgility.Persistence.Repositories
+namespace TodoAgility.Persistence.ReadModel.Projections
 {
-    public interface IProjectRepository: IRepository<ProjectState, Project>
+    public class ActivityProjection
     {
-        Project Get(ProjectCode code);
+        public ActivityProjection()
+        {
+        }
+        public ActivityProjection(string status, string description, uint activityId, uint projectId)
+        {
+            ActivityId = activityId;
+            Status = status;
+            Description = description;
+            ProjectId = projectId;
+        }
+
+        public uint ActivityId { get; set; }
+        public string Status { get; set; }
+        public string Description { get; set; }
+        public uint ProjectId { get; set; }
     }
 }

@@ -25,16 +25,17 @@ namespace TodoAgility.Domain.BusinessObjects.Validations
     {
         public ProjectValidator()
         {
+            RuleFor(project => project.Id).SetValidator(new EntityIdValidator());
             RuleFor(project => project.Name).SetValidator(new ProjectNameValidator());
             RuleFor(project => project.StartDate).SetValidator(new DateAndTimeValidator());
-            RuleFor(project => project.Budget).SetValidator(new MoneyValidator());
             RuleFor(project => project.ClientId).SetValidator(new EntityIdValidator());
 
             RuleFor(project => project.Code).SetValidator(new ProjectCodeValidator())
                 .DependentRules(() =>
                 {
-                    RuleFor(current => current.Code).Custom((code, context) => {
-                        if(context.ParentContext.RootContextData.ContainsKey("project"))
+                    RuleFor(current => current.Code).Custom((code, context) =>
+                    {
+                        if (context.ParentContext.RootContextData.ContainsKey("project"))
                         {
                             var changedProject = context.ParentContext.RootContextData["project"] as Project;
 
@@ -45,6 +46,17 @@ namespace TodoAgility.Domain.BusinessObjects.Validations
                         }
                     });
                 });
+            
+            RuleFor(project => project.Budget).SetValidator(new MoneyValidator());
+            RuleFor(project => project.Status).SetValidator(new ProjectStatusValidator())
+                .Must(status=> status.Equals(ProjectStatus.Default()));
+            
+            RuleFor(project => project.Owner).SetValidator(new EmailValidator())
+                .When(project => !project.Owner.Equals(Email.Empty()));
+            
+            RuleFor(project => project.OrderNumber).SetValidator(new ServiceOrderNumberValidator())
+                .When(order => !order.OrderNumber.Equals(ServiceOrderNumber.Empty()));
+
         }
     }
 }

@@ -16,15 +16,14 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Generic;
 
-namespace TodoAgility.Domain.Framework.DomainEvents
+using TodoAgility.Domain.BusinessObjects;
+using TodoAgility.Persistence.Framework.Repositories;
+
+namespace TodoAgility.Persistence.Model.Repositories
 {
-    public interface IEventDispatcher
+    public interface IProjectRepository: IRepository<ProjectState, Project>
     {
-        void Subscribe(string eventType, IDomainEventHandler handler);
-        void Publish(IDomainEvent @event);
 
-        void Publish(IReadOnlyList<IDomainEvent> events);
     }
 }

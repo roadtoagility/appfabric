@@ -20,13 +20,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using TodoAgility.Agile.Domain.Framework.BusinessObjects;
 using TodoAgility.Domain.Framework.BusinessObjects;
 
 namespace TodoAgility.Persistence.Framework.Repositories
 {
     public interface IRepository<TState,TModel> where TModel : class
     {
+        TModel Get(EntityId id);
         void Add(TModel entity);
         void Remove(TModel entity);
 

@@ -16,19 +16,13 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using TodoAgility.Persistence.Framework.ReadModel.Repositories;
+using TodoAgility.Persistence.ReadModel.Projections;
 
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using TodoAgility.Agile.Domain.Framework.BusinessObjects;
-
-namespace TodoAgility.Persistence.Framework.Repositories
+namespace TodoAgility.Persistence.ReadModel.Repositories
 {
-    public interface IProjectionRepository<TModel> where TModel : class
+    public interface IProjectProjectionRepository : IProjectionRepository<ProjectProjection>
     {
-        void Add(TModel entity);
-        void Remove(TModel entity);
-        TModel Get(IExposeValue<uint> id);
-        IEnumerable<TModel> Find(Expression<Func<TModel, bool>> predicate);
+        
     }
 }

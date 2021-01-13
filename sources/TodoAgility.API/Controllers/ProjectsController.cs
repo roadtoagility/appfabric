@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MediatR;
+using FluentMediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TodoAgility.API.Mock;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
+using TodoAgility.Business.QueryHandlers;
+using TodoAgility.Business.QueryHandlers.Filters;
 
 namespace TodoAgility.API.Controllers
 {
@@ -23,14 +25,10 @@ namespace TodoAgility.API.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<object>> List([FromQuery] string name)
+        public IActionResult List([FromQuery] string name)
         {
-            var projects = ProjectsMock.GetProjects();
-
-            if (!string.IsNullOrEmpty(name))
-                projects = projects.Where(x => x.Nome.Contains(name)).ToList();
-
-            return await Task.FromResult(projects);
+            var result = _mediator.Send<GetProjectsResponse>(GetProjectsByFilter.From(name));
+            return Ok(result);
         }
 
         [HttpGet("list/{clientId}/{name?}")]
@@ -44,18 +42,26 @@ namespace TodoAgility.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<dynamic>> Get(int id)
+        public IActionResult Get(int id)
         {
-            var entity = ProjectsMock.GetProjects().FirstOrDefault(x => x.Id == id);
-            return await Task.FromResult(entity);
+            var result = _mediator.Send<GetProjectResponse>(GetProjectByIdFilter.From(id));
+            return Ok(result);
         }
 
         [HttpPost("save")]
-        public async Task<ActionResult<object>> Save([FromBody] AddProjectCommand entity)
+        public IActionResult Save([FromBody] AddProjectCommand entity)
         {
-            //var query = ActivityByProjectFilter.For(dto.ProjectId);
-            //return await _mediator.SendAsync<ExecutionResult>(entity);
-            return Task.CompletedTask;
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
+        }
+        
+        [HttpPut("save/{id}")]
+        public IActionResult Update(uint id, [FromBody] UpdateProjectCommand entity)
+        {
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
         }
     }
 }

@@ -16,6 +16,7 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.Aggregates;
 using TodoAgility.Domain.Framework.BusinessObjects;
@@ -24,21 +25,34 @@ namespace TodoAgility.Domain.AggregationProject
 {
     public sealed class ProjectAggregationRoot : AggregationRoot<Project>
     {
-        /// <summary>
-        ///     load an aggregate from store
-        /// </summary>
-        /// <param name="currentActivity"></param>
-        private ProjectAggregationRoot(Project current)
-        :base(current)
+
+        private ProjectAggregationRoot(Project project)
         {
-            
+            if (project.ValidationResults.IsValid)
+            {
+                Apply(project);
+                Raise(ProjectAddedEvent.For(project));
+            }
+
+            ValidationResults = project.ValidationResults;
         }
         
-        private ProjectAggregationRoot(ProjectName name, ProjectCode code, 
+        private ProjectAggregationRoot(EntityId id, ProjectName name, ProjectCode code, 
             Money budget, DateAndTime startDate, EntityId clientId )
-            : this(Project.From(name,code,startDate,budget,clientId))
+            : this(Project.NewRequest(id, name,code,startDate,budget,clientId))
         {
-            Change(_entityRoot);
+        }
+
+        public void UpdateDetail(Project.ProjectDetail detail)
+        {
+            var change = Project.CombineWith(GetChange(), detail);
+            if (change.ValidationResults.IsValid)
+            {
+                Apply(change);
+                Raise(ProjectDetailUpdatedEvent.For(change));
+            }
+
+            ValidationResults = change.ValidationResults;
         }
 
         #region Aggregation contruction
@@ -50,9 +64,9 @@ namespace TodoAgility.Domain.AggregationProject
         }
 
         
-        public static ProjectAggregationRoot CreateFrom(ProjectName name, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
+        public static ProjectAggregationRoot CreateFrom(EntityId id, ProjectName name, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
         {
-            return new ProjectAggregationRoot(name,code,budget,startDate,clientId);
+            return new ProjectAggregationRoot(id, name,code,budget,startDate,clientId);
         }
 
         #endregion
