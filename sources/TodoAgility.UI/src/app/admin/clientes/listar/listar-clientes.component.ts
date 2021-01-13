@@ -5,6 +5,9 @@ import {ClientService} from '../../services/client.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { NbDialogService } from '@nebular/theme';
+
+import { NewClientFormComponent } from '../new/new-client-modal.component';
 
 @Component({
   selector: 'ngx-listar-clientes',
@@ -58,7 +61,7 @@ export class ListarClientesComponent implements OnDestroy {
   source: LocalDataSource = new LocalDataSource();
   entities: any = [];
 
-  constructor(private service: SmartTableData, private _clientService: ClientService, private _router: Router) {
+  constructor(private service: SmartTableData, private _clientService: ClientService, private _router: Router, private dialogService: NbDialogService) {
     const data = this.service.getClients();
     //this.source.load(data);
 
@@ -82,6 +85,15 @@ export class ListarClientesComponent implements OnDestroy {
 
   onDeleteConfirm(event): void {
     console.log(event);
+  }
+
+  new(){
+    this.dialogService.open(NewClientFormComponent, {
+      context: {
+        title: 'New Client',
+      },
+    })
+    .onClose.subscribe(project => console.log(project));
   }
 
   ngOnDestroy(): void {

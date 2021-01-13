@@ -3,7 +3,9 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class ClientService implements Resolve<any>
 {
     onClientsChanged: BehaviorSubject<any>;

@@ -5,6 +5,9 @@ import {ActivityService} from '../../services/activity.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { NbDialogService } from '@nebular/theme';
+
+import { NewActivityFormComponent } from '../new/new-activity-modal.component';
 
 @Component({
   selector: 'ngx-listar-atividades',
@@ -14,6 +17,7 @@ import { Router } from '@angular/router';
 export class ListarAtividadesComponent implements OnDestroy {
   
   private _unsubscribeAll: Subject<any>;
+  
 
   settings = {
     // add: {
@@ -80,7 +84,7 @@ export class ListarAtividadesComponent implements OnDestroy {
   source: LocalDataSource = new LocalDataSource();
   entities: any = [];
 
-  constructor(private service: SmartTableData, private _activityService: ActivityService, private _router: Router) {
+  constructor(private service: SmartTableData, private _activityService: ActivityService, private _router: Router, private dialogService: NbDialogService) {
     const data = this.service.getActivities();
     //this.source.load(data);
 
@@ -104,6 +108,15 @@ export class ListarAtividadesComponent implements OnDestroy {
 
   onDeleteConfirm(event): void {
     console.log(event);
+  }
+
+  new(){
+    this.dialogService.open(NewActivityFormComponent, {
+      context: {
+        title: 'New Activity',
+      },
+    })
+    .onClose.subscribe(project => console.log(project));
   }
  
   ngOnDestroy(): void {

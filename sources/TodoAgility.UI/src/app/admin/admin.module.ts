@@ -7,6 +7,13 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { AdminRoutingModule } from './admin-routing.module';
 import { ListarProjetosComponent } from './projetos/listar/listar-projetos.component';
 import { EditarProjetosComponent } from './projetos/editar/editar-projetos.component';
+
+import { NewProjectFormComponent } from './projetos/new/new-project-modal.component';
+import { NewActivityFormComponent } from './atividades/new/new-activity-modal.component';
+import { NewBillingFormComponent } from './billings/new/new-billing-modal.component';
+import { NewClientFormComponent } from './clientes/new/new-client-modal.component';
+import { NewReleaseFormComponent } from './releases/new/new-release-modal.component';
+
 import { ListarClientesComponent } from './clientes/listar/listar-clientes.component';
 import { EditarClientesComponent } from './clientes/editar/editar-clientes.component';
 import { ListarAtividadesComponent } from './atividades/listar/listar-atividades.component';
@@ -121,7 +128,12 @@ import {
     ReleasesEditComponent,
     BillingsEditComponent,
     ActivitySearchFormComponent,
-    ProjectSearchFormComponent
+    ProjectSearchFormComponent,
+    NewProjectFormComponent,
+    NewActivityFormComponent,
+    NewBillingFormComponent,
+    NewClientFormComponent,
+    NewReleaseFormComponent
   ],
   providers:[ProjectModalService, ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService, ReleaseModalService, ActivityModalService]
 })

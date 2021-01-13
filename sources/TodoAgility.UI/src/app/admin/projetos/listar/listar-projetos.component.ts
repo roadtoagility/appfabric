@@ -5,6 +5,9 @@ import {ProjectService} from '../../services/project.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { NbDialogService } from '@nebular/theme';
+
+import { NewProjectFormComponent } from '../new/new-project-modal.component';
 
 @Component({
   selector: 'ngx-listar-projetos',
@@ -68,7 +71,7 @@ export class ListarProjetosComponent implements OnDestroy {
   source: LocalDataSource = new LocalDataSource();
   entities: any = [];
 
-  constructor(private service: SmartTableData, private _projetosService: ProjectService, private _router: Router) {
+  constructor(private service: SmartTableData, private _projetosService: ProjectService, private _router: Router, private dialogService: NbDialogService) {
     const data = this.service.getProjects();
     //this.source.load(data);
     this._unsubscribeAll = new Subject();
@@ -91,6 +94,15 @@ export class ListarProjetosComponent implements OnDestroy {
 
   onDeleteConfirm(event): void {
     console.log(event);
+  }
+
+  new(){
+    this.dialogService.open(NewProjectFormComponent, {
+      context: {
+        title: 'New Project',
+      },
+    })
+    .onClose.subscribe(project => console.log(project));
   }
 
   ngOnDestroy(): void {

@@ -5,6 +5,9 @@ import { BillingService } from '../../services/billing.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { NbDialogService } from '@nebular/theme';
+
+import { NewBillingFormComponent } from '../new/new-billing-modal.component';
 
 @Component({
   selector: 'billings-list',
@@ -58,7 +61,7 @@ export class BillingsListComponent implements OnDestroy {
   source: LocalDataSource = new LocalDataSource();
   entities: any = [];
 
-  constructor(private service: SmartTableData, private _billingService: BillingService, private _router: Router) {
+  constructor(private service: SmartTableData, private _billingService: BillingService, private _router: Router, private dialogService: NbDialogService) {
     const data = this.service.getClients();
     //this.source.load(data);
 
@@ -82,6 +85,15 @@ export class BillingsListComponent implements OnDestroy {
 
   onDeleteConfirm(event): void {
     console.log(event);
+  }
+
+  new(){
+    this.dialogService.open(NewBillingFormComponent, {
+      context: {
+        title: 'New Billing',
+      },
+    })
+    .onClose.subscribe(project => console.log(project));
   }
 
   ngOnDestroy(): void {
