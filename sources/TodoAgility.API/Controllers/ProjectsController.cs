@@ -33,6 +33,16 @@ namespace TodoAgility.API.Controllers
             return await Task.FromResult(projects);
         }
 
+        [HttpGet("list/{clientId}/{name?}")]
+        public async Task<ActionResult<object>> List(int clientId, string name = "")
+        {
+            var projects = ProjectsMock.GetProjects();
+
+            projects = projects.Where(x => x.ClientId == clientId && x.Nome.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            return await Task.FromResult(projects);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<dynamic>> Get(int id)
         {

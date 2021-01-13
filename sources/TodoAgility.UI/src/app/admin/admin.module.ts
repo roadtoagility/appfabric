@@ -12,16 +12,13 @@ import { EditarClientesComponent } from './clientes/editar/editar-clientes.compo
 import { ListarAtividadesComponent } from './atividades/listar/listar-atividades.component';
 import { EditarAtividadesComponent } from './atividades/editar/editar-atividades.component';
 import { ClientSearchFormComponent} from './common/modals/client/client-modal.component';
+import { ProjectSearchFormComponent} from './common/modals/project/project-modal.component';
 import { ReleaseSearchFormComponent} from './common/modals/release/release-modal.component';
+import { ActivitySearchFormComponent} from './common/modals/activity/activity-modal.component';
 import { ReleasesListComponent } from './releases/list/releases-list.component';
 import { ReleasesEditComponent } from './releases/edit/releases-edit.component';
 import { BillingsListComponent } from './billings/list/billings-list.component';
 import { BillingsEditComponent } from './billings/edit/billings-edit.component';
-//BillingsListComponent
-
-
-//ReleasesListComponent
-
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -45,6 +42,8 @@ import { ActivityService} from './services/activity.service';
 import { DashboardService} from './services/dashboard.service';
 import { ClientModalService } from './common/modals/client/client-modal.service';
 import { ReleaseModalService } from './common/modals/release/release-modal.service';
+import { ProjectModalService } from './common/modals/project/project-modal.service';
+import { ActivityModalService } from './common/modals/activity/activity-modal.service';
 import {ReleaseService} from './services/release.service';
 import {BillingService} from './services/billing.service';
 
@@ -120,9 +119,11 @@ import {
     ReleasesListComponent,
     BillingsListComponent,
     ReleasesEditComponent,
-    BillingsEditComponent
+    BillingsEditComponent,
+    ActivitySearchFormComponent,
+    ProjectSearchFormComponent
   ],
-  providers:[ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService, ReleaseModalService]
+  providers:[ProjectModalService, ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService, ReleaseModalService, ActivityModalService]
 })
 export class AdminModule {
 }

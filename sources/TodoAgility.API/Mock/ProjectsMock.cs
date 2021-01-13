@@ -29,6 +29,7 @@ namespace TodoAgility.API.Mock
                 new {
                     Id = 1,
                     Cliente= "Locamais",
+                    ClientId= 2,
                     Nome= "Portal do Cliente",
                     Sigla= "PTC",
                     Gerente= "Marcio Alberto",
@@ -37,6 +38,7 @@ namespace TodoAgility.API.Mock
                 new {
                     Id= 2,
                     Cliente= "Locamais",
+                    ClientId= 2,
                     Nome= "Sistema de controle de frota",
                     Sigla= "SCF",
                     Gerente= "Marcio Alberto",
@@ -45,6 +47,7 @@ namespace TodoAgility.API.Mock
                 new {
                     Id= 3,
                     Cliente= "D&G Seguradora",
+                    ClientId= 1,
                     Nome= "Portal do Segurado",
                     Sigla= "PTS",
                     Gerente= "Ana Catarina",
@@ -53,6 +56,7 @@ namespace TodoAgility.API.Mock
                 new {
                     Id= 4,
                     Cliente= "Fiat do Brasil LTDA.",
+                    ClientId= 3,
                     Nome= "Sistema de Controle de Qualidade",
                     Sigla= "SCQ",
                     Gerente= "Renata Soares",
@@ -61,6 +65,7 @@ namespace TodoAgility.API.Mock
                 new {
                     Id= 5,
                     Cliente= "Fiat do Brasil LTDA.",
+                    ClientId= 3,
                     Nome= "Compliance",
                     Sigla= "Compliance",
                     Gerente= "Renata Soares",
@@ -69,6 +74,7 @@ namespace TodoAgility.API.Mock
                 new {
                     Id= 6,
                     Cliente= "Tribunal Superior de Contas da União",
+                    ClientId= 4,
                     Nome= "Gerenciamento Eletrônico de documentos",
                     Sigla= "GED",
                     Gerente= "Felipe Dias",
@@ -77,6 +83,7 @@ namespace TodoAgility.API.Mock
                 new {
                     Id= 7,
                     Cliente= "Tribunal Superior de Contas da União",
+                    ClientId= 4,
                     Nome= "Sistema de Gerenciamento de Recursos Humanos",
                     Sigla= "SGRH",
                     Gerente= "Felipe Dias",

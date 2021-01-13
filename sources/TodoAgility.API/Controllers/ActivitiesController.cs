@@ -32,6 +32,16 @@ namespace TodoAgility.API.Controllers
             return await Task.FromResult(activities);
         }
 
+        [HttpGet("list/{projectId}/{title?}")]
+        public async Task<ActionResult<object>> List(int projectId, string title = "")
+        {
+            var activities = ActivitiesMock.GetActivities();
+
+            activities = activities.Where(x => x.Id == projectId && x.Titulo.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            return await Task.FromResult(activities);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<object>> Get(int id)
         {

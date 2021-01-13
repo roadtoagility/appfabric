@@ -60,6 +60,10 @@ export class BillingsEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  getTotalEffort(){
+    return this.releases.reduce((release, {totalEffort}) => release += +(totalEffort || 0), 0);
+  }
+
   removeRelease(releaseToRemove){
     this.releases = this.releases.filter(release => release.id != releaseToRemove.id);
   }
