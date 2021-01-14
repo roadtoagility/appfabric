@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using FluentMediator;
 using Microsoft.AspNetCore.Mvc;
 using TodoAgility.API.Mock;
+using TodoAgility.Business.CommandHandlers.Commands;
+using TodoAgility.Business.Framework;
 
 namespace TodoAgility.API.Controllers
 {
@@ -38,12 +40,10 @@ namespace TodoAgility.API.Controllers
         }
 
         [HttpPost("save")]
-        public async Task<ActionResult<object>> Save([FromBody] ClientDto entity)
+        public IActionResult Save([FromBody] AddUserCommand entity)
         {
-            //var query = ActivityByProjectFilter.For(dto.ProjectId);
-            //var result = await _mediator.Send(query);
-            //return result;
-            return await Task.FromResult("");
+            var result = _mediator.Send<ExecutionResult>(entity);
+            return Ok(result);
         }
     }
 }

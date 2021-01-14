@@ -52,14 +52,28 @@ namespace TodoAgility.API
 
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IProjectProjectionRepository, ProjectProjectionRepository>();
+            
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserProjectionRepository, UserProjectionRepository>();
+            
             services.AddScoped<IDbSession<IProjectRepository>, DbSession<IProjectRepository>>();
             services.AddScoped<IDbSession<IProjectProjectionRepository>, ProjectionDbSession<IProjectProjectionRepository>>();
+            
+            services.AddScoped<IDbSession<IUserRepository>, DbSession<IUserRepository>>();
+            services.AddScoped<IDbSession<IUserProjectionRepository>, ProjectionDbSession<IUserProjectionRepository>>();
+            
             services.AddScoped<AddProjectCommandHandler>();
+            services.AddScoped<AddUserCommandHandler>();
             services.AddScoped<GetProjectsByQueryHandler>();
             services.AddScoped<UpdateProjectProjectionHandler>();
+            services.AddScoped<UpdateUserProjectionHandler>();
            
             services.AddFluentMediator(builder =>
             {
+                builder.On<AddUserCommand>().Pipeline()
+                    .Return<ExecutionResult, AddUserCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+                
                 builder.On<AddProjectCommand>().Pipeline()
                     .Return<ExecutionResult, AddProjectCommandHandler>(
                         (handler, request) => handler.Execute(request));

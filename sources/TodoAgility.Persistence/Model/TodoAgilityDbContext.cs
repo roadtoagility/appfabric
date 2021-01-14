@@ -11,12 +11,11 @@ namespace TodoAgility.Persistence.Model
         }
 
         public DbSet<ProjectState> Projects { get; set; }
+        public DbSet<UserState> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            #region ConfigureProject
 
             modelBuilder.Entity<ProjectState>(
                 b =>
@@ -33,8 +32,32 @@ namespace TodoAgility.Persistence.Model
                     b.Property(e => e.CreateAt);
                     b.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate().IsRowVersion();
                 });
+            
+            modelBuilder.Entity<UserState>(
+                b =>
+                {
+                    b.Property(e => e.Id).ValueGeneratedNever().IsRequired();
+                    b.Property(e => e.Name).IsRequired();
+                    b.Property(e => e.Cnpj).IsRequired();
+                    b.HasKey(e => e.CommercialEmail);
+                    b.Property(p => p.PersistenceId);
+                    b.HasQueryFilter(q => !q.IsDeleted);
+                    b.Property(e => e.CreateAt);
+                    b.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate().IsRowVersion();
+                });
+            
+            modelBuilder.Entity<ClientState>(
+                b =>
+                {
+                    b.Property(e => e.ProjectId).ValueGeneratedNever();
+                    b.Property(e => e.ClientId).IsRequired();
+                    b.HasKey(e => e.ClientId);
+                    b.Property(p => p.PersistenceId);
+                    b.HasQueryFilter(q => !q.IsDeleted);
+                    b.Property(e => e.CreateAt);
+                    b.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate().IsRowVersion();
+                });
 
-            #endregion
         }
     }
 }

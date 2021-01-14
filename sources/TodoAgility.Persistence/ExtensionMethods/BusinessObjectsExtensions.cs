@@ -47,6 +47,18 @@ namespace TodoAgility.Persistence.ExtensionMethods
                 Email.From(state.Owner),
                 ProjectStatus.From(state.Status),
                 ServiceOrderNumber.From(state.OrderNumber));
-       
+        
+        public static UserState ToUserState(this User user)
+            => new UserState(user.Id.Value,
+                user.Name.Value, 
+                user.Cnpj.Value, 
+                user.CommercialEmail.Value);
+
+        public static User ToUser(this UserState state)
+            => User.From(
+                EntityId.From(state.Id),
+                Name.From(state.Name),
+                SocialSecurityId.From(state.Cnpj),
+                Email.From(state.CommercialEmail));
     }
 }
