@@ -26,7 +26,7 @@ namespace TodoAgility.API.Controllers
         [HttpGet("list")]
         public IActionResult List([FromQuery] string razaoSocial, [FromQuery] string name)
         {
-            var result = _mediator.Send<GetProjectsResponse>(GetClientsByFilter.From(razaoSocial, name));
+            var result = _mediator.Send<GetClientsResponse>(GetClientsByFilter.From(razaoSocial, name));
             return Ok(result);
         }
 
