@@ -20,18 +20,16 @@ namespace TodoAgility.Business.QueryHandlers.Filters
 {
     public class GetClientsByFilter
     {
-        private GetClientsByFilter(string cnpj, string name)
+        private GetClientsByFilter(string name)
         {
-            Cnpj = cnpj;
             Name = name;
         }
 
-        public string Cnpj { get; }
         public string Name { get; }
         
-        public static GetClientsByFilter From(string cnpj, string name)
+        public static GetClientsByFilter From(string name)
         {
-            return new GetClientsByFilter(cnpj, name);
+            return new GetClientsByFilter(name);
         }
     }
 }

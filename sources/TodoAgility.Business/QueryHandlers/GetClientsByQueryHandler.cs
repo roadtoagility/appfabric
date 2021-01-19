@@ -40,11 +40,8 @@ namespace TodoAgility.Business.QueryHandlers
         {
             //we need a validation like a commandhandler here
 
-            var name = Name.From(filter.Name);
-            var cnpj = SocialSecurityId.From(filter.Cnpj);
-
             var clients = _dbSession.Repository
-                .Find(up=> up.Name.Contains(filter.Name) || up.Cnpj.Equals(cnpj.Value));
+                .Find(up=>  up.Name.Contains(filter.Name));
            
             return GetClientsResponse.From(true, clients);
         }
