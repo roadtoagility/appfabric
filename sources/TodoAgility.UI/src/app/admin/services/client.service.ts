@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { ResponseData } from '../models/ResponseData';
 
 @Injectable({
     providedIn: 'root',
@@ -68,9 +69,10 @@ export class ClientService implements Resolve<any>
         return new Promise((resolve, reject) => {
             this._httpClient
             .post(`${this.baseAdddress}/clients/save`, entity)
-            .subscribe((response: any) => {
+            .subscribe((response: ResponseData) => {
                 // this.projectActivities = response.items;
-                // this.onProjectActivitiesChanged.next(this.projectActivities);
+                this.client = entity;
+                this.onClientChanged.next(this.client);
                 resolve(response);
             });
         });

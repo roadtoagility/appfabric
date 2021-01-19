@@ -8,6 +8,9 @@ import { Router } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
 
 import { NewClientFormComponent } from '../new/new-client-modal.component';
+import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
+
+import {Client} from '../../models/entities/client';
 
 @Component({
   selector: 'ngx-listar-clientes',
@@ -61,7 +64,10 @@ export class ListarClientesComponent implements OnDestroy {
   source: LocalDataSource = new LocalDataSource();
   entities: any = [];
 
-  constructor(private service: SmartTableData, private _clientService: ClientService, private _router: Router, private dialogService: NbDialogService) {
+  statusForm: FormGroup;
+  form: FormGroup;
+
+  constructor(private _formBuilder: FormBuilder, private service: SmartTableData, private _clientService: ClientService, private _router: Router, private dialogService: NbDialogService) {
     const data = this.service.getClients();
     //this.source.load(data);
 
@@ -87,10 +93,20 @@ export class ListarClientesComponent implements OnDestroy {
     console.log(event);
   }
 
+  buildForm(client){
+    this.form = this._formBuilder.group({
+      name: [client.name, Validators.required],
+      cnpj: [client.cnpj, Validators.required],
+      email: [client.email, Validators.required]
+    });
+  }
+
   new(){
+    this.buildForm(new Client({}));
     this.dialogService.open(NewClientFormComponent, {
       context: {
         title: 'New Client',
+        form: this.form
       },
     })
     .onClose.subscribe(project => console.log(project));

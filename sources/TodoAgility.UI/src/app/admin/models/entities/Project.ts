@@ -10,6 +10,6 @@ export class Project{
         this.code = project.code || '';
         this.startDate = project.startDate || new Date();
         this.budget = project.budget || 0;
-        this.clientId = project.clientId || 0;
+        this.clientId = +project.clientId || 0;
     }
 }

@@ -24,15 +24,13 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.form);
+    
   }
 
   onSubmit(formSubmitted: NgForm, project) {
-    console.log("salvando 1...");
-    console.log(project);
-    console.log(formSubmitted);
     if (this.form.status === 'VALID' && this.form.touched === true) {
       
+      project.clientId = +project.clientId;
       this._projectService.save(project);
 
       formSubmitted.resetForm();
