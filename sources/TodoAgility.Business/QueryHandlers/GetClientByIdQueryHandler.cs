@@ -19,28 +19,31 @@
 using System;
 using TodoAgility.Business.Framework;
 using TodoAgility.Business.QueryHandlers.Filters;
+using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.Framework;
+using TodoAgility.Persistence.Framework.ReadModel.Repositories;
+using TodoAgility.Persistence.ReadModel.Projections;
 using TodoAgility.Persistence.ReadModel.Repositories;
 
 namespace TodoAgility.Business.QueryHandlers
 {
-    public sealed class GetProjectsByQueryHandler : QueryHandler<GetProjectsByFilter, GetProjectsResponse>
+    public sealed class GetClientByIdQueryHandler : QueryHandler<GetClientByIdFilter, GetClientResponse>
     {
-        private readonly IDbSession<IProjectProjectionRepository> _dbSession;
+        private readonly IDbSession<IUserProjectionRepository> _dbSession;
 
-        public GetProjectsByQueryHandler(IDbSession<IProjectProjectionRepository> session)
+        public GetClientByIdQueryHandler(IDbSession<IUserProjectionRepository> session)
         {
             _dbSession = session;
         }
 
-        protected override GetProjectsResponse ExecuteQuery(GetProjectsByFilter filter)
+        protected override GetClientResponse ExecuteQuery(GetClientByIdFilter filter)
         {
             //we need a validation like a commandhandler here
             
-            var projects = _dbSession.Repository
-                .Find(p=> p.Name.Contains(filter.Name));
+            var user = _dbSession.Repository
+                .Get(EntityId.From(filter.Id));
            
-            return GetProjectsResponse.From(true, projects);
+            return GetClientResponse.From(true, user);
         }
     }
 }

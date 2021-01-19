@@ -27,16 +27,18 @@ namespace TodoAgility.Business.QueryHandlers
 {
     public sealed class GetProjectByIdQueryHandler : QueryHandler<GetProjectByIdFilter, GetProjectResponse>
     {
+        private readonly IDbSession<IProjectProjectionRepository> _dbSession;
+
         public GetProjectByIdQueryHandler(IDbSession<IProjectProjectionRepository> session)
-        :base(session)
         {
+            _dbSession = session;
         }
 
         protected override GetProjectResponse ExecuteQuery(GetProjectByIdFilter filter)
         {
             //we need a validation like a commandhandler here
             
-            var project = DbSession.Repository
+            var project = _dbSession.Repository
                 .Get(EntityId.From(filter.ProjectId));
            
             return GetProjectResponse.From(true, project);
