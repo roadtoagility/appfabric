@@ -26,21 +26,24 @@ namespace TodoAgility.Persistence.ReadModel.Projections
         public ProjectProjection()
         {
         }
-        public ProjectProjection(long id, string name, string code, decimal budget, DateTime startDate, long clientId, string owner, string orderNumber, int status)
+        public ProjectProjection(long id, string name, string code, decimal budget, DateTime startDate, long clientId, string clientName, string owner, string orderNumber, int status, string statusName)
         {
             Id = id;
             ClientId = clientId;
+            ClientName = clientName;
             Name = name;
             Code = code;
             StartDate = startDate;
             Budget = budget;
             Owner = owner;
             Status = status;
+            StatusName = statusName;
             OrderNumber = orderNumber;
         }
 
         public long Id { get; set; }
         public long ClientId { get; set; }
+        public string ClientName { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
         public DateTime StartDate { get; set; }
@@ -50,5 +53,6 @@ namespace TodoAgility.Persistence.ReadModel.Projections
         public string OrderNumber { get; set; }
         
         public int Status { get; set; }
+        public string StatusName { get; set; }
     }
 }

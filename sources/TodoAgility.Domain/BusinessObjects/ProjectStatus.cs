@@ -58,7 +58,7 @@ namespace TodoAgility.Domain.BusinessObjects
 
         public override string ToString()
         {
-            return $"{_status}";
+            return $"{_status.ToString()}";
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

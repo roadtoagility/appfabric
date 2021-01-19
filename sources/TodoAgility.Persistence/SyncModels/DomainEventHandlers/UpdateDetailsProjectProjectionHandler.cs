@@ -45,9 +45,11 @@ namespace TodoAgility.Persistence.SyncModels.DomainEventHandlers
                 @event.Budget.Value,
                 project.StartDate,
                 project.ClientId,
+                project.ClientName,
                 project.Owner,
                 project.OrderNumber,
-                project.Status);
+                project.Status,
+                project.StatusName);
             
             _projectSession.Repository.Add(projection);
             
