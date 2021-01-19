@@ -19,9 +19,42 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
   @Input() form: any;
   statusForm: FormGroup;
   loading = false;
+  success = false;
+  errors: any[];
+  private _formSubmitted: any;
 
   constructor(private _projectService: ProjectService, protected ref: NbDialogRef<NewProjectFormComponent>) {
     this._unsubscribeAll = new Subject();
+    this.errors = [];
+
+    this._projectService.onProjectChanged
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe(response => {
+      if(Object.keys(response).length > 0){
+        this._formSubmitted.resetForm();
+        this.form.markAsUntouched();
+        this.form.markAsPristine();
+        
+
+        this.showCompleteForm();
+        this.errors = [];
+        this.success = true;
+        this.toggleLoadingAnimation();
+      }
+    });
+
+    this._projectService.onProjectUpdateError
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe(errors => {
+      if(Object.keys(errors).length > 0){
+        this.errors = errors;
+        this.toggleLoadingAnimation();
+      }
+    });
+  }
+
+  showCompleteForm(){
+
   }
 
   ngOnInit(): void {
@@ -35,19 +68,14 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
 
   onSubmit(formSubmitted: NgForm, project) {
     this.toggleLoadingAnimation();
+    this._formSubmitted = formSubmitted;
+    
     if (this.form.status === 'VALID' && this.form.touched === true) {
-      
       project.clientId = +project.clientId;
       this._projectService.save(project);
-
-      formSubmitted.resetForm();
-      //this.buildForm(new Project({}));
-      this.form.markAsUntouched();
-      this.form.markAsPristine();
-
-      //this.titleButtonAction = this.ADICIONAR_LABEL;
-      //this.openSnackBar('Dados de taxas do condomínio atualizados com sucesso', 'Fechar');
-      this.ref.close("");
+    }else{
+      this.errors = [{message: "Check required fields."}];
+      this.toggleLoadingAnimation();
     }
   }
 

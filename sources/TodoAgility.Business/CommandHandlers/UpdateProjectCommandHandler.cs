@@ -22,7 +22,6 @@ using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.CommandHandlers.ExtensionMethods;
 using TodoAgility.Business.Framework;
 using TodoAgility.Domain.AggregationProject;
-using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Model.Repositories;

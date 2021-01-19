@@ -54,6 +54,8 @@ import { ActivityModalService } from './common/modals/activity/activity-modal.se
 import {ReleaseService} from './services/release.service';
 import {BillingService} from './services/billing.service';
 
+import {DisplayErrorComponent} from './common/components/display-error/display-error.component';
+
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -135,7 +137,8 @@ import {
     NewActivityFormComponent,
     NewBillingFormComponent,
     NewClientFormComponent,
-    NewReleaseFormComponent
+    NewReleaseFormComponent,
+    DisplayErrorComponent
   ],
   providers:[FormsModule, ProjectModalService, ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService, ReleaseModalService, ActivityModalService]
 })

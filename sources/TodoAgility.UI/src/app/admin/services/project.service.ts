@@ -15,6 +15,8 @@ export class ProjectService implements Resolve<any>
     onProjectChanged: BehaviorSubject<any>;
     project: {};
 
+    onProjectUpdateError: BehaviorSubject<any>;
+
     baseAdddress: string = "https://localhost:44353/api";
     
     constructor(
@@ -25,6 +27,8 @@ export class ProjectService implements Resolve<any>
 
         this.onProjectChanged = new BehaviorSubject({});
         this.project = {};
+
+        this.onProjectUpdateError = new BehaviorSubject({}); 
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
@@ -70,8 +74,18 @@ export class ProjectService implements Resolve<any>
             this._httpClient
             .post(`${this.baseAdddress}/projects/save`, entity)
             .subscribe((response: ResponseData) => {
-                // this.projectActivities = response.items;
-                // this.onProjectActivitiesChanged.next(this.projectActivities);
+                
+                if(response.isSucceed){
+                    this.project = entity;
+                    this.onProjectChanged.next(this.project);
+                }else{
+                    this.onProjectUpdateError.next(response.violations.map(x => ({
+                        propertyName: x.propertyName,
+                        errorMessage: x.errorMessage,
+                        message: x.errorMessage.replace("'Value'", x.propertyName).replace('.Value', '')
+                    })));
+                }
+
                 resolve(response);
             });
         });

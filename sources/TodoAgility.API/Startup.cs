@@ -63,15 +63,27 @@ namespace TodoAgility.API
             services.AddScoped<IDbSession<IUserProjectionRepository>, ProjectionDbSession<IUserProjectionRepository>>();
             
             services.AddScoped<AddProjectCommandHandler>();
-            services.AddScoped<AddUserCommandHandler>();
+            services.AddScoped<UpdateProjectCommandHandler>();
             services.AddScoped<GetProjectsByQueryHandler>();
             services.AddScoped<UpdateProjectProjectionHandler>();
+
+            services.AddScoped<AddUserCommandHandler>();
             services.AddScoped<UpdateUserProjectionHandler>();
-           
+            services.AddScoped<GetClientsByQueryHandler>();
+            services.AddScoped<GetClientByIdQueryHandler>();
+            
             services.AddFluentMediator(builder =>
             {
                 builder.On<AddUserCommand>().Pipeline()
                     .Return<ExecutionResult, AddUserCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+                
+                builder.On<GetClientByIdFilter>().Pipeline()
+                    .Return<GetClientResponse, GetClientByIdQueryHandler>(
+                        (handler, request) => handler.Execute(request));
+                
+                builder.On<GetClientsByFilter>().Pipeline()
+                    .Return<GetClientsResponse, GetClientsByQueryHandler>(
                         (handler, request) => handler.Execute(request));
                 
                 builder.On<AddProjectCommand>().Pipeline()

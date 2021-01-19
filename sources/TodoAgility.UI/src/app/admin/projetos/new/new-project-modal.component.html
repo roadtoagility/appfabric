@@ -3,33 +3,44 @@
     <nb-card-header>{{ title }}</nb-card-header>
     <nb-card-body [nbSpinner]="loading">
         <div style="width: 600px;">
+
+          <display-error [(errors)]="errors"></display-error>
             
           <form [formGroup]="form" #formSubmitted="ngForm">
             <div class="form-group row">
               <label for="name" class="label col-sm-3 col-form-label">Name</label>
               <div class="col-sm-9">
-                <input type="email" nbInput formControlName="name" fullWidth id="name">
+                <input type="email" nbInput formControlName="name" fullWidth id="name" [class.danger]="form.get('name').invalid && 
+                (form.get('name').dirty || form.get('name').touched)">
               </div>
             </div>
             <div class="form-group row">
               <label for="code" class="label col-sm-3 col-form-label">Code</label>
               <div class="col-sm-9">
-                <input type="text" nbInput formControlName="code" fullWidth id="code">
+                <input type="text" nbInput formControlName="code" fullWidth id="code" [class.danger]="form.get('code').invalid && 
+                (form.get('code').dirty || form.get('code').touched)">
               </div>
             </div>
             <div class="form-group row">
               <label for="startDate" class="label col-sm-3 col-form-label">Start Date</label>
               <div class="col-sm-9">
-                <input type="text" nbInput formControlName="startDate" fullWidth id="startDate">
+                <input type="text" nbInput formControlName="startDate" fullWidth id="startDate" [class.danger]="form.get('startDate').invalid && 
+                (form.get('startDate').dirty || form.get('startDate').touched)">
               </div>
             </div>
             <div class="form-group row">
-              <label for="client" class="label col-sm-3 col-form-label">Client</label>
+              <label for="clientId" class="label col-sm-3 col-form-label">Client</label>
               <div class="col-sm-9">
-                <input type="text" nbInput formControlName="clientId" fullWidth id="client">
+                <input type="text" nbInput formControlName="clientId" fullWidth id="clientId" [class.danger]="form.get('clientId').invalid && 
+                (form.get('clientId').dirty || form.get('clientId').touched)">
               </div>
             </div>
           </form>
+
+          <div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
+            Project created! To complete the form <a href="http://www.uol.com.br" class="alert-link">click here</a>
+          </div>
+
         </div>
     </nb-card-body>
     <nb-card-footer>

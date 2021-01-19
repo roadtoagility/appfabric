@@ -3,27 +3,37 @@
     <nb-card-header>{{ title }}</nb-card-header>
     <nb-card-body [nbSpinner]="loading">
         <div style="width: 600px;">
-            
+          
+          <display-error [(errors)]="errors"></display-error>
+          
           <form [formGroup]="form" #formSubmitted="ngForm">
             <div class="form-group row">
               <label for="name" class="label col-sm-3 col-form-label">Name</label>
               <div class="col-sm-9">
-                <input type="email" nbInput formControlName="name" fullWidth id="name">
+                <input type="text" nbInput formControlName="name" fullWidth id="name" [class.info]="form.get('name').valid && 
+                (form.get('name').dirty || form.get('name').touched)" [class.danger]="form.get('name').invalid && 
+                (form.get('name').dirty || form.get('name').touched)">
               </div>
             </div>
             <div class="form-group row">
               <label for="cnpj" class="label col-sm-3 col-form-label">Cnpj</label>
               <div class="col-sm-9">
-                <input type="text" nbInput formControlName="cnpj" fullWidth id="cnpj">
+                <input type="text" nbInput formControlName="cnpj" fullWidth id="cnpj" [class.danger]="form.get('cnpj').invalid && 
+                (form.get('cnpj').dirty || form.get('cnpj').touched)">
               </div>
             </div>
             <div class="form-group row">
               <label for="email" class="label col-sm-3 col-form-label">Email</label>
               <div class="col-sm-9">
-                <input type="text" nbInput formControlName="email" fullWidth id="email">
+                <input type="text" nbInput formControlName="email" fullWidth id="email" [class.danger]="form.get('email').invalid && 
+                (form.get('email').dirty || form.get('email').touched)">
               </div>
             </div>
           </form>
+
+          <div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
+            Client created! To complete the form <a href="http://www.uol.com.br" class="alert-link">click here</a>
+          </div>
             
         </div>
     </nb-card-body>

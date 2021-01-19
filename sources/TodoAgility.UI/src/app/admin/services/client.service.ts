@@ -15,6 +15,8 @@ export class ClientService implements Resolve<any>
     onClientChanged: BehaviorSubject<any>;
     client: {};
 
+    onClientUpdateError: BehaviorSubject<any>;
+
     baseAdddress: string = "https://localhost:44353/api";
     
     constructor(
@@ -25,6 +27,8 @@ export class ClientService implements Resolve<any>
 
         this.onClientChanged = new BehaviorSubject({});
         this.client = {};
+
+        this.onClientUpdateError = new BehaviorSubject({});
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
@@ -70,9 +74,18 @@ export class ClientService implements Resolve<any>
             this._httpClient
             .post(`${this.baseAdddress}/clients/save`, entity)
             .subscribe((response: ResponseData) => {
-                // this.projectActivities = response.items;
-                this.client = entity;
-                this.onClientChanged.next(this.client);
+
+                if(response.isSucceed){
+                    this.client = entity;
+                    this.onClientChanged.next(this.client);
+                }else{
+                    this.onClientUpdateError.next(response.violations.map(x => ({
+                        propertyName: x.propertyName,
+                        errorMessage: x.errorMessage,
+                        message: x.errorMessage.replace("'Value'", x.propertyName).replace('.Value', '')
+                    })));
+                }
+                
                 resolve(response);
             });
         });

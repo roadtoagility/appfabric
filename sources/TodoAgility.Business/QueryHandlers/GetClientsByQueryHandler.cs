@@ -17,30 +17,36 @@
 //
 
 using System;
+using System.Linq.Expressions;
 using TodoAgility.Business.Framework;
 using TodoAgility.Business.QueryHandlers.Filters;
+using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Persistence.Framework;
+using TodoAgility.Persistence.ReadModel.Projections;
 using TodoAgility.Persistence.ReadModel.Repositories;
 
 namespace TodoAgility.Business.QueryHandlers
 {
-    public sealed class GetProjectsByQueryHandler : QueryHandler<GetProjectsByFilter, GetProjectsResponse>
+    public sealed class GetClientsByQueryHandler : QueryHandler<GetClientsByFilter, GetClientsResponse>
     {
-        private readonly IDbSession<IProjectProjectionRepository> _dbSession;
+        private readonly IDbSession<IUserProjectionRepository> _dbSession;
 
-        public GetProjectsByQueryHandler(IDbSession<IProjectProjectionRepository> session)
+        public GetClientsByQueryHandler(IDbSession<IUserProjectionRepository> session)
         {
             _dbSession = session;
         }
 
-        protected override GetProjectsResponse ExecuteQuery(GetProjectsByFilter filter)
+        protected override GetClientsResponse ExecuteQuery(GetClientsByFilter filter)
         {
             //we need a validation like a commandhandler here
-            
-            var projects = _dbSession.Repository
-                .Find(p=> p.Name.Contains(filter.Name));
+
+            var name = Name.From(filter.Name);
+            var cnpj = SocialSecurityId.From(filter.Cnpj);
+
+            var clients = _dbSession.Repository
+                .Find(up=> up.Name.Contains(filter.Name) || up.Cnpj.Equals(cnpj.Value));
            
-            return GetProjectsResponse.From(true, projects);
+            return GetClientsResponse.From(true, clients);
         }
     }
 }
