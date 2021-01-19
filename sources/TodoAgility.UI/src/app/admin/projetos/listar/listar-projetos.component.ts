@@ -7,7 +7,11 @@ import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { NbDialogService } from '@nebular/theme';
 
+import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
+
 import { NewProjectFormComponent } from '../new/new-project-modal.component';
+
+import {Project} from '../../models/entities/Project';
 
 @Component({
   selector: 'ngx-listar-projetos',
@@ -71,9 +75,11 @@ export class ListarProjetosComponent implements OnDestroy {
   source: LocalDataSource = new LocalDataSource();
   entities: any = [];
 
-  constructor(private service: SmartTableData, private _projetosService: ProjectService, private _router: Router, private dialogService: NbDialogService) {
-    const data = this.service.getProjects();
-    //this.source.load(data);
+  statusForm: FormGroup;
+  form: FormGroup;
+
+  constructor(private _formBuilder: FormBuilder, private service: SmartTableData, private _projetosService: ProjectService, private _router: Router, private dialogService: NbDialogService) {
+   
     this._unsubscribeAll = new Subject();
 
     this._projetosService.onProjectsChanged
@@ -84,7 +90,7 @@ export class ListarProjetosComponent implements OnDestroy {
         this.source.load(this.entities);
       }
     });
-
+    
     this._projetosService.loadAll("");
   }
 
@@ -96,10 +102,22 @@ export class ListarProjetosComponent implements OnDestroy {
     console.log(event);
   }
 
+  buildForm(project){
+    this.form = this._formBuilder.group({
+      name: [project.name, Validators.required],
+      code: [project.code, Validators.required],
+      startDate: [project.startDate, Validators.required],
+      budget: [project.budget, Validators.required],
+      clientId: [project.clientId, Validators.required],
+    });
+  }
+
   new(){
+    this.buildForm(new Project({}));
     this.dialogService.open(NewProjectFormComponent, {
       context: {
         title: 'New Project',
+        form: this.form
       },
     })
     .onClose.subscribe(project => console.log(project));

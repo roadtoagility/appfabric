@@ -57,8 +57,8 @@ export class ProjectService implements Resolve<any>
         return new Promise((resolve, reject) => {
             this._httpClient
             .get(`${this.baseAdddress}/projects/list?nome=${filter}`)
-            .subscribe((response: any) => {
-                this.projects = response;
+            .subscribe((response: ResponseData) => {
+                this.projects = response.items;
                 this.onProjectsChanged.next(this.projects);
                 resolve(response);
             });

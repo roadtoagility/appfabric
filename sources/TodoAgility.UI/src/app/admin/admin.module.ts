@@ -36,7 +36,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { FormsModule as ngFormsModule } from '@angular/forms';
+//import { FormsModule as ngFormsModule } from '@angular/forms';
 
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { FsIconComponent } from './atividades/listar/listar-atividades.component';
@@ -103,7 +103,7 @@ import {
     NbSelectModule,
     NbIconModule,
     NbEvaIconsModule,
-    ngFormsModule,
+    //ngFormsModule,
     DashboardModule,
     NbInputModule,
     Ng2SmartTableModule,
@@ -135,7 +135,7 @@ import {
     NewClientFormComponent,
     NewReleaseFormComponent
   ],
-  providers:[ProjectModalService, ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService, ReleaseModalService, ActivityModalService]
+  providers:[FormsModule, ProjectModalService, ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService, ReleaseModalService, ActivityModalService]
 })
 export class AdminModule {
 }
