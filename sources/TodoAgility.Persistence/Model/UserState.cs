@@ -33,9 +33,9 @@ namespace TodoAgility.Persistence.Model
             CommercialEmail = commercialEmail;
         }
 
-        public long Id { get; }
-        public string Name { get; }
-        public string Cnpj { get; }
+        public long Id { get; set;}
+        public string Name { get; set;}
+        public string Cnpj { get; set;}
         public string CommercialEmail { get; set; }
     }
 }
