@@ -18,6 +18,7 @@
 
 using TodoAgility.Domain.AggregationProject;
 using TodoAgility.Domain.AggregationProject.Events;
+using TodoAgility.Domain.AggregationUser.Events;
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.Aggregates;
 using TodoAgility.Domain.Framework.BusinessObjects;
@@ -32,6 +33,7 @@ namespace TodoAgility.Domain.AggregationUser
             if (user.ValidationResults.IsValid)
             {
                 Apply(user);
+                Raise(UserAddedEvent.For(user));
             }
 
             ValidationResults = user.ValidationResults;
