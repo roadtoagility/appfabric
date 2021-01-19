@@ -4,8 +4,8 @@ export class Client{
     email: string;
 
     constructor(client?){
-        this.name = client.name || '';
-        this.cnpj = client.cnpj || '';
-        this.email = client.email || '';
+        this.name = client.name || null;
+        this.cnpj = client.cnpj || null;
+        this.email = client.email || null;
     }
 }

@@ -81,7 +81,8 @@ import {
   NbSelectModule,
   NbUserModule,
   NbTreeGridModule,
-  NbListModule
+  NbListModule,
+  NbSpinnerModule
 } from '@nebular/theme';
 
 
@@ -102,6 +103,7 @@ import {
     NbDatepickerModule,
     NbSelectModule,
     NbIconModule,
+    NbSpinnerModule,
     NbEvaIconsModule,
     //ngFormsModule,
     DashboardModule,

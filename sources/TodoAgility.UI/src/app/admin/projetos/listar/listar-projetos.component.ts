@@ -44,27 +44,27 @@ export class ListarProjetosComponent implements OnDestroy {
         editable: false,
         filter: false
       },
-      cliente: {
-        title: 'Cliente',
+      clientId: {
+        title: 'Client',
         type: 'string',
         filter: false
       },
-      nome: {
-        title: 'Nome do projeto',
+      name: {
+        title: 'Project Name',
         type: 'string',
         filter: false,
       },
-      sigla: {
-        title: 'Sigla',
+      code: {
+        title: 'Code',
         type: 'string',
         filter: false
       },
-      gerente: {
-        title: 'Gerente Responsável',
+      owner: {
+        title: 'Manager',
         type: 'string',
         filter: false
       },
-      statusOrdemServico: {
+      status: {
         title: 'Status OS',
         type: 'string',
         filter: false

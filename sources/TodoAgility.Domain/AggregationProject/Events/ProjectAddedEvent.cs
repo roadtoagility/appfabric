@@ -28,7 +28,7 @@ namespace TodoAgility.Domain.AggregationProject.Events
         private ProjectAddedEvent(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
             : base(DateTime.Now)
         {
-            Id = Id;
+            Id = id;
             Code = code;
             Name = name;
             Budget = budget;

@@ -14,27 +14,44 @@ import { FormGroup, NgForm } from '@angular/forms';
 export class NewClientFormComponent implements OnDestroy {
   
   private _unsubscribeAll: Subject<any>;
+  loading = false;
 
   @Input() title: string;
   @Input() form: any;
   statusForm: FormGroup;
 
   constructor(private _clientService: ClientService, protected ref: NbDialogRef<NewClientFormComponent>) {
-      this._unsubscribeAll = new Subject();
-    
+    this._unsubscribeAll = new Subject();
+
+    this._clientService.onClientChanged
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe(response => {
+      if(Object.keys(response).length > 0){
+        
+        this.form.markAsUntouched();
+        this.form.markAsPristine();
+      }
+    });
   }
 
-  onSubmit(formSubmitted: NgForm, project) {
+  toggleLoadingAnimation() {
+    this.loading = true;
+    setTimeout(() => this.loading = false, 1000);
+  }
+
+  onSubmit(formSubmitted: NgForm, client) {
+    this.toggleLoadingAnimation();
 
     if (this.form.status === 'VALID' && this.form.touched === true) {
-      this._clientService.save(project);
+      this._clientService.save(client);
 
-      formSubmitted.resetForm();
+      //formSubmitted.resetForm();
       this.form.markAsUntouched();
       this.form.markAsPristine();
+      this.ref.close(client);
     }
-    
-    this.ref.close("");
+
+    //this.toggleLoadingAnimation();
   }
 
   dismiss() {

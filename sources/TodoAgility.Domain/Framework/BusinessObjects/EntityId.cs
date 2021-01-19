@@ -25,14 +25,11 @@ namespace TodoAgility.Domain.Framework.BusinessObjects
 {
     public sealed class EntityId : ValidationStatus
     {
-        private readonly long _id;
-
         public long Value { get; }
         
         private EntityId(long id)
         {
-            _id = id;
-            Value = _id;
+            Value = id;
         }
 
         public static EntityId From(long id)
@@ -51,14 +48,14 @@ namespace TodoAgility.Domain.Framework.BusinessObjects
         }
         public override string ToString()
         {
-            return $"{_id}";
+            return $"{Value}";
         }
 
         #region IEquatable
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return _id;
+            yield return Value;
         }
 
         #endregion
@@ -77,7 +74,7 @@ namespace TodoAgility.Domain.Framework.BusinessObjects
                 return 1;
             }
 
-            return _id.CompareTo(other._id);
+            return Value.CompareTo(other.Value);
         }
 
         #endregion

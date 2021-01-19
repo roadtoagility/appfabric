@@ -18,6 +18,7 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
   @Input() title: string;
   @Input() form: any;
   statusForm: FormGroup;
+  loading = false;
 
   constructor(private _projectService: ProjectService, protected ref: NbDialogRef<NewProjectFormComponent>) {
     this._unsubscribeAll = new Subject();
@@ -27,7 +28,13 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
     
   }
 
+  toggleLoadingAnimation() {
+    this.loading = true;
+    setTimeout(() => this.loading = false, 1000);
+  }
+
   onSubmit(formSubmitted: NgForm, project) {
+    this.toggleLoadingAnimation();
     if (this.form.status === 'VALID' && this.form.touched === true) {
       
       project.clientId = +project.clientId;
@@ -40,9 +47,8 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
 
       //this.titleButtonAction = this.ADICIONAR_LABEL;
       //this.openSnackBar('Dados de taxas do condomínio atualizados com sucesso', 'Fechar');
+      this.ref.close("");
     }
-    
-    this.ref.close("");
   }
 
   

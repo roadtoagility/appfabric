@@ -1,7 +1,7 @@
 <form>
   <nb-card>
     <nb-card-header>{{ title }}</nb-card-header>
-    <nb-card-body>
+    <nb-card-body [nbSpinner]="loading">
         <div style="width: 600px;">
             
           <form [formGroup]="form" #formSubmitted="ngForm">
