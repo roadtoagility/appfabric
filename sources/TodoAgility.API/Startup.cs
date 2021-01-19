@@ -63,6 +63,7 @@ namespace TodoAgility.API
             services.AddScoped<IDbSession<IUserProjectionRepository>, ProjectionDbSession<IUserProjectionRepository>>();
             
             services.AddScoped<AddProjectCommandHandler>();
+            services.AddScoped<UpdateProjectCommandHandler>();
             services.AddScoped<AddUserCommandHandler>();
             services.AddScoped<GetProjectsByQueryHandler>();
             services.AddScoped<UpdateProjectProjectionHandler>();
