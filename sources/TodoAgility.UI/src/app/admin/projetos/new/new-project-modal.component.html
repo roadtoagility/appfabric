@@ -24,8 +24,12 @@
             <div class="form-group row">
               <label for="startDate" class="label col-sm-3 col-form-label">Start Date</label>
               <div class="col-sm-9">
-                <input type="text" nbInput formControlName="startDate" fullWidth id="startDate" [class.danger]="form.get('startDate').invalid && 
+                <!-- <input type="text" nbInput formControlName="startDate" fullWidth id="startDate" [class.danger]="form.get('startDate').invalid && 
+                (form.get('startDate').dirty || form.get('startDate').touched)"> -->
+
+                <input nbInput [nbDatepicker]="formpicker" formControlName="startDate" id="startDate" [class.danger]="form.get('startDate').invalid && 
                 (form.get('startDate').dirty || form.get('startDate').touched)">
+                <nb-datepicker #formpicker></nb-datepicker>
               </div>
             </div>
             <div class="form-group row">
