@@ -38,17 +38,17 @@ namespace TodoAgility.Persistence.Model
             OrderNumber = orderNumber;
         }
 
-        public long Id { get; }
-        public long ClientId { get; }
-        public string Name { get; }
-        public string Code { get; }
-        public DateTime StartDate { get; }
-        public decimal Budget { get; }
+        public long Id { get; set; }
+        public long ClientId { get; set;}
+        public string Name { get; set;}
+        public string Code { get; set;}
+        public DateTime StartDate { get; set;}
+        public decimal Budget { get; set;}
         
-        public string Owner { get; }
+        public string Owner { get; set;}
         
-        public string OrderNumber { get; }
+        public string OrderNumber { get; set;}
         
-        public int Status { get; }
+        public int Status { get; set;}
     }
 }

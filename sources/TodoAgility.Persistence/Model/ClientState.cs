@@ -31,7 +31,7 @@ namespace TodoAgility.Persistence.Model
             ClientId = clientId;
         }
 
-        public long ProjectId { get; }
-        public long ClientId { get; }
+        public long ProjectId { get; set;}
+        public long ClientId { get; set;}
     }
 }
