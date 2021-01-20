@@ -11,6 +11,7 @@ using TodoAgility.Business.Framework;
 using TodoAgility.Business.QueryHandlers;
 using TodoAgility.Business.QueryHandlers.Filters;
 using TodoAgility.Domain.AggregationProject.Events;
+using TodoAgility.Domain.AggregationUser.Events;
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Framework.ReadModel.Projections;
 using TodoAgility.Persistence.Model;
@@ -108,6 +109,10 @@ namespace TodoAgility.API
                 
                 builder.On<ProjectDetailUpdatedEvent>().Pipeline()
                     .Call<UpdateDetailsProjectProjectionHandler>(
+                        (handler, request) => handler.Handle(request));
+                
+                builder.On<UserAddedEvent>().Pipeline()
+                    .Call<UpdateUserProjectionHandler>(
                         (handler, request) => handler.Handle(request));
             });
             
