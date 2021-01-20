@@ -8,19 +8,19 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
-    title: 'Clientes',
+    title: 'Clients',
     icon: 'people-outline',
     link: '/admin/clientes',
     home: true,
   },
   {
-    title: 'Projetos',
+    title: 'Projects',
     icon: 'clipboard-outline',
     link: '/admin/projetos',
     home: true,
   },
   {
-    title: 'Atividades',
+    title: 'Activities',
     icon: 'file-text-outline',
     link: '/admin/atividades',
     home: true,
@@ -32,7 +32,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
-    title: 'Financeiro',
+    title: 'Billing',
     icon: 'trending-up-outline',
     link: '/admin/billings',
     home: true,
