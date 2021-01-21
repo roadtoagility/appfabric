@@ -34,7 +34,7 @@ export class ListarProjetosComponent implements OnDestroy {
     actions: {
       edit: true,
       add: false,
-      columnTitle: 'Ações'
+      columnTitle: 'Actions'
     },
     mode:'external',
     columns: {

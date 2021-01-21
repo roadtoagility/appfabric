@@ -31,7 +31,7 @@ namespace TodoAgility.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get(long id)
         {
             var result = _mediator.Send<GetClientResponse>(GetClientByIdFilter.From(id));
             return Ok(result);

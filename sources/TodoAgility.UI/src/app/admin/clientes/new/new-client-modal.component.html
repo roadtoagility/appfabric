@@ -31,8 +31,12 @@
             </div>
           </form>
 
-          <div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
+          <!-- <div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
             Client created! To complete the form <a href="http://www.uol.com.br" class="alert-link">click here</a>
+          </div>-->
+
+          <div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
+            Client created!
           </div>
             
         </div>
@@ -42,7 +46,7 @@
       <div class="row">
         <div class="col-sm-12">
           <button type="button" nbButton matRipple status="primary" outline style="margin-right: 10px" (click)="dismiss()">Close</button>
-          <button type="button" nbButton status="primary" (click)="onSubmit(formSubmitted, form.value)">Save</button>
+          <button type="button" nbButton status="primary" (click)="onSubmit(formSubmitted, form.value)" [disabled]="form.invalid">Save</button>
         </div>
       </div>
 

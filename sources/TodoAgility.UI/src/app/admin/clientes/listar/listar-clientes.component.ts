@@ -10,7 +10,7 @@ import { NbDialogService } from '@nebular/theme';
 import { NewClientFormComponent } from '../new/new-client-modal.component';
 import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
 
-import {Client} from '../../models/entities/client';
+import {ClientData} from '../../models/entities/ClientData';
 
 @Component({
   selector: 'ngx-listar-clientes',
@@ -33,7 +33,7 @@ export class ListarClientesComponent implements OnDestroy {
     actions: {
       edit: true,
       add: false,
-      columnTitle: 'Ações'
+      columnTitle: 'Actions'
     },
     mode:'external',
     columns: {
@@ -43,8 +43,8 @@ export class ListarClientesComponent implements OnDestroy {
         editable: false,
         filter: false
       },
-      razaoSocial: {
-        title: 'Razão Social',
+      name: {
+        title: 'Company Name',
         type: 'string',
         filter: false,
       },
@@ -53,8 +53,8 @@ export class ListarClientesComponent implements OnDestroy {
         type: 'string',
         filter: false
       },
-      emailComercial: {
-        title: 'E-mail Comercial',
+      commercialEmail: {
+        title: 'Commercial Email',
         type: 'string',
         filter: false
       }
@@ -102,7 +102,7 @@ export class ListarClientesComponent implements OnDestroy {
   }
 
   new(){
-    this.buildForm(new Client({}));
+    this.buildForm(new ClientData({}));
     this.dialogService.open(NewClientFormComponent, {
       context: {
         title: 'New Client',

@@ -60,10 +60,12 @@ export class ClientService implements Resolve<any>
     loadAll(filter){
         return new Promise((resolve, reject) => {
             this._httpClient
-            .get(`${this.baseAdddress}/clients/list?razaoSocial=${filter}`)
-            .subscribe((response: any) => {
-                this.clients = response;
-                this.onClientsChanged.next(this.clients);
+            .get(`${this.baseAdddress}/clients/list?name=${filter}`)
+            .subscribe((response: ResponseData) => {
+                if(response.isSucceed){
+                    this.clients = response.items;
+                    this.onClientsChanged.next(this.clients);
+                }
                 resolve(response);
             });
         });
