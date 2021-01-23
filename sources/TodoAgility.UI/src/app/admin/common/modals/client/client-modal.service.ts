@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { ResponseData } from 'app/admin/models/ResponseData';
 
 @Injectable({
     providedIn: 'root',
@@ -37,10 +38,13 @@ export class ClientModalService implements Resolve<any>
     search(filter){
         return new Promise((resolve, reject) => {
             this._httpClient
-            .get(`${this.baseAdddress}/clients/list?razaoSocial=${filter}`)
-            .subscribe((response: any) => {
-                this.clients = response;
-                this.onClientsChanged.next(this.clients);
+            .get(`${this.baseAdddress}/clients/list?name=${filter}`)
+            .subscribe((response: ResponseData) => {
+                if(response.isSucceed){
+                    this.clients = response.items;
+                    this.onClientsChanged.next(this.clients);
+                }
+                
                 resolve(response);
             });
         });

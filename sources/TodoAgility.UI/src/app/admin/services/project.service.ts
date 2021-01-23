@@ -49,9 +49,11 @@ export class ProjectService implements Resolve<any>
         return new Promise((resolve, reject) => {
             this._httpClient
             .get(`${this.baseAdddress}/projects/${projectId}`)
-            .subscribe((response: any) => {
-                this.project = response;
-                this.onProjectChanged.next(this.project);
+            .subscribe((response: ResponseData) => {
+                if(response.isSucceed && response.items !== null && response.items.length > 0){
+                    this.project = response.items[0];
+                    this.onProjectChanged.next(this.project);
+                }
                 resolve(response);
             });
         });
@@ -69,23 +71,36 @@ export class ProjectService implements Resolve<any>
         });
     }
 
+    private handle(response, entity){
+        if(response.isSucceed){
+            this.project = entity;
+            this.onProjectChanged.next(this.project);
+        }else{
+            this.onProjectUpdateError.next(response.violations.map(x => ({
+                propertyName: x.propertyName,
+                errorMessage: x.errorMessage,
+                message: x.errorMessage.replace("'Value'", x.propertyName).replace('.Value', '')
+            })));
+        }
+    }
+
     save(entity){
         return new Promise((resolve, reject) => {
             this._httpClient
-            .post(`${this.baseAdddress}/projects/save`, entity)
+            .put(`${this.baseAdddress}/projects/save`, entity)
             .subscribe((response: ResponseData) => {
-                
-                if(response.isSucceed){
-                    this.project = entity;
-                    this.onProjectChanged.next(this.project);
-                }else{
-                    this.onProjectUpdateError.next(response.violations.map(x => ({
-                        propertyName: x.propertyName,
-                        errorMessage: x.errorMessage,
-                        message: x.errorMessage.replace("'Value'", x.propertyName).replace('.Value', '')
-                    })));
-                }
+                this.handle(response, entity);
+                resolve(response);
+            });
+        });
+    }
 
+    update(entity){
+        return new Promise((resolve, reject) => {
+            this._httpClient
+            .post(`${this.baseAdddress}/projects/save/${entity.id}`, entity)
+            .subscribe((response: ResponseData) => {
+                this.handle(response, entity);
                 resolve(response);
             });
         });

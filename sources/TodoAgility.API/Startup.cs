@@ -72,6 +72,7 @@ namespace TodoAgility.API
             services.AddScoped<UpdateUserProjectionHandler>();
             services.AddScoped<GetClientsByQueryHandler>();
             services.AddScoped<GetClientByIdQueryHandler>();
+            services.AddScoped<GetProjectByIdQueryHandler>();
             
             services.AddFluentMediator(builder =>
             {

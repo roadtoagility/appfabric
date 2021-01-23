@@ -25,7 +25,6 @@ export class EditarClientesComponent implements OnInit, OnDestroy {
   formDetails: FormGroup;
   formDetailsSubmitted: any;
 
-  statusForm: FormGroup;
   statesData: States;
   states: any[];
   loading = false;
@@ -42,11 +41,6 @@ export class EditarClientesComponent implements OnInit, OnDestroy {
 
     this.statesData.getEstados().forEach(state => {
       this.states.push({value: state.shortcut, viewValue: state.name});
-    });
-    
-    
-    this.statusForm = this._formBuilder.group({
-      newStatus: ['']
     });
 
     this.clientService.onClientChanged
@@ -106,9 +100,8 @@ export class EditarClientesComponent implements OnInit, OnDestroy {
     this.actRoute.paramMap.subscribe(params => {
       this.id = params.get('id');
       this.clientService.load(this.id);
+      this.buildForm(new ClientData({id: this.id}));
     });
-
-    this.buildForm(new ClientData({id: this.id}));
   }
 
   toggleLoadingAnimation() {

@@ -1,4 +1,4 @@
-<div *ngIf="errors.length > 0" class="alert alert-danger" role="alert">
+<div *ngIf="errors !== undefined && errors.length > 0" class="alert alert-danger" role="alert">
     <label>Errors</label>
     <ul>
         <li *ngFor="let error of errors">{{error.message}}</li>

@@ -1,13 +1,21 @@
+<display-error [(errors)]="errors"></display-error>
+
+<div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
+  Project Updated!
+</div>
+
 <div class="row">
     <div class="col-md-12">
       <nb-card class="inline-form-card">
-        <nb-card-header>Dados básicos</nb-card-header>
-        <nb-card-body>
-          <form class="form-inline">
-            <input type="text" nbInput fullWidth placeholder="Nome do Projeto">
-            <input type="text" nbInput fullWidth placeholder="Sigla">
-            <input type="text" nbInput fullWidth placeholder="Data de Início">
-            <nb-checkbox>Adicionar aos favoritos</nb-checkbox>
+        <nb-card-header>Basic Info</nb-card-header>
+        <nb-card-body [nbSpinner]="loading">
+          <form class="form-inline" [formGroup]="form">
+            <input type="text" nbInput formControlName="name" [class.danger]="form.get('name').invalid" fullWidth placeholder="Project's name">
+            <input type="text" nbInput formControlName="code" [class.danger]="form.get('code').invalid" fullWidth placeholder="Code">
+            <input type="text"  [nbDatepicker]="formpicker" nbInput formControlName="startDate" [class.danger]="form.get('startDate').invalid" fullWidth placeholder="Start Date">
+            <nb-datepicker #formpicker></nb-datepicker>
+
+            <nb-checkbox formControlName="isFavorited" [class.danger]="form.get('isFavorited').invalid">Add to Favorites</nb-checkbox>
           </form>
         </nb-card-body>
       </nb-card>
@@ -17,42 +25,45 @@
   <div class="row">
     <div class="col-md-12">
         <nb-card>
-            <nb-card-header>Configurações</nb-card-header>
-            <nb-card-body>
-              <form>
+            <nb-card-header>Details</nb-card-header>
+            <nb-card-body [nbSpinner]="loading">
+              <form [formGroup]="formDetails">
                 <div class="row">
                     <div class="col-sm-2">
                       <div class="form-group">
                         <label for="inputFirstName" class="label">Budget</label>
-                        <input type="text" nbInput fullWidth id="inputFirstName" placeholder="R$ 1.000.000,00">
+                        <input type="text" nbInput fullWidth id="budget" placeholder="R$ 1.000.000,00" formControlName="budget" [class.danger]="formDetails.get('budget').invalid">
                       </div>
                     </div>
                     <div class="col-sm-3">
                       <div class="form-group">
                         <label for="inputLastName" class="label">Status</label>
-                        <nb-select matRipple selected="1" fullWidth>
-                            <nb-option matRipple value="1">OS Aprovada</nb-option>
-                            <nb-option matRipple value="2">Option 2</nb-option>
-                          </nb-select>
+                        <nb-select matRipple selected="1" fullWidth formControlName="status" [class.danger]="formDetails.get('status').invalid">
+                          <nb-option matRipple value="1">Pending Approval</nb-option>
+                          <nb-option matRipple value="2">Approved</nb-option>
+                          <nb-option matRipple value="3">Pending OS</nb-option>
+                          <nb-option matRipple value="4">OS Approved</nb-option>
+                          <nb-option matRipple value="5">Finished</nb-option>
+                        </nb-select>
                       </div>
                     </div>
                     <div class="col-sm-2">
                       <div class="form-group">
-                        <label for="inputLastName" class="label">Custo/Hora</label>
-                        <input type="text" nbInput fullWidth id="inputFirstName" placeholder="R$ 1.000.000,00">
+                        <label for="inputLastName" class="label">Hour cost</label>
+                        <input type="text" nbInput fullWidth id="hourCost" placeholder="R$ 1.000.000,00" formControlName="hourCost" [class.danger]="formDetails.get('hourCost').invalid">
                       </div>
                     </div>
                     <div class="col-sm-2">
                       <div class="form-group">
-                        <label for="inputLastName" class="label">Margem/Lucro</label>
-                        <input type="text" nbInput fullWidth id="inputFirstName" placeholder="R$ 1.000.000,00">
+                        <label for="inputLastName" class="label">Profit margin</label>
+                        <input type="text" nbInput fullWidth id="profitMargin" placeholder="R$ 1.000.000,00" formControlName="profitMargin" [class.danger]="formDetails.get('profitMargin').invalid">
                       </div>
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
-                          <label for="inputLastName" class="label">Cliente</label>
+                          <label for="inputLastName" class="label">Client</label>
                           <div class="input-group mb-3">
-                            <input type="text" readonly class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" [(value)]="selectedClient.razaoSocial">
+                            <input type="text" readonly class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" [(value)]="selectedClient.name">
                             <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="selectClient()">
                                 <nb-icon class="search-icon" icon="search-outline" pack="eva"></nb-icon>
                             </button>
@@ -63,22 +74,22 @@
                 <div class="row">
                     <div class="col-sm-6">
                       <div class="form-group">
-                        <label for="inputEmail" class="label">Email responsável</label>
-                        <input type="email" nbInput fullWidth id="inputEmail" placeholder="comercial@empresa.com.br">
+                        <label for="inputEmail" class="label">Manager</label>
+                        <input type="email" nbInput fullWidth id="manager" placeholder="Manager's name" formControlName="manager" [class.danger]="formDetails.get('manager').invalid">
                       </div>
                     </div>
                     <div class="col-sm-6">
                       <div class="form-group">
-                        <label for="inputWebsite" class="label">N° Ordem de Serviço</label>
-                        <input type="text" nbInput fullWidth id="inputWebsite" placeholder="OS16122020-01">
+                        <label for="inputWebsite" class="label">Order Service number</label>
+                        <input type="text" nbInput fullWidth id="orderNumber" placeholder="OS16122020-01" formControlName="orderNumber" [class.danger]="formDetails.get('orderNumber').invalid">
                       </div>
                     </div>
                 </div>
                 
                 <div class="row">
                   <div class="col-sm-12">
-                    <button type="button" nbButton matRipple status="primary" outline style="margin: 0px 10px" (click)="backClicked()">Cancelar</button>
-                    <button type="submit" nbButton status="primary">Salvar</button>
+                    <button type="button" nbButton matRipple status="primary" outline style="margin-right: 10px" (click)="backClicked()">Cancel</button>
+                    <button type="submit" nbButton status="primary" (click)="onSubmit(formSubmitted, form.value, formDetails.value)" [disabled]="form.invalid">Save</button>
                   </div>
                 </div>
 

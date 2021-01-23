@@ -48,7 +48,7 @@ namespace TodoAgility.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("save")]
+        [HttpPut("save")]
         public IActionResult Save([FromBody] AddProjectCommand entity)
         {
             var result = _mediator.Send<ExecutionResult>(entity);
@@ -56,8 +56,8 @@ namespace TodoAgility.API.Controllers
             return Ok(result);
         }
         
-        [HttpPut("save/{id}")]
-        public IActionResult Update(uint id, [FromBody] UpdateProjectCommand entity)
+        [HttpPost("save/{id}")]
+        public IActionResult Update(long id, UpdateProjectCommand entity)
         {
             var result = _mediator.Send<ExecutionResult>(entity);
 
