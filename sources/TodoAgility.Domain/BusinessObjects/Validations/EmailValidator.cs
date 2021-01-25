@@ -22,7 +22,6 @@ namespace TodoAgility.Domain.BusinessObjects.Validations
 {
     public sealed class EmailValidator: AbstractValidator<Email>
     {
-        private static readonly string EmailFormat = @"^(([a-zA-Z0-9]+([-+.][a-zA-Z0-9]+)*@[a-zA-Z0-9]+([-.][a-zA-Z0-9]+)*\.[a-zA-Z0-9]+([-.][a-zA-Z0-9]+)))+$";
         public EmailValidator()
         {
             RuleFor(item => item.Value).NotNull()

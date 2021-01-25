@@ -16,18 +16,18 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
+using System.Collections.Generic;
+using FluentValidation.Results;
 
-namespace TodoAgility.Business.CommandHandlers.Commands
+namespace TodoAgility.Business.Framework
 {
-    public class AddProjectCommand
+    public class CommandResult<TResult>: ExecutionResult
     {
-        public string Name { get; set; }
-        public string Code { get; set; }
-        public DateTime StartDate { get; set; }
-        public decimal Budget { get; set; }
-        public uint ClientId { get; set; }
-        
-        public uint Id { get; set; }
+        public CommandResult(bool isSucceed, TResult id, IReadOnlyList<ValidationFailure> violations)
+            :base(isSucceed, violations)
+        {
+            Id = id;
+        }
+        public TResult Id { get;}
     }
 }

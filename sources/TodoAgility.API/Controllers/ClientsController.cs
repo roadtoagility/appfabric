@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿
 using FluentMediator;
 using Microsoft.AspNetCore.Mvc;
-using TodoAgility.API.Mock;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
 using TodoAgility.Business.QueryHandlers;
@@ -31,7 +27,7 @@ namespace TodoAgility.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get(long id)
         {
             var result = _mediator.Send<GetClientResponse>(GetClientByIdFilter.From(id));
             return Ok(result);

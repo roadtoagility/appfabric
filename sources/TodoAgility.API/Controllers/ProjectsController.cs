@@ -32,7 +32,7 @@ namespace TodoAgility.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get(long id)
         {
             var result = _mediator.Send<GetProjectResponse>(GetProjectByIdFilter.From(id));
             return Ok(result);
@@ -47,7 +47,7 @@ namespace TodoAgility.API.Controllers
         }
         
         [HttpPut("save/{id}")]
-        public IActionResult Update(uint id, [FromBody] UpdateProjectCommand entity)
+        public IActionResult Update(long id, [FromBody] UpdateProjectCommand entity)
         {
             var result = _mediator.Send<ExecutionResult>(entity);
 

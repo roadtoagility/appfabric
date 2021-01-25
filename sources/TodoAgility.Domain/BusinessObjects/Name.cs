@@ -42,6 +42,11 @@ namespace TodoAgility.Domain.BusinessObjects
             return userName;
         }
 
+        public static Name Empty()
+        {
+            return new Name(String.Empty);
+        }
+        
         public override string ToString()
         {
             return $"{Value}";
@@ -54,5 +59,6 @@ namespace TodoAgility.Domain.BusinessObjects
             yield return Value;
         }
         #endregion
+
     }
 }

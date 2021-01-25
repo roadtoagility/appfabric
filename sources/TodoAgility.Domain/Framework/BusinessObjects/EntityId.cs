@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using TodoAgility.Agile.Domain.Framework.BusinessObjects;
+using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.Validation;
 
 namespace TodoAgility.Domain.Framework.BusinessObjects
@@ -41,7 +42,12 @@ namespace TodoAgility.Domain.Framework.BusinessObjects
             
             return entityId;
         }
-
+        
+        public static EntityId Empty()
+        {
+            return new EntityId(0);
+        }
+        
         public static EntityId GetNext()
         {
             return From(DateTime.Now.Ticks);

@@ -40,8 +40,11 @@ namespace TodoAgility.Business.CommandHandlers
         
         protected override ExecutionResult ExecuteCommand(AddProjectCommand command)
         {
+            var id = EntityId.From(command.Id);
+            // _dbSession.Repository.Get(id);
+                
             var agg = ProjectAggregationRoot.CreateFrom(
-                EntityId.GetNext(), 
+                id, 
                 ProjectName.From(command.Name),
                 ProjectCode.From(command.Code), 
                 Money.From(command.Budget), 

@@ -29,7 +29,7 @@ using TodoAgility.Persistence.Model.Repositories;
 
 namespace TodoAgility.Business.CommandHandlers
 {
-    public sealed class AddUserCommandHandler : CommandHandler<AddUserCommand, ExecutionResult>
+    public sealed class AddUserCommandHandler : CommandHandler<AddUserCommand, CommandResult<long>>
     {
         private readonly IDbSession<IUserRepository> _dbSession;
         
@@ -39,25 +39,29 @@ namespace TodoAgility.Business.CommandHandlers
             _dbSession = dbSession;
         }
         
-        protected override ExecutionResult ExecuteCommand(AddUserCommand command)
+        protected override CommandResult<long> ExecuteCommand(AddUserCommand command)
         {
             var agg = UserAggregationRoot.CreateFrom(
-                EntityId.GetNext(), 
                 Name.From(command.Name),
                 SocialSecurityId.From(command.Cnpj),
                 Email.From(command.Email));
             
             var isSucceed = false;
+            var okId = -1L;
       
             if (agg.ValidationResults.IsValid)
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 _dbSession.SaveChanges();
-                agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));
+                
+                agg.GetEvents().ToImmutableList()
+                    .ForEach( ev => Publisher.Publish(ev));
+                
                 isSucceed = true;
+                okId = agg.GetChange().Id.Value;
             }
             
-            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
+            return new CommandResult<long>(isSucceed, okId,agg.ValidationResults.Errors.ToImmutableList());
         }
     }
 }

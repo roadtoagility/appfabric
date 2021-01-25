@@ -17,6 +17,7 @@
 //
 
 
+using System.Diagnostics;
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.Model;
@@ -56,9 +57,11 @@ namespace TodoAgility.Persistence.ExtensionMethods
 
         public static User ToUser(this UserState state)
             => User.From(
-                EntityId.From(state.Id),
-                Name.From(state.Name),
-                SocialSecurityId.From(state.Cnpj),
-                Email.From(state.CommercialEmail));
+                    EntityId.From(state.Id),
+                    Name.From(state.Name),
+                    SocialSecurityId.From(state.Cnpj),
+                    Email.From(state.CommercialEmail));
+
+
     }
 }
