@@ -14,8 +14,8 @@ import {ClientData} from '../../models/entities/ClientData';
 
 @Component({
   selector: 'ngx-listar-clientes',
-  templateUrl: './listar-clientes.component.html',
-  styleUrls: ['./listar-clientes.component.scss']
+  templateUrl: './clients-list.component.html',
+  styleUrls: ['./clients-list.component.scss']
 })
 export class ListarClientesComponent implements OnDestroy {
 

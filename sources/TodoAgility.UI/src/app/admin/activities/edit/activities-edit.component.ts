@@ -7,8 +7,8 @@ import {Location} from '@angular/common';
 
 @Component({
   selector: 'ngx-editar-atividades',
-  templateUrl: './editar-atividades.component.html',
-  styleUrls: ['./editar-atividades.component.scss']
+  templateUrl: './activities-edit.component.html',
+  styleUrls: ['./activities-edit.component.scss']
 })
 export class EditarAtividadesComponent implements OnInit, OnDestroy {
 

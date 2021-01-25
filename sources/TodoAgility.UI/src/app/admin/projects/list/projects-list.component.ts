@@ -15,8 +15,8 @@ import {Project} from '../../models/entities/Project';
 
 @Component({
   selector: 'ngx-listar-projetos',
-  templateUrl: './listar-projetos.component.html',
-  styleUrls: ['./listar-projetos.component.scss']
+  templateUrl: './projects-list.component.html',
+  styleUrls: ['./projects-list.component.scss']
 })
 export class ListarProjetosComponent implements OnDestroy {
 

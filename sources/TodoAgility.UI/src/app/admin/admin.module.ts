@@ -5,27 +5,18 @@ import { ThemeModule } from '../@theme/theme.module';
 import { AdminComponent } from './admin.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { AdminRoutingModule } from './admin-routing.module';
-import { ListarProjetosComponent } from './projetos/listar/listar-projetos.component';
-import { EditarProjetosComponent } from './projetos/editar/editar-projetos.component';
+import { ProjectsModule } from './projects/projects.module';
+import { ClientsModule } from './clients/clients.module';
+import { ActivitiesModule } from './activities/activities.module';
 
-import { NewProjectFormComponent } from './projetos/new/new-project-modal.component';
-import { NewActivityFormComponent } from './atividades/new/new-activity-modal.component';
-import { NewBillingFormComponent } from './billings/new/new-billing-modal.component';
-import { NewClientFormComponent } from './clientes/new/new-client-modal.component';
-import { NewReleaseFormComponent } from './releases/new/new-release-modal.component';
-
-import { ListarClientesComponent } from './clientes/listar/listar-clientes.component';
-import { EditarClientesComponent } from './clientes/editar/editar-clientes.component';
-import { ListarAtividadesComponent } from './atividades/listar/listar-atividades.component';
-import { EditarAtividadesComponent } from './atividades/editar/editar-atividades.component';
 import { ClientSearchFormComponent} from './common/modals/client/client-modal.component';
 import { ProjectSearchFormComponent} from './common/modals/project/project-modal.component';
 import { ReleaseSearchFormComponent} from './common/modals/release/release-modal.component';
 import { ActivitySearchFormComponent} from './common/modals/activity/activity-modal.component';
-import { ReleasesListComponent } from './releases/list/releases-list.component';
-import { ReleasesEditComponent } from './releases/edit/releases-edit.component';
-import { BillingsListComponent } from './billings/list/billings-list.component';
-import { BillingsEditComponent } from './billings/edit/billings-edit.component';
+
+import { ReleasesModule } from './releases/releases.module';
+import { BillingsModule } from './billings/billings.module';
+
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -36,10 +27,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-//import { FormsModule as ngFormsModule } from '@angular/forms';
 
 import { Ng2SmartTableModule } from 'ng2-smart-table';
-import { FsIconComponent } from './atividades/listar/listar-atividades.component';
+import { FsIconComponent } from './activities/list/activities-list.component';
 
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
@@ -53,8 +43,6 @@ import { ProjectModalService } from './common/modals/project/project-modal.servi
 import { ActivityModalService } from './common/modals/activity/activity-modal.service';
 import {ReleaseService} from './services/release.service';
 import {BillingService} from './services/billing.service';
-
-import {DisplayErrorComponent} from './common/components/display-error/display-error.component';
 
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -107,38 +95,25 @@ import {
     NbIconModule,
     NbSpinnerModule,
     NbEvaIconsModule,
-    //ngFormsModule,
     DashboardModule,
     NbInputModule,
     Ng2SmartTableModule,
     NbListModule,
     NbAccordionModule,
-    //NbDialogRef,
-    ...materialModules
+    ...materialModules,
+    ActivitiesModule,
+    BillingsModule,
+    ClientsModule,
+    ProjectsModule,
+    ReleasesModule
   ],
   declarations: [
     AdminComponent,
-    ListarProjetosComponent,
-    EditarProjetosComponent,
-    ListarClientesComponent,
-    EditarClientesComponent,
-    ListarAtividadesComponent,
-    EditarAtividadesComponent,
     FsIconComponent,
     ClientSearchFormComponent,
     ReleaseSearchFormComponent,
-    ReleasesListComponent,
-    BillingsListComponent,
-    ReleasesEditComponent,
-    BillingsEditComponent,
     ActivitySearchFormComponent,
-    ProjectSearchFormComponent,
-    NewProjectFormComponent,
-    NewActivityFormComponent,
-    NewBillingFormComponent,
-    NewClientFormComponent,
-    NewReleaseFormComponent,
-    DisplayErrorComponent
+    ProjectSearchFormComponent
   ],
   providers:[FormsModule, ProjectModalService, ClientService, ProjectService, DashboardService, ActivityService, ClientModalService, ReleaseService, BillingService, ReleaseModalService, ActivityModalService]
 })

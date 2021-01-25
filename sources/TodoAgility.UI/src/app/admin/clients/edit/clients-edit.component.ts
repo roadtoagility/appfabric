@@ -10,8 +10,8 @@ import { ClientData } from 'app/admin/models/entities/ClientData';
 
 @Component({
   selector: 'ngx-editar-clientes',
-  templateUrl: './editar-clientes.component.html',
-  styleUrls: ['./editar-clientes.component.scss']
+  templateUrl: './clients-edit.component.html',
+  styleUrls: ['./clients-edit.component.scss']
 })
 export class EditarClientesComponent implements OnInit, OnDestroy {
 

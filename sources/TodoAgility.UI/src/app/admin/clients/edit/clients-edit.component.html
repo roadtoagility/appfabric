@@ -1,4 +1,9 @@
-<display-error [(errors)]="errors"></display-error>
+<div *ngIf="errors !== undefined && errors.length > 0" class="alert alert-danger" role="alert">
+  <label>Errors</label>
+  <ul>
+      <li *ngFor="let error of errors">{{error.message}}</li>
+  </ul>
+</div>
 
 <div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
   Client Updated!

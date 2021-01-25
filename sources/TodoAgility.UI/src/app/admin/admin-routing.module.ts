@@ -2,13 +2,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { AdminComponent } from './admin.component';
-import { ListarProjetosComponent } from './projetos/listar/listar-projetos.component'
-import { ListarClientesComponent } from './clientes/listar/listar-clientes.component';
+import { ListarProjetosComponent } from './projects/list/projects-list.component'
+import { ListarClientesComponent } from './clients/list/clients-list.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { ListarAtividadesComponent } from './atividades/listar/listar-atividades.component';
-import { EditarProjetosComponent } from './projetos/editar/editar-projetos.component';
-import { EditarClientesComponent } from './clientes/editar/editar-clientes.component';
-import { EditarAtividadesComponent } from './atividades/editar/editar-atividades.component';
+import { ListarAtividadesComponent } from './activities/list/activities-list.component';
+import { EditarProjetosComponent } from './projects/edit/projects-edit.component';
+import { EditarClientesComponent } from './clients/edit/clients-edit.component';
+import { EditarAtividadesComponent } from './activities/edit/activities-edit.component';
 
 import { ReleasesListComponent } from './releases/list/releases-list.component';
 import { ReleasesEditComponent } from './releases/edit/releases-edit.component';
@@ -24,7 +24,7 @@ const routes: Routes = [{
       component: DashboardComponent,
     },
     {
-      path: 'clientes',
+      path: 'clients',
       component: ListarClientesComponent,
     },
     {
@@ -32,7 +32,7 @@ const routes: Routes = [{
       component: EditarClientesComponent,
     },
     {
-      path: 'projetos',
+      path: 'projects',
       component: ListarProjetosComponent,
     },
     {
@@ -40,7 +40,7 @@ const routes: Routes = [{
       component: EditarProjetosComponent,
     },
     {
-      path: 'atividades',
+      path: 'activities',
       component: ListarAtividadesComponent,
     },
     {

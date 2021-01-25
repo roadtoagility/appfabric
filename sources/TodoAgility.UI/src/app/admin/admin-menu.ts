@@ -10,19 +10,19 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Clients',
     icon: 'people-outline',
-    link: '/admin/clientes',
+    link: '/admin/clients',
     home: true,
   },
   {
     title: 'Projects',
     icon: 'clipboard-outline',
-    link: '/admin/projetos',
+    link: '/admin/projects',
     home: true,
   },
   {
     title: 'Activities',
     icon: 'file-text-outline',
-    link: '/admin/atividades',
+    link: '/admin/activities',
     home: true,
   },
   {

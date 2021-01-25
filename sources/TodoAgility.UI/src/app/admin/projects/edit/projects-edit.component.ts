@@ -11,8 +11,8 @@ import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'ngx-editar-projetos',
-  templateUrl: './editar-projetos.component.html',
-  styleUrls: ['./editar-projetos.component.scss']
+  templateUrl: './projects-edit.component.html',
+  styleUrls: ['./projects-edit.component.scss']
 })
 export class EditarProjetosComponent implements OnInit, OnDestroy {
 

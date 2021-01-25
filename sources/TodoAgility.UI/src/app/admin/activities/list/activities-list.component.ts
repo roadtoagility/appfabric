@@ -11,8 +11,8 @@ import { NewActivityFormComponent } from '../new/new-activity-modal.component';
 
 @Component({
   selector: 'ngx-listar-atividades',
-  templateUrl: './listar-atividades.component.html',
-  styleUrls: ['./listar-atividades.component.scss']
+  templateUrl: './activities-list.component.html',
+  styleUrls: ['./activities-list.component.scss']
 })
 export class ListarAtividadesComponent implements OnDestroy {
   
