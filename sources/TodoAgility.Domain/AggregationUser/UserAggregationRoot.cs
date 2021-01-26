@@ -59,5 +59,15 @@ namespace TodoAgility.Domain.AggregationUser
         }
 
         #endregion
+
+        public void Remove()
+        {
+            if (this.GetChange().ValidationResults.IsValid)
+            {
+                Raise(UserAddedEvent.For(this.GetChange()));
+            }
+
+            ValidationResults = this.GetChange().ValidationResults;
+        }
     }
 }

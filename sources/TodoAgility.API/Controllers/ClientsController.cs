@@ -32,7 +32,13 @@ namespace TodoAgility.API.Controllers
             var result = _mediator.Send<GetClientResponse>(GetClientByIdFilter.From(id));
             return Ok(result);
         }
-
+        [HttpDelete("{id}")]
+        public IActionResult Delete(long id)
+        {
+            var result = _mediator.Send<ExecutionResult>(new RemoveUserCommand{Id = id});
+            return Ok(result);
+        }
+        
         [HttpPost("save")]
         public IActionResult Save([FromBody] AddUserCommand entity)
         {

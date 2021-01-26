@@ -20,12 +20,8 @@ using System;
 
 namespace TodoAgility.Business.CommandHandlers.Commands
 {
-    public class AddProjectCommand
+    public class RemoveProjectCommand
     {
-        public string Name { get; set; }
-        public string Code { get; set; }
-        public DateTime StartDate { get; set; }
-        public decimal Budget { get; set; }
-        public uint ClientId { get; set; }
+        public long Id { get; set; }
     }
 }

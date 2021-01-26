@@ -28,40 +28,39 @@ using TodoAgility.Persistence.Model.Repositories;
 
 namespace TodoAgility.Business.CommandHandlers
 {
-    public sealed class AddProjectCommandHandler : CommandHandler<AddProjectCommand, CommandResult<long>>
+    public sealed class RemoveProjectCommandHandler : CommandHandler<RemoveProjectCommand, ExecutionResult>
     {
-        private readonly IDbSession<IProjectRepository> _dbSession;
+        private readonly IDbSession<IProjectRepository> _projectDb;
+        private readonly IDbSession<IUserRepository> _userDb;
         
-        public AddProjectCommandHandler(IMediator publisher, IDbSession<IProjectRepository> dbSession)
+        public RemoveProjectCommandHandler(IMediator publisher, IDbSession<IProjectRepository> projectDb,
+            IDbSession<IUserRepository> userDb)
             :base(publisher)
         {
-            _dbSession = dbSession;
+            _projectDb = projectDb;
+            _userDb = userDb;
         }
         
-        protected override CommandResult<long> ExecuteCommand(AddProjectCommand command)
+        protected override ExecutionResult ExecuteCommand(RemoveProjectCommand command)
         {
-            // _dbSession.Repository.Get(id);
-                
-            var agg = ProjectAggregationRoot.CreateFrom(
-                ProjectName.From(command.Name),
-                ProjectCode.From(command.Code), 
-                Money.From(command.Budget), 
-                DateAndTime.From(command.StartDate), 
-                EntityId.From(command.ClientId));
+            var project = _projectDb.Repository.Get(EntityId.From(command.Id));
+            // esse deveria ser o usuário do request
+            //var owner = _userDb.Repository.Get(command.ClientId);
+            
+            var agg = ProjectAggregationRoot.ReconstructFrom(project);
+            agg.Remove();
             
             var isSucceed = false;
-            var okId = -1L;
       
             if (agg.ValidationResults.IsValid)
             {
-                _dbSession.Repository.Add(agg.GetChange());
-                _dbSession.SaveChanges();
+                _projectDb.Repository.Remove(agg.GetChange());
+                _projectDb.SaveChanges();
                 agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));
                 isSucceed = true;
-                okId = agg.GetChange().Id.Value;
             }
             
-            return new CommandResult<long>(isSucceed,okId, agg.ValidationResults.Errors.ToImmutableList());
+            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,15 +17,24 @@
 //
 
 using System;
+using TodoAgility.Domain.BusinessObjects;
+using TodoAgility.Domain.Framework.BusinessObjects;
+using TodoAgility.Domain.Framework.DomainEvents;
 
-namespace TodoAgility.Business.CommandHandlers.Commands
+namespace TodoAgility.Domain.AggregationProject.Events
 {
-    public class AddProjectCommand
+    public class ProjectRemovedEvent : DomainEvent
     {
-        public string Name { get; set; }
-        public string Code { get; set; }
-        public DateTime StartDate { get; set; }
-        public decimal Budget { get; set; }
-        public uint ClientId { get; set; }
+        private ProjectRemovedEvent(EntityId id)
+            : base(DateTime.Now)
+        {
+            Id = id;
+        }
+        public EntityId Id { get; }
+        
+        public static ProjectRemovedEvent For(Project project)
+        {
+            return new ProjectRemovedEvent(project.Id);
+        }
     }
 }

@@ -47,7 +47,13 @@ namespace TodoAgility.API.Controllers
             var result = _mediator.Send<GetProjectResponse>(GetProjectByIdFilter.From(id));
             return Ok(result);
         }
-
+        [HttpDelete("{id}")]
+        public IActionResult Delete(long id)
+        {
+            var result = _mediator.Send<ExecutionResult>(new RemoveProjectCommand{Id = id});
+            return Ok(result);
+        }
+        
         [HttpPut("save")]
         public IActionResult Save([FromBody] AddProjectCommand entity)
         {

@@ -66,11 +66,15 @@ namespace TodoAgility.API
             
             services.AddScoped<AddProjectCommandHandler>();
             services.AddScoped<UpdateProjectCommandHandler>();
+            services.AddScoped<RemoveProjectCommandHandler>();
             services.AddScoped<GetProjectsByQueryHandler>();
             services.AddScoped<IDomainEventHandler<ProjectAddedEvent>, UpdateProjectProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ProjectRemovedEvent>,RemoveProjectProjectionHandler>();
 
             services.AddScoped<AddUserCommandHandler>();
+            services.AddScoped<RemoveUserCommandHandler>();
             services.AddScoped<IDomainEventHandler<UserAddedEvent>,UpdateUserProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
             services.AddScoped<GetClientsByQueryHandler>();
             services.AddScoped<GetClientByIdQueryHandler>();
             services.AddScoped<GetProjectByIdQueryHandler>();
@@ -98,7 +102,15 @@ namespace TodoAgility.API
                 builder.On<UpdateProjectCommand>().Pipeline()
                     .Return<ExecutionResult, UpdateProjectCommandHandler>(
                         (handler, request) => handler.Execute(request));
-
+                
+                builder.On<RemoveUserCommand>().Pipeline()
+                    .Return<ExecutionResult, RemoveUserCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+                
+                builder.On<RemoveProjectCommand>().Pipeline()
+                    .Return<ExecutionResult, RemoveProjectCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+                
                 //queries
                 builder.On<GetProjectByIdFilter>().Pipeline()
                     .Return<GetProjectResponse, GetProjectByIdQueryHandler>(
@@ -119,6 +131,14 @@ namespace TodoAgility.API
                 
                 builder.On<UserAddedEvent>().Pipeline()
                     .Call<UpdateUserProjectionHandler>(
+                        (handler, request) => handler.Handle(request));
+                
+                builder.On<UserRemovedEvent>().Pipeline()
+                    .Call<RemoveUserProjectionHandler>(
+                        (handler, request) => handler.Handle(request));
+                
+                builder.On<ProjectRemovedEvent>().Pipeline()
+                    .Call<RemoveProjectProjectionHandler>(
                         (handler, request) => handler.Handle(request));
             });
             

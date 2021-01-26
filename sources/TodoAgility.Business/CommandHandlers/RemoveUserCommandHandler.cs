@@ -21,6 +21,7 @@ using FluentMediator;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
 using TodoAgility.Domain.AggregationProject;
+using TodoAgility.Domain.AggregationUser;
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.Framework;
@@ -28,40 +29,36 @@ using TodoAgility.Persistence.Model.Repositories;
 
 namespace TodoAgility.Business.CommandHandlers
 {
-    public sealed class AddProjectCommandHandler : CommandHandler<AddProjectCommand, CommandResult<long>>
+    public sealed class RemoveUserCommandHandler : CommandHandler<RemoveUserCommand, ExecutionResult>
     {
-        private readonly IDbSession<IProjectRepository> _dbSession;
+        private readonly IDbSession<IUserRepository> _userDb;
         
-        public AddProjectCommandHandler(IMediator publisher, IDbSession<IProjectRepository> dbSession)
+        public RemoveUserCommandHandler(IMediator publisher, IDbSession<IUserRepository> userDb)
             :base(publisher)
         {
-            _dbSession = dbSession;
+            _userDb = userDb;
         }
         
-        protected override CommandResult<long> ExecuteCommand(AddProjectCommand command)
+        protected override ExecutionResult ExecuteCommand(RemoveUserCommand command)
         {
-            // _dbSession.Repository.Get(id);
-                
-            var agg = ProjectAggregationRoot.CreateFrom(
-                ProjectName.From(command.Name),
-                ProjectCode.From(command.Code), 
-                Money.From(command.Budget), 
-                DateAndTime.From(command.StartDate), 
-                EntityId.From(command.ClientId));
+            var user = _userDb.Repository.Get(EntityId.From(command.Id));
+            // esse deveria ser o usuário do request
+            //var owner = _userDb.Repository.Get(command.ClientId);
+            
+            var agg = UserAggregationRoot.ReconstructFrom(user);
+            agg.Remove();
             
             var isSucceed = false;
-            var okId = -1L;
       
             if (agg.ValidationResults.IsValid)
             {
-                _dbSession.Repository.Add(agg.GetChange());
-                _dbSession.SaveChanges();
+                _userDb.Repository.Remove(agg.GetChange());
+                _userDb.SaveChanges();
                 agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));
                 isSucceed = true;
-                okId = agg.GetChange().Id.Value;
             }
             
-            return new CommandResult<long>(isSucceed,okId, agg.ValidationResults.Errors.ToImmutableList());
+            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
         }
     }
 }

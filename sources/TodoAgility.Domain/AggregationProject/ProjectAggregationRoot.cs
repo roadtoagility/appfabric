@@ -16,6 +16,7 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System.ComponentModel.DataAnnotations;
 using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.Aggregates;
@@ -64,11 +65,21 @@ namespace TodoAgility.Domain.AggregationProject
         }
 
         
-        public static ProjectAggregationRoot CreateFrom(EntityId id, ProjectName name, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
+        public static ProjectAggregationRoot CreateFrom(ProjectName name, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
         {
-            return new ProjectAggregationRoot(id, name,code,budget,startDate,clientId);
+            return new ProjectAggregationRoot(EntityId.GetNext(), name,code,budget,startDate,clientId);
         }
 
         #endregion
+
+        public void Remove()
+        {
+            if (this.GetChange().ValidationResults.IsValid)
+            {
+                Raise(ProjectRemovedEvent.For(this.GetChange()));
+            }
+
+            ValidationResults = this.GetChange().ValidationResults;            
+        }
     }
 }
