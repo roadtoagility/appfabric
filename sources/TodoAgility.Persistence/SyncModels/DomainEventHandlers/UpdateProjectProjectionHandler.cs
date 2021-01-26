@@ -25,17 +25,22 @@ using TodoAgility.Persistence.ReadModel.Repositories;
 
 namespace TodoAgility.Persistence.SyncModels.DomainEventHandlers
 {
-    public class UpdateProjectProjectionHandler : DomainEventHandler<ProjectAddedEvent>
+    public sealed class UpdateProjectProjectionHandler : DomainEventHandler<ProjectAddedEvent>
     {
         private readonly IDbSession<IProjectProjectionRepository> _projectSession;
+        private readonly IDbSession<IUserProjectionRepository> _userSession;
 
-        public UpdateProjectProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession)
+        public UpdateProjectProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession,
+            IDbSession<IUserProjectionRepository> userSession)
         {
             _projectSession = projectSession;
+            _userSession = userSession;
         }
 
         protected override void ExecuteHandle(ProjectAddedEvent @event)
         {
+            var client = _userSession.Repository.Get(@event.ClientId);
+                
             var projection = new ProjectProjection(
                 @event.Id.Value,
                 @event.Name.Value,
@@ -43,7 +48,7 @@ namespace TodoAgility.Persistence.SyncModels.DomainEventHandlers
                 @event.Budget.Value,
                 @event.StartDate.Value,
                 @event.ClientId.Value,
-                @event.Name.Value,
+                client.Name,
                 @event.Owner.Value,
                 @event.OrderNumber.Value,
                 @event.Status.Value,

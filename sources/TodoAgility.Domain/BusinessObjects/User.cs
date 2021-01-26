@@ -46,6 +46,11 @@ namespace TodoAgility.Domain.BusinessObjects
             user.SetValidationResult(validator.Validate(user));
             return user;        
         }
+
+        public static User Empty()
+        {
+            return From(EntityId.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty());
+        }
         
         public override string ToString()
         {

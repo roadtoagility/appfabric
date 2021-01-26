@@ -66,10 +66,16 @@ namespace TodoAgility.Persistence.Model.Repositories
 
         public User Get(EntityId id)
         {
-            var project = DbContext.Users.AsNoTracking()
+            var user = DbContext.Users.AsNoTracking()
                 .OrderByDescending(ob => ob.Id)
-                .First(t => t.Id == id.Value);
-            return project.ToUser();
+                .FirstOrDefault(t => t.Id == id.Value);
+            
+            if (user == null)
+            {
+                return User.Empty();
+            }
+            
+            return user.ToUser();
         }
 
         public IEnumerable<User> Find(Expression<Func<UserState, bool>> predicate)

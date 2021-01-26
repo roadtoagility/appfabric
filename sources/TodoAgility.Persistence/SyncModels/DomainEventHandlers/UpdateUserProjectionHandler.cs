@@ -26,7 +26,7 @@ using TodoAgility.Persistence.ReadModel.Repositories;
 
 namespace TodoAgility.Persistence.SyncModels.DomainEventHandlers
 {
-    public class UpdateUserProjectionHandler : DomainEventHandler<UserAddedEvent>
+    public sealed class UpdateUserProjectionHandler : DomainEventHandler<UserAddedEvent>
     {
         private readonly IDbSession<IUserProjectionRepository> _projectSession;
 

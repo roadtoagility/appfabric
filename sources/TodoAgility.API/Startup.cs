@@ -12,6 +12,7 @@ using TodoAgility.Business.QueryHandlers;
 using TodoAgility.Business.QueryHandlers.Filters;
 using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Domain.AggregationUser.Events;
+using TodoAgility.Domain.Framework.DomainEvents;
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Framework.ReadModel.Projections;
 using TodoAgility.Persistence.Model;
@@ -66,26 +67,28 @@ namespace TodoAgility.API
             services.AddScoped<AddProjectCommandHandler>();
             services.AddScoped<UpdateProjectCommandHandler>();
             services.AddScoped<GetProjectsByQueryHandler>();
-            services.AddScoped<UpdateProjectProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ProjectAddedEvent>, UpdateProjectProjectionHandler>();
 
             services.AddScoped<AddUserCommandHandler>();
-            services.AddScoped<UpdateUserProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<UserAddedEvent>,UpdateUserProjectionHandler>();
             services.AddScoped<GetClientsByQueryHandler>();
             services.AddScoped<GetClientByIdQueryHandler>();
             services.AddScoped<GetProjectByIdQueryHandler>();
             
             services.AddFluentMediator(builder =>
             {
-                builder.On<AddUserCommand>().Pipeline()
-                    .Return<ExecutionResult, AddUserCommandHandler>(
-                        (handler, request) => handler.Execute(request));
-                
+               
                 builder.On<GetClientByIdFilter>().Pipeline()
                     .Return<GetClientResponse, GetClientByIdQueryHandler>(
                         (handler, request) => handler.Execute(request));
                 
                 builder.On<GetClientsByFilter>().Pipeline()
                     .Return<GetClientsResponse, GetClientsByQueryHandler>(
+                        (handler, request) => handler.Execute(request));
+                
+                //operations
+                builder.On<AddUserCommand>().Pipeline()
+                    .Return<CommandResult<long>, AddUserCommandHandler>(
                         (handler, request) => handler.Execute(request));
                 
                 builder.On<AddProjectCommand>().Pipeline()
@@ -96,6 +99,7 @@ namespace TodoAgility.API
                     .Return<ExecutionResult, UpdateProjectCommandHandler>(
                         (handler, request) => handler.Execute(request));
 
+                //queries
                 builder.On<GetProjectByIdFilter>().Pipeline()
                     .Return<GetProjectResponse, GetProjectByIdQueryHandler>(
                         (handler, request) => handler.Execute(request));
@@ -104,6 +108,7 @@ namespace TodoAgility.API
                     .Return<GetProjectsResponse, GetProjectsByQueryHandler>(
                         (handler, request) => handler.Execute(request));
 
+                //readmodel sync
                 builder.On<ProjectAddedEvent>().Pipeline()
                     .Call<UpdateProjectProjectionHandler>(
                         (handler, request) => handler.Handle(request));

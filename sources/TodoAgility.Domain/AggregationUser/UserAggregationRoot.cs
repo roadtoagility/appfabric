@@ -53,9 +53,9 @@ namespace TodoAgility.Domain.AggregationUser
         }
 
         
-        public static UserAggregationRoot CreateFrom(EntityId id, Name name, SocialSecurityId cnpj, Email commercialEmail)
+        public static UserAggregationRoot CreateFrom(Name name, SocialSecurityId cnpj, Email commercialEmail)
         {
-            return new UserAggregationRoot(id, name,cnpj,commercialEmail);
+            return new UserAggregationRoot(EntityId.GetNext(), name,cnpj,commercialEmail);
         }
 
         #endregion

@@ -41,7 +41,12 @@ namespace TodoAgility.Domain.BusinessObjects
             
             return ssId;
         }
-
+        
+        public static SocialSecurityId Empty()
+        {
+            return new SocialSecurityId(String.Empty);
+        }
+        
         public override string ToString()
         {
             return $"{Value}";
