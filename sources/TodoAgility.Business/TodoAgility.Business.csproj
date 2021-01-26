@@ -16,5 +16,7 @@
     <ItemGroup>
       <PackageReference Include="FluentMediator" Version="0.4.7" />
     </ItemGroup>
-
+    <PropertyGroup>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    </PropertyGroup>
 </Project>

@@ -24,5 +24,7 @@
     <ProjectReference Include="..\TodoAgility.Persistence\TodoAgility.Persistence.csproj" />
   </ItemGroup>
 
-
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+  </PropertyGroup>
 </Project>

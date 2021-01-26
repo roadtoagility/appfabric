@@ -17,5 +17,7 @@
       <Folder Include="Framework\ReadModel" />
       <Folder Include="SyncModels" />
     </ItemGroup>
-
+    <PropertyGroup>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    </PropertyGroup>
 </Project>
