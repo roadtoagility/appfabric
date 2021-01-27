@@ -24,8 +24,7 @@ using TodoAgility.Domain.Framework.BusinessObjects;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
-
-namespace TodoAgility.Tests
+namespace TodoAgility.Tests.Features
 {
     [FeatureFile("./Features/NewProjectRequest.feature")]
     public sealed class NewProjectRequest:Feature
@@ -42,14 +41,14 @@ namespace TodoAgility.Tests
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
         }
 
-        [Given(@"The client (\d+), requested a project named ([\w\s]+), code (\w+), budget ([\d\.\,]+), and start date ([\d\/]+)")]
-        public void The_project_parameters_request(uint clientId, string name, string code, decimal budget, DateTime date)
+        [Given(@"The client ([a-fA-F0-9\-]+), requested a project named ([\w\s]+), code (\w+), budget ([\d\.\,]+), and start date ([\d\/]+)")]
+        public void The_project_parameters_request(String clientId, string name, string code, decimal budget, DateTime date)
         {
             _projectName = ProjectName.From(name);
             _projectCode = ProjectCode.From(code);
             _startDate= DateAndTime.From(date);
             _budget = Money.From(budget);
-            _clientId = EntityId.From(clientId);
+            _clientId = EntityId.From(Guid.Parse(clientId));
         }
         
         [When(@"The client request a project")]

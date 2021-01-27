@@ -17,6 +17,8 @@
 //
 
 
+using System;
+
 namespace TodoAgility.Persistence.ReadModel.Projections
 {
     public class ActivityProjection
@@ -24,7 +26,7 @@ namespace TodoAgility.Persistence.ReadModel.Projections
         public ActivityProjection()
         {
         }
-        public ActivityProjection(string status, string description, uint activityId, uint projectId)
+        public ActivityProjection(string status, string description, Guid activityId, Guid projectId)
         {
             ActivityId = activityId;
             Status = status;
@@ -32,9 +34,9 @@ namespace TodoAgility.Persistence.ReadModel.Projections
             ProjectId = projectId;
         }
 
-        public uint ActivityId { get; set; }
+        public Guid ActivityId { get; set; }
         public string Status { get; set; }
         public string Description { get; set; }
-        public uint ProjectId { get; set; }
+        public Guid ProjectId { get; set; }
     }
 }

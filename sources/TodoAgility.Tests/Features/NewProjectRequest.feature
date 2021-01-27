@@ -10,6 +10,6 @@ Feature:NewProjectRequest
   
     Examples:
     |clientId|name|code|budget|date|created|
-    |10|My First Project | MyProject | 13| 12/31/2020 | true|
-    |10|My First Project | MyProject | 13.2| 12/31/2020 | true|
-    |1|My First Project 1 | MyProject1 | 13.4| 1/1/1900 | false|
+    |A3D46E71-B22F-4A7F-B7F7-4983FB6EDDA4|My First Project | MyProject | 13| 12/31/2020 | true|
+    |29AB8142-C5D3-4368-90B3-819748093AAE|My First Project | MyProject | 13.2| 12/31/2020 | true|
+    |BA6F9193-A51A-4950-8A49-690875FCEF39|My First Project 1 | MyProject1 | 13.4| 1/1/1900 | false|

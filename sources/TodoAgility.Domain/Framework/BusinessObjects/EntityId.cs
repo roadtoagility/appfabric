@@ -26,14 +26,14 @@ namespace TodoAgility.Domain.Framework.BusinessObjects
 {
     public sealed class EntityId : ValidationStatus
     {
-        public long Value { get; }
+        public Guid Value { get; }
         
-        private EntityId(long id)
+        private EntityId(Guid id)
         {
             Value = id;
         }
 
-        public static EntityId From(long id)
+        public static EntityId From(Guid id)
         {
             var entityId = new EntityId(id);
             var validator = new EntityIdValidator();
@@ -45,16 +45,16 @@ namespace TodoAgility.Domain.Framework.BusinessObjects
         
         public static EntityId Empty()
         {
-            return new EntityId(0);
+            return new EntityId(Guid.Empty);
         }
         
         public static EntityId GetNext()
         {
-            return From(DateTime.Now.Ticks);
+            return From(Guid.NewGuid());
         }
         public override string ToString()
         {
-            return $"{Value}";
+            return Value.ToString("N");
         }
 
         #region IEquatable

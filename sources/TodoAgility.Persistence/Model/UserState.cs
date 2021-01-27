@@ -24,7 +24,7 @@ namespace TodoAgility.Persistence.Model
 {
     public class UserState : PersistentState
     {
-        public UserState(long id, string name, string cnpj, string commercialEmail)
+        public UserState(Guid id, string name, string cnpj, string commercialEmail)
         :base(DateTime.Now)
         {
             Id = id;
@@ -33,7 +33,7 @@ namespace TodoAgility.Persistence.Model
             CommercialEmail = commercialEmail;
         }
 
-        public long Id { get; set;}
+        public Guid Id { get; set;}
         public string Name { get; set;}
         public string Cnpj { get; set;}
         public string CommercialEmail { get; set; }

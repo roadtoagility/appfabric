@@ -16,6 +16,7 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System;
 using System.Collections.Immutable;
 using FluentMediator;
 using TodoAgility.Business.CommandHandlers.Commands;
@@ -29,7 +30,7 @@ using TodoAgility.Persistence.Model.Repositories;
 
 namespace TodoAgility.Business.CommandHandlers
 {
-    public sealed class AddUserCommandHandler : CommandHandler<AddUserCommand, CommandResult<long>>
+    public sealed class AddUserCommandHandler : CommandHandler<AddUserCommand, CommandResult<Guid>>
     {
         private readonly IDbSession<IUserRepository> _dbSession;
         
@@ -39,7 +40,7 @@ namespace TodoAgility.Business.CommandHandlers
             _dbSession = dbSession;
         }
         
-        protected override CommandResult<long> ExecuteCommand(AddUserCommand command)
+        protected override CommandResult<Guid> ExecuteCommand(AddUserCommand command)
         {
             var agg = UserAggregationRoot.CreateFrom(
                 Name.From(command.Name),
@@ -47,7 +48,7 @@ namespace TodoAgility.Business.CommandHandlers
                 Email.From(command.Email));
             
             var isSucceed = false;
-            var okId = -1L;
+            var okId = Guid.Empty;
       
             if (agg.ValidationResults.IsValid)
             {
@@ -61,7 +62,7 @@ namespace TodoAgility.Business.CommandHandlers
                 okId = agg.GetChange().Id.Value;
             }
             
-            return new CommandResult<long>(isSucceed, okId,agg.ValidationResults.Errors.ToImmutableList());
+            return new CommandResult<Guid>(isSucceed, okId,agg.ValidationResults.Errors.ToImmutableList());
         }
     }
 }

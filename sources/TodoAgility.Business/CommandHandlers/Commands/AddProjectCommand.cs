@@ -26,6 +26,6 @@ namespace TodoAgility.Business.CommandHandlers.Commands
         public string Code { get; set; }
         public DateTime StartDate { get; set; }
         public decimal Budget { get; set; }
-        public uint ClientId { get; set; }
+        public Guid ClientId { get; set; }
     }
 }

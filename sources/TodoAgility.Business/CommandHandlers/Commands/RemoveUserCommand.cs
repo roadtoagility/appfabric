@@ -16,10 +16,12 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System;
+
 namespace TodoAgility.Business.CommandHandlers.Commands
 {
     public class RemoveUserCommand
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

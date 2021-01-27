@@ -16,6 +16,7 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System;
 using FluentValidation;
 using TodoAgility.Domain.Framework.BusinessObjects;
 
@@ -26,7 +27,7 @@ namespace TodoAgility.Domain.Framework.Validation
         public EntityIdValidator()
         {
             RuleFor(id => id.Value).NotNull();
-            RuleFor(id => id.Value).GreaterThan(0u);
+            RuleFor(id => id.Value).NotEqual(Guid.Empty);
         }
     }
 }

@@ -22,6 +22,6 @@ namespace TodoAgility.Business.CommandHandlers.Commands
 {
     public class RemoveProjectCommand
     {
-        public long Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

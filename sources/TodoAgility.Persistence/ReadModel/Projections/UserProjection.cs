@@ -26,7 +26,7 @@ namespace TodoAgility.Persistence.ReadModel.Projections
         public UserProjection()
         {
         }
-        public UserProjection(long id, string name, string cnpj, string commercialEmail)
+        public UserProjection(Guid id, string name, string cnpj, string commercialEmail)
         {
             Id = id;
             Name = name;
@@ -34,7 +34,7 @@ namespace TodoAgility.Persistence.ReadModel.Projections
             CommercialEmail = commercialEmail;
         }
 
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Cnpj { get; set; }
         public string CommercialEmail { get; set; }

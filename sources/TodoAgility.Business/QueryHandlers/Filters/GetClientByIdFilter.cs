@@ -16,18 +16,20 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System;
+
 namespace TodoAgility.Business.QueryHandlers.Filters
 {
     public class GetClientByIdFilter
     {
-        private GetClientByIdFilter(long id)
+        private GetClientByIdFilter(Guid id)
         {
             Id = id;
         }
 
-        public long Id { get; }
+        public Guid Id { get; }
 
-        public static GetClientByIdFilter From(long id)
+        public static GetClientByIdFilter From(Guid id)
         {
             return new GetClientByIdFilter(id);
         }
