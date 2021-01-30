@@ -1,6 +1,7 @@
 ﻿
 using FluentMediator;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
 using TodoAgility.Business.QueryHandlers;
@@ -27,13 +28,14 @@ namespace TodoAgility.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(long id)
+        public IActionResult Get(Guid id)
         {
             var result = _mediator.Send<GetClientResponse>(GetClientByIdFilter.From(id));
             return Ok(result);
         }
+
         [HttpDelete("{id}")]
-        public IActionResult Delete(long id)
+        public IActionResult Delete(Guid id)
         {
             var result = _mediator.Send<ExecutionResult>(new RemoveUserCommand{Id = id});
             return Ok(result);

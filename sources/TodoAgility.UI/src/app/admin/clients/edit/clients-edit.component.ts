@@ -46,6 +46,7 @@ export class EditarClientesComponent implements OnInit, OnDestroy {
     this.clientService.onClientChanged
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(response => {
+      console.log(response);
       if(Object.keys(response).length > 0){
         this.errors = [];
         this.success = true;
@@ -88,15 +89,6 @@ export class EditarClientesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.clientService.onClientChanged
-    .pipe(takeUntil(this._unsubscribeAll))
-    .subscribe(response => {
-      if(Object.keys(response).length > 0){
-        this.entity = response;
-        this.buildForm(new ClientData(this.entity));
-      }
-    });
-
     this.actRoute.paramMap.subscribe(params => {
       this.id = params.get('id');
       this.clientService.load(this.id);

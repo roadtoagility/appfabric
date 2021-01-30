@@ -1,6 +1,6 @@
 export class ClientData {
     
-    id: number = 0;
+    id: string = '';
     name: string;
     cnpj: string;
     commercialEmail: string;
@@ -19,7 +19,7 @@ export class ClientData {
     }
 
     update(client){
-        this.id = client.id === null || client.id === undefined ? this.id : +client.id;
+        this.id = client.id === null || client.id === undefined ? this.id : client.id;
         this.name = client.name === null || client.name === undefined ? this.name : client.name;
         this.cnpj = client.cnpj === null || client.cnpj === undefined ? this.cnpj : client.cnpj;
         this.commercialEmail = client.commercialEmail === null || client.commercialEmail === undefined ? this.commercialEmail : client.commercialEmail;

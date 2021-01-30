@@ -7,11 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoAgility.Tests", "TodoAg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoAgility.API", "TodoAgility.API\TodoAgility.API.csproj", "{02909CFB-B1F0-47DD-965E-2EDDA6893474}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoAgility.Domain", "TodoAgility.Domain\TodoAgility.Domain.csproj", "{F2111D4F-9151-474F-895E-C6E64037A0C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoAgility.Domain", "TodoAgility.Domain\TodoAgility.Domain.csproj", "{F2111D4F-9151-474F-895E-C6E64037A0C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoAgility.Persistence", "TodoAgility.Persistence\TodoAgility.Persistence.csproj", "{8A1E194C-AD98-40DD-87F6-B409915B5E4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoAgility.Persistence", "TodoAgility.Persistence\TodoAgility.Persistence.csproj", "{8A1E194C-AD98-40DD-87F6-B409915B5E4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoAgility.Business", "TodoAgility.Business\TodoAgility.Business.csproj", "{45969A82-E4AF-49E4-BA72-03D4963A353B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodoAgility.Business", "TodoAgility.Business\TodoAgility.Business.csproj", "{45969A82-E4AF-49E4-BA72-03D4963A353B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CE9A5F1D-C9E9-4EA2-8CDC-C766D5D6E690}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

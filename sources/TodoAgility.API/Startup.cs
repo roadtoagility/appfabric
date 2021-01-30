@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using TodoAgility.Business.CommandHandlers;
 using TodoAgility.Business.CommandHandlers.Commands;
 using TodoAgility.Business.Framework;
@@ -73,12 +74,14 @@ namespace TodoAgility.API
 
             services.AddScoped<AddUserCommandHandler>();
             services.AddScoped<RemoveUserCommandHandler>();
-            services.AddScoped<IDomainEventHandler<UserAddedEvent>,UpdateUserProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<UserAddedEvent>, UpdateUserProjectionHandler>();
             services.AddScoped<IDomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
             services.AddScoped<GetClientsByQueryHandler>();
             services.AddScoped<GetClientByIdQueryHandler>();
             services.AddScoped<GetProjectByIdQueryHandler>();
             
+            
+
             services.AddFluentMediator(builder =>
             {
                
@@ -92,7 +95,7 @@ namespace TodoAgility.API
                 
                 //operations
                 builder.On<AddUserCommand>().Pipeline()
-                    .Return<CommandResult<long>, AddUserCommandHandler>(
+                    .Return<CommandResult<Guid>, AddUserCommandHandler>(
                         (handler, request) => handler.Execute(request));
                 
                 builder.On<AddProjectCommand>().Pipeline()
@@ -129,8 +132,9 @@ namespace TodoAgility.API
                     .Call<UpdateDetailsProjectProjectionHandler>(
                         (handler, request) => handler.Handle(request));
                 
-                builder.On<UserAddedEvent>().Pipeline()
-                    .Call<UpdateUserProjectionHandler>(
+                builder.On<UserAddedEvent>()
+                .Pipeline()
+                    .Call<IDomainEventHandler<UserAddedEvent>>(
                         (handler, request) => handler.Handle(request));
                 
                 builder.On<UserRemovedEvent>().Pipeline()
