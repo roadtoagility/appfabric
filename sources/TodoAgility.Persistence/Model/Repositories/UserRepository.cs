@@ -33,8 +33,6 @@ namespace TodoAgility.Persistence.Model.Repositories
         public UserRepository(TodoAgilityDbContext context)
         {
             DbContext = context;
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
         }
 
         private TodoAgilityDbContext DbContext { get; }
@@ -61,14 +59,14 @@ namespace TodoAgility.Persistence.Model.Repositories
         {
             var entry = entity.ToUserState();
 
-            DbContext.Entry(entity).State = EntityState.Deleted;
+            DbContext.Users.Remove(entry);
         }
 
         public User Get(EntityId id)
         {
             var user = DbContext.Users.AsNoTracking()
                 .OrderByDescending(ob => ob.Id)
-                .FirstOrDefault(t =>t.Id.Equals(id.Value.ToString("N")));
+                .FirstOrDefault(t =>t.Id.Equals(id.Value));
             
             if (user == null)
             {

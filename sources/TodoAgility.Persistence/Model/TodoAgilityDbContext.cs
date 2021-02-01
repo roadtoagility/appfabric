@@ -8,6 +8,7 @@ namespace TodoAgility.Persistence.Model
         public TodoAgilityDbContext(DbContextOptions options)
             : base(options)
         {
+
         }
 
         public DbSet<ProjectState> Projects { get; set; }
@@ -29,21 +30,22 @@ namespace TodoAgility.Persistence.Model
                     b.Property(e => e.StartDate).IsRequired();
                     
                     b.Property(p => p.PersistenceId);
-                    b.HasQueryFilter(q => !q.IsDeleted);
+                    b.Property(q => q.IsDeleted);
+                    b.HasQueryFilter(project => EF.Property<bool>(project, "IsDeleted") == false);
                     b.Property(e => e.CreateAt);
                     b.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate().IsRowVersion();
                 });
-            
+
             modelBuilder.Entity<UserState>(
                 b =>
                 {
                     b.Property(e => e.Id).ValueGeneratedNever().IsRequired();
                     b.Property(e => e.Name).IsRequired();
                     b.Property(e => e.Cnpj).IsRequired();
-                    b.HasKey(e => e.CommercialEmail);
                     
                     b.Property(p => p.PersistenceId);
-                    b.HasQueryFilter(q => !q.IsDeleted);
+                    b.Property(e => e.IsDeleted);
+                    b.HasQueryFilter(user => EF.Property<bool>(user, "IsDeleted") == false);
                     b.Property(e => e.CreateAt);
                     b.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate().IsRowVersion();
                 });
@@ -55,7 +57,8 @@ namespace TodoAgility.Persistence.Model
                     b.Property(e => e.ClientId).IsRequired();
                     b.HasKey(e => e.ClientId);
                     b.Property(p => p.PersistenceId);
-                    b.HasQueryFilter(q => !q.IsDeleted);
+                    b.Property(q => q.IsDeleted);
+                    b.HasQueryFilter(client => EF.Property<bool>(client, "IsDeleted") == false);
                     b.Property(e => e.CreateAt);
                     b.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate().IsRowVersion();
                 });

@@ -28,6 +28,9 @@ namespace TodoAgility.Persistence.Model
         {
             Context = context;
             Repository = repository;
+            
+            // context.Database.EnsureDeleted();
+            // context.Database.EnsureCreated();
         }
 
         private TodoAgilityDbContext Context { get; }

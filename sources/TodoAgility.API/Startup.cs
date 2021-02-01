@@ -47,11 +47,10 @@ namespace TodoAgility.API
             
             services.Configure<ProjectionDbOptions>(Configuration.GetSection(
                 ProjectionDbOptions.ProjectionConnectionStrings));
-            
             services.AddSingleton<TodoAgilityProjectionsDbContext>();
+            
             services.AddDbContext<TodoAgilityDbContext>(options =>
-                options.UseSqlite(
-                    Configuration.GetConnectionString("ModelConnection")));
+                options.UseSqlite(Configuration.GetConnectionString("ModelConnection")));
 
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IProjectProjectionRepository, ProjectProjectionRepository>();

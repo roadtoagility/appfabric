@@ -4,7 +4,7 @@ using TodoAgility.Persistence.Framework.ReadModel.Projections;
 
 namespace TodoAgility.Persistence.ReadModel.Projections
 {
-    public class TodoAgilityProjectionsDbContext:ProjectionDbContext
+    public sealed class TodoAgilityProjectionsDbContext:ProjectionDbContext
     {
         public TodoAgilityProjectionsDbContext(IOptions<ProjectionDbOptions> options)
         :base(options)

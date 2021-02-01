@@ -33,8 +33,6 @@ namespace TodoAgility.Persistence.Model.Repositories
         public ProjectRepository(TodoAgilityDbContext context)
         {
             DbContext = context;
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
         }
 
         private TodoAgilityDbContext DbContext { get; }
@@ -61,7 +59,7 @@ namespace TodoAgility.Persistence.Model.Repositories
         {
             var entry = entity.ToProjectState();
 
-            DbContext.Entry(entity).State = EntityState.Deleted;
+            DbContext.Projects.Remove(entry);
         }
 
         public Project Get(EntityId id)

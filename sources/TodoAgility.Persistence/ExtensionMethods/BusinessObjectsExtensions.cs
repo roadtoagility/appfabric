@@ -51,14 +51,14 @@ namespace TodoAgility.Persistence.ExtensionMethods
                 ServiceOrderNumber.From(state.OrderNumber));
         
         public static UserState ToUserState(this User user)
-            => new UserState(user.Id.Value.ToString("N"),
+            => new UserState(user.Id.Value,
                 user.Name.Value, 
                 user.Cnpj.Value, 
                 user.CommercialEmail.Value);
 
         public static User ToUser(this UserState state)
             => User.From(
-                    EntityId.From(Guid.Parse(state.Id)),
+                    EntityId.From(state.Id),
                     Name.From(state.Name),
                     SocialSecurityId.From(state.Cnpj),
                     Email.From(state.CommercialEmail));
