@@ -24,13 +24,7 @@ namespace TodoAgility.Domain.BusinessObjects.Validations
     {
         public EmailValidator()
         {
-            RuleFor(item => item.Value).NotNull()
-                .When(item=> !item.Equals(Email.Empty()));
-            RuleFor(item => item.Value).NotEmpty()
-                .When(item=> !item.Equals(Email.Empty()));
-            
-            RuleFor(item => item.Value).EmailAddress()
-                .When(item=> !item.Equals(Email.Empty()));
+            RuleFor(item => item.Value).EmailAddress();
         }
     }
 }

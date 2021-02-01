@@ -22,7 +22,7 @@ using TodoAgility.Persistence.Framework;
 
 namespace TodoAgility.Persistence.Model
 {
-    public class DbSession<TRepository> : IDbSession<TRepository>, IDisposable
+    public sealed class DbSession<TRepository> : IDbSession<TRepository>, IDisposable
     {
         public DbSession(TodoAgilityDbContext context, TRepository repository)
         {

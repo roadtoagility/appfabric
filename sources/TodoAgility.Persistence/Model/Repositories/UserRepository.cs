@@ -68,7 +68,7 @@ namespace TodoAgility.Persistence.Model.Repositories
         {
             var user = DbContext.Users.AsNoTracking()
                 .OrderByDescending(ob => ob.Id)
-                .FirstOrDefault(t => t.Id == id.Value);
+                .FirstOrDefault(t =>t.Id.Equals(id.Value.ToString("N")));
             
             if (user == null)
             {

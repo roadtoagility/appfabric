@@ -27,6 +27,7 @@ namespace TodoAgility.Persistence.Model
                     b.HasKey(e => e.Id);
                     b.Property(e => e.ClientId).IsRequired();
                     b.Property(e => e.StartDate).IsRequired();
+                    
                     b.Property(p => p.PersistenceId);
                     b.HasQueryFilter(q => !q.IsDeleted);
                     b.Property(e => e.CreateAt);
@@ -40,6 +41,7 @@ namespace TodoAgility.Persistence.Model
                     b.Property(e => e.Name).IsRequired();
                     b.Property(e => e.Cnpj).IsRequired();
                     b.HasKey(e => e.CommercialEmail);
+                    
                     b.Property(p => p.PersistenceId);
                     b.HasQueryFilter(q => !q.IsDeleted);
                     b.Property(e => e.CreateAt);

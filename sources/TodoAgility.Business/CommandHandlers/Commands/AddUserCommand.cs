@@ -22,6 +22,6 @@ namespace TodoAgility.Business.CommandHandlers.Commands
     {
         public string Name { get; set; }
         public string Cnpj { get; set; }
-        public string Email { get; set; }
+        public string CommercialEmail { get; set; }
     }
 }

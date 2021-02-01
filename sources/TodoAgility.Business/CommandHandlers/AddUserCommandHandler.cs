@@ -45,7 +45,7 @@ namespace TodoAgility.Business.CommandHandlers
             var agg = UserAggregationRoot.CreateFrom(
                 Name.From(command.Name),
                 SocialSecurityId.From(command.Cnpj),
-                Email.From(command.Email));
+                Email.From(command.CommercialEmail));
             
             var isSucceed = false;
             var okId = Guid.Empty;
