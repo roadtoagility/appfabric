@@ -25,6 +25,8 @@ export class NewClientFormComponent implements OnDestroy {
 
   errors: any[];
 
+  savedObject: any;
+
   constructor(private _clientService: ClientService, protected ref: NbDialogRef<NewClientFormComponent>) {
     this._unsubscribeAll = new Subject();
 
@@ -43,6 +45,8 @@ export class NewClientFormComponent implements OnDestroy {
         this.errors = [];
         this.success = true;
         this.toggleLoadingAnimation();
+        this.savedObject = response;
+        console.log(response);
       }
     });
 

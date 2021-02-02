@@ -4,7 +4,7 @@ using TodoAgility.Persistence.Framework.ReadModel.Projections;
 
 namespace TodoAgility.Persistence.ReadModel.Projections
 {
-    public sealed class TodoAgilityProjectionsDbContext:ProjectionDbContext
+    public sealed class TodoAgilityProjectionsDbContext : ProjectionDbContext
     {
         public TodoAgilityProjectionsDbContext(IOptions<ProjectionDbOptions> options)
         :base(options)
@@ -32,14 +32,15 @@ namespace TodoAgility.Persistence.ReadModel.Projections
                 .Field(p=> p.StartDate, "startDate")
                 .Field(p=> p.Budget, "budget")
                 .Field(p=> p.ClientId, "clientId")
-                ;
-            
+                .Id(x => x.Id);
+
             modelBuilder.Entity<UserProjection>()
-                .Field(p=> p.Id, "projectId")
-                .Field(p=> p.Name, "name")
-                .Field(p=> p.Cnpj, "cnpj")
-                .Field(p=> p.CommercialEmail, "commercialEmail")
-                ;
+                .Field(p => p.Id, "userId")
+                .Field(p => p.Name, "name")
+                .Field(p => p.Cnpj, "cnpj")
+                .Field(p => p.CommercialEmail, "commercialEmail")
+                .Id(x => x.Id);
+            ;
             #endregion
         }
     }

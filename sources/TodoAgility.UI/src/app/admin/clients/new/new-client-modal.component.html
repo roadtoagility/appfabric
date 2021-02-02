@@ -28,20 +28,16 @@
               </div>
             </div>
             <div class="form-group row">
-              <label for="email" class="label col-sm-3 col-form-label">Email</label>
+              <label for="commercialEmail" class="label col-sm-3 col-form-label">Email</label>
               <div class="col-sm-9">
-                <input type="text" nbInput formControlName="email" fullWidth id="email" [class.danger]="form.get('email').invalid && 
-                (form.get('email').dirty || form.get('email').touched)">
+                <input type="text" nbInput formControlName="commercialEmail" fullWidth id="commercialEmail" [class.danger]="form.get('commercialEmail').invalid && 
+                (form.get('commercialEmail').dirty || form.get('commercialEmail').touched)">
               </div>
             </div>
           </form>
 
-          <!-- <div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
-            Client created! To complete the form <a href="http://www.uol.com.br" class="alert-link">click here</a>
-          </div>-->
-
           <div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
-            Client created!
+            Client created! To complete the form <a href="/admin/editar-cliente/{{savedObject.id}}" class="alert-link">click here</a>
           </div>
             
         </div>

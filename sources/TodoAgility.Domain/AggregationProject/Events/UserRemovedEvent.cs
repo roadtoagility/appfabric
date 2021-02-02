@@ -32,9 +32,9 @@ namespace TodoAgility.Domain.AggregationProject.Events
         }
         public EntityId Id { get; }
         
-        public static UserRemovedEvent For(Project project)
+        public static UserRemovedEvent For(User user)
         {
-            return new UserRemovedEvent(project.Id);
+            return new UserRemovedEvent(user.Id);
         }
     }
 }

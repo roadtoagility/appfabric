@@ -1,0 +1,11 @@
+<nb-card>
+    <nb-card-header>Confirm</nb-card-header>
+    <nb-card-body>
+      <p>{{message}}</p>
+    </nb-card-body>
+    <nb-card-footer>
+      <button class="cancel" nbButton matRipple status="" (click)="cancel()">Cancel</button>
+      <button nbButton matRipple status="danger" (click)="confirm()">Delete</button>
+    </nb-card-footer>
+</nb-card>
+  

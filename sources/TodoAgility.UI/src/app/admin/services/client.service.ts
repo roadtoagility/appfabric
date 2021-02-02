@@ -9,13 +9,18 @@ import { ResponseData } from '../models/ResponseData';
 })
 export class ClientService implements Resolve<any>
 {
+
+
     onClientsChanged: BehaviorSubject<any>;
     clients: any[];
 
     onClientChanged: BehaviorSubject<any>;
     client: {};
 
+    onClientLoaded: BehaviorSubject<any>;
+
     onClientUpdateError: BehaviorSubject<any>;
+    onClientDeleted: BehaviorSubject<any>;
 
     baseAdddress: string = "https://localhost:44353/api";
     
@@ -29,6 +34,8 @@ export class ClientService implements Resolve<any>
         this.client = {};
 
         this.onClientUpdateError = new BehaviorSubject({});
+        this.onClientDeleted = new BehaviorSubject({});
+        this.onClientLoaded = new BehaviorSubject({});
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
@@ -50,8 +57,22 @@ export class ClientService implements Resolve<any>
             this._httpClient
             .get(`${this.baseAdddress}/clients/${projectId}`)
             .subscribe((response: any) => {
-                this.client = response;
-                this.onClientChanged.next(this.client);
+                if(response.isSucceed){
+                    this.client = response.items;
+                    this.onClientLoaded.next(this.client);
+                }
+                resolve(response);
+            });
+        });
+    }
+
+    delete(clientId){
+        return new Promise((resolve, reject) => {
+            this._httpClient
+            .delete(`${this.baseAdddress}/clients/${clientId}`)
+            .subscribe((response: any) => {
+                this.client = {};
+                this.onClientDeleted.next({executed: true});
                 resolve(response);
             });
         });
@@ -79,7 +100,7 @@ export class ClientService implements Resolve<any>
 
                 if(response.isSucceed){
                     this.client = entity;
-                    this.onClientChanged.next(this.client);
+                    this.onClientChanged.next(response);
                 }else{
                     this.onClientUpdateError.next(response.violations.map(x => ({
                         propertyName: x.propertyName,

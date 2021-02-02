@@ -33,14 +33,12 @@ namespace TodoAgility.Domain.AggregationUser
             if (user.ValidationResults.IsValid)
             {
                 Apply(user);
-                Raise(UserAddedEvent.For(user));
             }
 
             ValidationResults = user.ValidationResults;
         }
         
-        private UserAggregationRoot(EntityId id, Name name, SocialSecurityId cnpj, Email commercialEmail)
-            : this(User.From(id, name,cnpj,commercialEmail))
+        private UserAggregationRoot()
         {
         }
 
@@ -55,16 +53,30 @@ namespace TodoAgility.Domain.AggregationUser
         
         public static UserAggregationRoot CreateFrom(Name name, SocialSecurityId cnpj, Email commercialEmail)
         {
-            return new UserAggregationRoot(EntityId.GetNext(), name,cnpj,commercialEmail);
+            var user = User.From(EntityId.GetNext(), name, cnpj, commercialEmail);
+            var agg = new UserAggregationRoot();
+            agg.Add(user);
+            return agg;
         }
 
         #endregion
+
+        private void Add(User user)
+        {
+            if (user.ValidationResults.IsValid)
+            {
+                Apply(user);
+                Raise(UserAddedEvent.For(user));
+            }
+
+            ValidationResults = user.ValidationResults;
+        }
 
         public void Remove()
         {
             if (this.GetChange().ValidationResults.IsValid)
             {
-                Raise(UserAddedEvent.For(this.GetChange()));
+                Raise(UserRemovedEvent.For(this.GetChange()));
             }
 
             ValidationResults = this.GetChange().ValidationResults;

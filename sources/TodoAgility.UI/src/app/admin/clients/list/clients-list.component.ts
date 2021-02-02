@@ -5,12 +5,15 @@ import {ClientService} from '../../services/client.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { NbDialogService } from '@nebular/theme';
+import { NbDialogService, NbToastrService } from '@nebular/theme';
 
 import { NewClientFormComponent } from '../new/new-client-modal.component';
 import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
 
 import {ClientData} from '../../models/entities/ClientData';
+import { DialogDeleteComponent } from '../../common/modals/delete/dialog-delete.component';
+
+
 
 @Component({
   selector: 'ngx-listar-clientes',
@@ -67,7 +70,7 @@ export class ListarClientesComponent implements OnDestroy {
   statusForm: FormGroup;
   form: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder, private service: SmartTableData, private _clientService: ClientService, private _router: Router, private dialogService: NbDialogService) {
+  constructor(private _toastrService: NbToastrService, private _formBuilder: FormBuilder, private service: SmartTableData, private _clientService: ClientService, private _router: Router, private dialogService: NbDialogService) {
     const data = this.service.getClients();
     //this.source.load(data);
 
@@ -78,7 +81,21 @@ export class ListarClientesComponent implements OnDestroy {
     .subscribe(response => {
       if(Object.keys(response).length > 0){
         this.entities = response;
-        this.source.load(this.entities);
+      }else{
+        this.entities = [];
+      }
+
+      this.source.load(this.entities);
+    });
+
+    this._clientService.onClientDeleted
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe(isDeleted => {
+      if(Object.keys(isDeleted).length > 0){
+        if(isDeleted.executed){
+          this._clientService.loadAll("");
+          this._toastrService.show("Client deleted!", "Action", { status: "danger", icon: "trash-2-outline" });
+        }
       }
     });
 
@@ -89,15 +106,27 @@ export class ListarClientesComponent implements OnDestroy {
     this._router.navigateByUrl('/admin/editar-cliente/' + event.data.id);
   }
 
-  onDeleteConfirm(event): void {
-    console.log(event);
+  onDeleteConfirm(register): void {
+    console.log(register.data);
+    this.dialogService.open(DialogDeleteComponent, {
+      context: {
+        message: `Do you want to delete client ${register.data.name}?`
+      },
+    })
+    .onClose.subscribe(clientConfirmed => this.onDeleteConfirmed(register.data, clientConfirmed));
+  }
+
+  onDeleteConfirmed(client, deleteConfirmed){
+    if(deleteConfirmed){
+      this._clientService.delete(client.id);
+    }
   }
 
   buildForm(client){
     this.form = this._formBuilder.group({
       name: [client.name, Validators.required],
       cnpj: [client.cnpj, Validators.required],
-      email: [client.email, Validators.required]
+      commercialEmail: [client.email, Validators.required]
     });
   }
 
@@ -109,7 +138,7 @@ export class ListarClientesComponent implements OnDestroy {
         form: this.form
       },
     })
-    .onClose.subscribe(project => console.log(project));
+    .onClose.subscribe(project => this._clientService.loadAll(""));
   }
 
   ngOnDestroy(): void {

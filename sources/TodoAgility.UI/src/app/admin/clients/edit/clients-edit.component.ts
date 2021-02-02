@@ -46,7 +46,6 @@ export class EditarClientesComponent implements OnInit, OnDestroy {
     this.clientService.onClientChanged
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(response => {
-      console.log(response);
       if(Object.keys(response).length > 0){
         this.errors = [];
         this.success = true;
@@ -55,6 +54,14 @@ export class EditarClientesComponent implements OnInit, OnDestroy {
       }
     });
     
+    this.clientService.onClientLoaded
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe(client => {
+      if(Object.keys(client).length > 0){
+        this.buildForm(client);
+      }
+    });
+
     this.clientService.onClientUpdateError
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(errors => {

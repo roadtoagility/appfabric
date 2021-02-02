@@ -7,6 +7,8 @@ import { ClientService} from '../services/client.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {DisplayErrorComponent} from '../common/components/display-error/display-error.component';
 import { DisplayErrorModule } from '../common/components/display-error/display-error.module';
+import { DialogDeleteModule } from '../common/modals/delete/dialog-delete.module';
+import { CommonModule } from '@angular/common';  
 
 import {
     NbButtonModule,
@@ -20,6 +22,7 @@ import {
 
 @NgModule({
     imports: [
+        CommonModule,
         NbCardModule,
         Ng2SmartTableModule,
         NbSelectModule,
@@ -29,7 +32,8 @@ import {
         FormsModule,
         ReactiveFormsModule,
         NbSpinnerModule,
-        NbDatepickerModule
+        NbDatepickerModule,
+        DialogDeleteModule
     ],
     declarations: [
         EditarClientesComponent,

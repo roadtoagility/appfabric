@@ -137,7 +137,7 @@ namespace TodoAgility.API
                         (handler, request) => handler.Handle(request));
                 
                 builder.On<UserRemovedEvent>().Pipeline()
-                    .Call<RemoveUserProjectionHandler>(
+                    .Call<IDomainEventHandler<UserRemovedEvent>>(
                         (handler, request) => handler.Handle(request));
                 
                 builder.On<ProjectRemovedEvent>().Pipeline()
