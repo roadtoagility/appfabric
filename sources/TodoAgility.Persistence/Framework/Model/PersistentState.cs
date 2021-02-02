@@ -23,7 +23,7 @@ namespace TodoAgility.Persistence.Framework.Model
 {
     public abstract class PersistentState : IPersistentState
     {
-        protected PersistentState(DateTime createAt, byte[] rowVersion)
+        protected PersistentState(DateTime createAt)
         {
             PersistenceId = Guid.NewGuid();
             CreateAt = createAt;

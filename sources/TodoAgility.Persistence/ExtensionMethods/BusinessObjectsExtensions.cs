@@ -19,11 +19,9 @@
 
 using System;
 using System.Diagnostics;
-using System.Text;
 using TodoAgility.Domain.BusinessObjects;
 using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.Model;
-using Version = TodoAgility.Domain.Framework.BusinessObjects.Version;
 
 namespace TodoAgility.Persistence.ExtensionMethods
 {
@@ -38,8 +36,7 @@ namespace TodoAgility.Persistence.ExtensionMethods
                 project.ClientId.Value,
                 project.Owner.Value,
                 project.OrderNumber.Value,
-                project.Status.Value,
-                new byte[]{0});
+                project.Status.Value);
 
         public static Project ToProject(this ProjectState state)
             => Project.From(
@@ -57,16 +54,14 @@ namespace TodoAgility.Persistence.ExtensionMethods
             => new UserState(user.Id.Value,
                 user.Name.Value, 
                 user.Cnpj.Value, 
-                user.CommercialEmail.Value
-                , BitConverter.GetBytes(user.Version.Value));
+                user.CommercialEmail.Value);
 
         public static User ToUser(this UserState state)
             => User.From(
                     EntityId.From(state.Id),
                     Name.From(state.Name),
                     SocialSecurityId.From(state.Cnpj),
-                    Email.From(state.CommercialEmail)
-                    , Version.From(BitConverter.ToInt32(state.RowVersion)));
+                    Email.From(state.CommercialEmail));
 
 
     }

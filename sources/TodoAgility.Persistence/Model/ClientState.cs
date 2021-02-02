@@ -25,7 +25,7 @@ namespace TodoAgility.Persistence.Model
     public class ClientState : PersistentState
     {
         public ClientState(long projectId, long clientId)
-        :base(DateTime.Now, new byte[]{0})
+        :base(DateTime.Now)
         {
             ProjectId = projectId;
             ClientId = clientId;
