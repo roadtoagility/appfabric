@@ -25,7 +25,7 @@ namespace TodoAgility.Persistence.Model
     public class ActivityState : PersistentState
     {
         public ActivityState(int status, string description, uint activityId, uint projectId)
-            : base(DateTime.Now)
+            : base(DateTime.Now, new byte[]{0})
         {
             ActivityId = activityId;
             Status = status;

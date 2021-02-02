@@ -35,42 +35,32 @@ namespace TodoAgility.Domain.AggregationUser
                 Apply(user);
             }
 
-            ValidationResults = user.ValidationResults;
-        }
-        
-        private UserAggregationRoot()
-        {
-        }
-
-        #region Aggregation contruction
-
-        
-        public static UserAggregationRoot ReconstructFrom(User currentState)
-        {
-            return new UserAggregationRoot(currentState);
-        }
-
-        
-        public static UserAggregationRoot CreateFrom(Name name, SocialSecurityId cnpj, Email commercialEmail)
-        {
-            var user = User.From(EntityId.GetNext(), name, cnpj, commercialEmail);
-            var agg = new UserAggregationRoot();
-            agg.Add(user);
-            return agg;
-        }
-
-        #endregion
-
-        private void Add(User user)
-        {
-            if (user.ValidationResults.IsValid)
+            if (user.Version.Equals(Version.New()))
             {
-                Apply(user);
                 Raise(UserAddedEvent.For(user));
             }
 
             ValidationResults = user.ValidationResults;
         }
+
+        #region Aggregation construction
+
+        
+        public static UserAggregationRoot ReconstructFrom(User currentState)
+        {
+            var user = User.From(currentState.Id, currentState.Name, currentState.Cnpj,
+                currentState.CommercialEmail, Version.Next(currentState.Version));
+            return new UserAggregationRoot(user);
+        }
+
+        
+        public static UserAggregationRoot CreateFrom(Name name, SocialSecurityId cnpj, Email commercialEmail)
+        {
+            var user = User.From(EntityId.GetNext(), name, cnpj, commercialEmail, Version.New());
+            return new UserAggregationRoot(user);
+        }
+
+        #endregion
 
         public void Remove()
         {

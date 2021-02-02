@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,25 +17,17 @@
 //
 
 
-using System;
-using TodoAgility.Persistence.Framework.Model;
+using FluentValidation;
+using TodoAgility.Domain.BusinessObjects;
+using TodoAgility.Domain.Framework.BusinessObjects;
 
-namespace TodoAgility.Persistence.Model
+namespace TodoAgility.Domain.Framework.Validation
 {
-    public class UserState : PersistentState
+    public sealed class VersionValidator: AbstractValidator<Version>
     {
-        public UserState(Guid id, string name, string cnpj, string commercialEmail, byte[] rowVersion)
-        :base(DateTime.Now, rowVersion)
+        public VersionValidator()
         {
-            Id = id;
-            Name = name;
-            Cnpj = cnpj;
-            CommercialEmail = commercialEmail;
+            RuleFor(id => id.Value).NotNull();
         }
-
-        public Guid Id { get; set;}
-        public string Name { get; set;}
-        public string Cnpj { get; set;}
-        public string CommercialEmail { get; set; }
     }
 }

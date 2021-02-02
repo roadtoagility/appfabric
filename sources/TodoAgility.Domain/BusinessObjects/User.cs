@@ -25,12 +25,13 @@ namespace TodoAgility.Domain.BusinessObjects
 {
     public sealed class User : ValidationStatus
     {
-        private User(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail)
+        private User(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, Version version)
         {
             Id = clientId;
             Name = name;
             Cnpj = cnpj;
             CommercialEmail = commercialEmail;
+            Version = version;
         }
         public EntityId Id { get; }
         
@@ -38,10 +39,12 @@ namespace TodoAgility.Domain.BusinessObjects
         public SocialSecurityId Cnpj { get; }
         
         public Email CommercialEmail { get; }
+        
+        public Version Version { get; }
                 
-        public static User From(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail)
+        public static User From(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, Version version)
         {
-            var user = new User(clientId,name,cnpj,commercialEmail);
+            var user = new User(clientId,name,cnpj,commercialEmail,version);
             var validator = new UserValidator();
             user.SetValidationResult(validator.Validate(user));
             return user;        
@@ -49,7 +52,7 @@ namespace TodoAgility.Domain.BusinessObjects
 
         public static User Empty()
         {
-            return From(EntityId.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty());
+            return From(EntityId.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty(), Version.New());
         }
         
         public override string ToString()
