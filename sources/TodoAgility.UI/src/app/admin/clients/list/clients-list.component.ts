@@ -107,7 +107,6 @@ export class ListarClientesComponent implements OnDestroy {
   }
 
   onDeleteConfirm(register): void {
-    console.log(register.data);
     this.dialogService.open(DialogDeleteComponent, {
       context: {
         message: `Do you want to delete client ${register.data.name}?`

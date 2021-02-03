@@ -48,6 +48,14 @@ export class EditarProjetosComponent implements OnInit, OnDestroy {
         setTimeout(() => this.success = false, 2000);
       }
     });
+
+    this.projectService.onProjectLoaded
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe(project => {
+      if(Object.keys(project).length > 0){
+        this.buildForm(project);
+      }
+    });
     
     this.projectService.onProjectUpdateError
     .pipe(takeUntil(this._unsubscribeAll))
@@ -86,7 +94,7 @@ export class EditarProjetosComponent implements OnInit, OnDestroy {
       name: [project.name, Validators.required],
       code: [project.code, Validators.required],
       startDate: [project.startDate, [Validators.required]],
-      isFavorited: project.isFavorited 
+      isFavorited: false 
     });
 
     this.formDetails = this._formBuilder.group({

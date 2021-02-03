@@ -5,6 +5,7 @@ import { NewProjectFormComponent } from './new/new-project-modal.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { ProjectService} from '../services/project.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';  
 
 import {
     NbButtonModule,
@@ -13,7 +14,8 @@ import {
     NbIconModule,
     NbInputModule,
     NbSelectModule,
-    NbSpinnerModule
+    NbSpinnerModule,
+    NbCheckboxModule
   } from '@nebular/theme';
 
 @NgModule({
@@ -27,7 +29,9 @@ import {
         FormsModule,
         ReactiveFormsModule,
         NbSpinnerModule,
-        NbDatepickerModule
+        NbDatepickerModule,
+        CommonModule,
+        NbCheckboxModule
     ],
     declarations: [
         EditarProjetosComponent,

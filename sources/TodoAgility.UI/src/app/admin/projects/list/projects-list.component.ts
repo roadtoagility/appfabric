@@ -5,13 +5,14 @@ import {ProjectService} from '../../services/project.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { NbDialogService } from '@nebular/theme';
+import { NbDialogService, NbToastrService } from '@nebular/theme';
 
 import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
 
 import { NewProjectFormComponent } from '../new/new-project-modal.component';
 
 import {Project} from '../../models/entities/Project';
+import { DialogDeleteComponent } from '../../common/modals/delete/dialog-delete.component';
 
 @Component({
   selector: 'ngx-listar-projetos',
@@ -64,7 +65,7 @@ export class ListarProjetosComponent implements OnDestroy {
         type: 'string',
         filter: false
       },
-      status: {
+      statusName: {
         title: 'Status OS',
         type: 'string',
         filter: false
@@ -78,28 +79,53 @@ export class ListarProjetosComponent implements OnDestroy {
   statusForm: FormGroup;
   form: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder, private service: SmartTableData, private _projetosService: ProjectService, private _router: Router, private dialogService: NbDialogService) {
+  constructor(private _toastrService: NbToastrService, private _formBuilder: FormBuilder, private service: SmartTableData, private _projectService: ProjectService, private _router: Router, private dialogService: NbDialogService) {
    
     this._unsubscribeAll = new Subject();
 
-    this._projetosService.onProjectsChanged
+    this._projectService.onProjectsChanged
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(response => {
       if(Object.keys(response).length > 0){
         this.entities = response;
-        this.source.load(this.entities);
+      }else{
+        this.entities = [];
+      }
+
+      this.source.load(this.entities);
+    });
+
+    this._projectService.onProjectDeleted
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe(isDeleted => {
+      if(Object.keys(isDeleted).length > 0){
+        if(isDeleted.executed){
+          this._projectService.loadAll("");
+          this._toastrService.show("Project deleted!", "Action", { status: "danger", icon: "trash-2-outline" });
+        }
       }
     });
     
-    this._projetosService.loadAll("");
+    this._projectService.loadAll("");
   }
 
   onEdit(event): void{
     this._router.navigateByUrl('/admin/editar-projeto/' + event.data.id);
   }
 
-  onDeleteConfirm(event): void {
-    console.log(event);
+  onDeleteConfirm(register): void {
+    this.dialogService.open(DialogDeleteComponent, {
+      context: {
+        message: `Do you want to delete project ${register.data.name}?`
+      },
+    })
+    .onClose.subscribe(clientConfirmed => this.onDeleteConfirmed(register.data, clientConfirmed));
+  }
+
+  onDeleteConfirmed(client, deleteConfirmed){
+    if(deleteConfirmed){
+      this._projectService.delete(client.id);
+    }
   }
 
   buildForm(project){
@@ -107,7 +133,6 @@ export class ListarProjetosComponent implements OnDestroy {
       name: [project.name, Validators.required],
       code: [project.code, Validators.required],
       startDate: [project.startDate, Validators.required],
-      budget: [project.budget, Validators.required],
       clientId: [project.clientId, Validators.required],
     });
   }
@@ -120,7 +145,7 @@ export class ListarProjetosComponent implements OnDestroy {
         form: this.form
       },
     })
-    .onClose.subscribe(project => console.log(project));
+    .onClose.subscribe(project => this._projectService.loadAll(""));
   }
 
   ngOnDestroy(): void {

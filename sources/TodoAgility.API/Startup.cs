@@ -124,7 +124,7 @@ namespace TodoAgility.API
 
                 //readmodel sync
                 builder.On<ProjectAddedEvent>().Pipeline()
-                    .Call<UpdateProjectProjectionHandler>(
+                    .Call<IDomainEventHandler<ProjectAddedEvent>>(
                         (handler, request) => handler.Handle(request));
                 
                 builder.On<ProjectDetailUpdatedEvent>().Pipeline()
@@ -141,7 +141,7 @@ namespace TodoAgility.API
                         (handler, request) => handler.Handle(request));
                 
                 builder.On<ProjectRemovedEvent>().Pipeline()
-                    .Call<RemoveProjectProjectionHandler>(
+                    .Call<IDomainEventHandler<ProjectRemovedEvent>>(
                         (handler, request) => handler.Handle(request));
             });
             

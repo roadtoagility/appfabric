@@ -1,10 +1,10 @@
 export class Project{
-    id: number = 0;
+    id: string;
     name: string;
     code: string;
     startDate: Date = new Date();
     budget: number;
-    clientId: number;
+    clientId: string;
     isFavorited: boolean = false;
 
     status: number;
@@ -18,12 +18,12 @@ export class Project{
     }
 
     update(project){
-        this.id = project.id === null || project.id === undefined ? this.id : +project.id;
+        this.id = project.id === null || project.id === undefined ? this.id : project.id;
         this.name = project.name === null || project.name === undefined ? this.name : project.name;
         this.code = project.code === null || project.code === undefined ? this.code : project.code;
         this.startDate = project.startDate === null || project.startDate === undefined ? this.startDate : project.startDate;
         this.budget = project.budget === null || project.budget === undefined ? this.budget : +project.budget;
-        this.clientId = project.clientId === null || project.clientId === undefined ? this.clientId : +project.clientId;
+        this.clientId = project.clientId === null || project.clientId === undefined ? this.clientId : project.clientId;
         this.isFavorited = project.isFavorited === null || project.isFavorited === undefined ? this.isFavorited : project.isFavorited;
 
         this.status = project.status === null || project.status === undefined ? this.status : +project.status;

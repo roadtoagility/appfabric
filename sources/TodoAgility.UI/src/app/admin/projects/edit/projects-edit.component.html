@@ -43,8 +43,8 @@
                     <div class="col-sm-3">
                       <div class="form-group">
                         <label for="inputLastName" class="label">Status</label>
-                        <nb-select matRipple selected="1" fullWidth formControlName="status" [class.danger]="formDetails.get('status').invalid">
-                          <nb-option matRipple value="1">Pending Approval</nb-option>
+                        <nb-select matRipple fullWidth formControlName="status" [class.danger]="formDetails.get('status').invalid">
+                          <nb-option matRipple value="0">Pending Approval</nb-option>
                           <nb-option matRipple value="2">Approved</nb-option>
                           <nb-option matRipple value="3">Pending OS</nb-option>
                           <nb-option matRipple value="4">OS Approved</nb-option>

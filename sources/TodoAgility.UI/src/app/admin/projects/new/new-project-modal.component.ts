@@ -22,6 +22,7 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
   success = false;
   errors: any[];
   private _formSubmitted: any;
+  savedObject: any;
 
   constructor(private _projectService: ProjectService, protected ref: NbDialogRef<NewProjectFormComponent>) {
     this._unsubscribeAll = new Subject();
@@ -40,6 +41,7 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
         this.errors = [];
         this.success = true;
         this.toggleLoadingAnimation();
+        this.savedObject = response;
       }
     });
 
@@ -71,7 +73,6 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
     this._formSubmitted = formSubmitted;
     
     if (this.form.status === 'VALID' && this.form.touched === true) {
-      project.clientId = +project.clientId;
       this._projectService.save(project);
     }else{
       this.errors = [{message: "Check required fields."}];

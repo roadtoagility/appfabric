@@ -46,7 +46,6 @@ export class NewClientFormComponent implements OnDestroy {
         this.success = true;
         this.toggleLoadingAnimation();
         this.savedObject = response;
-        console.log(response);
       }
     });
 
