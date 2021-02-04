@@ -17,7 +17,6 @@
 //
 
 using TodoAgility.Persistence.Framework.ReadModel.Repositories;
-using TodoAgility.Persistence.ReadModel.Projections;
 
 namespace TodoAgility.Persistence.ReadModel.Repositories
 {

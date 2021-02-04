@@ -35,6 +35,7 @@ namespace TodoAgility.Domain.Framework.DomainEvents
             {
                 //TODO: log here
                 Exception = ex;
+                throw;
             }
         }
 

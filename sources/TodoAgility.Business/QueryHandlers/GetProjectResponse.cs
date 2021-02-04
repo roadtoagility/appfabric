@@ -18,7 +18,7 @@
 
 using System.Collections.Generic;
 using TodoAgility.Business.Framework;
-using TodoAgility.Persistence.ReadModel.Projections;
+using TodoAgility.Persistence.ReadModel;
 
 namespace TodoAgility.Business.QueryHandlers
 {

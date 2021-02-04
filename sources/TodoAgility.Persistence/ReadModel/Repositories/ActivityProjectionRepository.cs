@@ -19,10 +19,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using LiteDB;
+using Microsoft.EntityFrameworkCore;
 using TodoAgility.Domain.Framework.BusinessObjects;
-using TodoAgility.Persistence.ReadModel.Projections;
 
 namespace TodoAgility.Persistence.ReadModel.Repositories
 {
@@ -36,22 +36,22 @@ namespace TodoAgility.Persistence.ReadModel.Repositories
 
         public ActivityProjection Get(EntityId id)
         {
-            return Context.Activities.FindOne(ac => ac.ActivityId == id.Value);
+            throw new NotImplementedException();
         }
 
         public void Add(ActivityProjection entity)
         {
-            Context.Activities.Upsert(entity);
+            throw new NotImplementedException();
         }
 
         public void Remove(ActivityProjection entity)
         {
-            Context.Activities.Delete( new BsonValue(entity.ActivityId));
+            throw new NotImplementedException();
         }
 
         public IReadOnlyList<ActivityProjection> Find(Expression<Func<ActivityProjection, bool>> predicate)
         {
-            return Context.Activities.Query().Where(predicate).ToList();
+            throw new NotImplementedException();
         }
     }
 }

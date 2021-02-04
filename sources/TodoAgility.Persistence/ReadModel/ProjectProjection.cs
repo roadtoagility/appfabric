@@ -19,7 +19,7 @@
 
 using System;
 
-namespace TodoAgility.Persistence.ReadModel.Projections
+namespace TodoAgility.Persistence.ReadModel
 {
     public class ProjectProjection
     {
@@ -39,6 +39,7 @@ namespace TodoAgility.Persistence.ReadModel.Projections
             Status = status;
             StatusName = statusName;
             OrderNumber = orderNumber;
+            IsDeleted = false;
         }
 
         public Guid Id { get; set; }
@@ -54,5 +55,14 @@ namespace TodoAgility.Persistence.ReadModel.Projections
         
         public int Status { get; set; }
         public string StatusName { get; set; }
+        
+        public bool IsDeleted { get; set; }
+
+        public static ProjectProjection Empty()
+        {
+            return new ProjectProjection(Guid.Empty, String.Empty, String.Empty, Decimal.Zero, 
+                DateTime.UnixEpoch,Guid.Empty, String.Empty, String.Empty, String.Empty, 
+                Int32.MinValue, String.Empty);
+        }
     }
 }

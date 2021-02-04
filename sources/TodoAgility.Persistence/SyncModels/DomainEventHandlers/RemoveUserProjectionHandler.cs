@@ -20,7 +20,6 @@
 using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Domain.Framework.DomainEvents;
 using TodoAgility.Persistence.Framework;
-using TodoAgility.Persistence.ReadModel.Projections;
 using TodoAgility.Persistence.ReadModel.Repositories;
 
 namespace TodoAgility.Persistence.SyncModels.DomainEventHandlers

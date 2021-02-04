@@ -19,41 +19,56 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using LiteDB;
 using TodoAgility.Domain.Framework.BusinessObjects;
-using TodoAgility.Persistence.ReadModel.Projections;
 
 namespace TodoAgility.Persistence.ReadModel.Repositories
 {
     public sealed class UserProjectionRepository : IUserProjectionRepository
     {
-        private readonly TodoAgilityProjectionsDbContext _context;
-        public UserProjectionRepository(TodoAgilityProjectionsDbContext context)
+        private readonly TodoAgilityDbContext _context;
+        public UserProjectionRepository(TodoAgilityDbContext context)
         {
             _context = context;
         }
 
         public UserProjection Get(EntityId id)
         {
-            return _context.Users.FindOne(ac => ac.Id == id.Value);
+            var user = _context.UsersProjection.FirstOrDefault(ac => ac.Id == id.Value);
+            
+            if (user == null)
+            {
+                UserProjection.Empty();
+            }
+            
+            return user;
         }
 
         public void Add(UserProjection entity)
         {
-            _context.Users.Upsert(entity);
+            var oldState =
+                _context.UsersProjection.FirstOrDefault(b => b.Id == entity.Id);
+
+            if (oldState == null)
+            {
+                _context.UsersProjection.Add(entity);
+            }
+            else
+            {
+                _context.Entry(oldState).CurrentValues.SetValues(entity);
+            }
         }
 
         public void Remove(UserProjection entity)
         {
-            var isExecuted = _context.Users.Delete(new BsonValue(entity.Id));
-
-            _context.Database.Commit();
+            _context.UsersProjection.Remove(entity);
         }
 
         public IReadOnlyList<UserProjection> Find(Expression<Func<UserProjection, bool>> predicate)
         {
-            return _context.Users.Query().Where(predicate).ToList();
+            return _context.UsersProjection.Where(predicate).ToList();
         }
     }
 }

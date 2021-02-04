@@ -18,32 +18,32 @@
 
 
 using System;
-using TodoAgility.Persistence.Framework;
 
-namespace TodoAgility.Persistence.Model
+namespace TodoAgility.Persistence.ReadModel
 {
-    public sealed class DbSession<TRepository> : IDbSession<TRepository>, IDisposable
+    public class ActivityProjection
     {
-        public DbSession(TodoAgilityDbContext context, TRepository repository)
+        public ActivityProjection()
         {
-            Context = context;
-            Repository = repository;
-            
-            // context.Database.EnsureDeleted();
-            // context.Database.EnsureCreated();
+        }
+        public ActivityProjection(string status, string description, Guid activityId, Guid projectId)
+        {
+            ActivityId = activityId;
+            Status = status;
+            Description = description;
+            ProjectId = projectId;
         }
 
-        private TodoAgilityDbContext Context { get; }
-        public TRepository Repository { get; }
+        public Guid ActivityId { get; set; }
+        public string Status { get; set; }
+        public string Description { get; set; }
+        public Guid ProjectId { get; set; }
 
-        public void SaveChanges()
-        {
-            Context.SaveChanges();
-        }
 
-        public void Dispose()
+        public static ActivityProjection Empty()
         {
-            Context?.Dispose();
+            return new ActivityProjection(String.Empty, String.Empty, Guid.Empty, Guid.Empty);
         }
+        
     }
 }

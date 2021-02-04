@@ -19,39 +19,56 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
-using LiteDB;
 using TodoAgility.Domain.Framework.BusinessObjects;
-using TodoAgility.Persistence.ReadModel.Projections;
+using TodoAgility.Persistence.Model;
 
 namespace TodoAgility.Persistence.ReadModel.Repositories
 {
     public sealed class ProjectProjectionRepository : IProjectProjectionRepository
     {
-        private readonly TodoAgilityProjectionsDbContext _context;
-        public ProjectProjectionRepository(TodoAgilityProjectionsDbContext context)
+        private readonly TodoAgilityDbContext _context;
+        public ProjectProjectionRepository(TodoAgilityDbContext context)
         {
             _context = context;
         }
 
         public ProjectProjection Get(EntityId id)
         {
-            return _context.Projects.FindOne(ac => ac.Id == id.Value);
+            var project = _context.ProjectsProjection.FirstOrDefault(ac => ac.Id == id.Value);
+            
+            if (project == null)
+            {
+                ProjectProjection.Empty();
+            }
+            
+            return project;
         }
 
         public void Add(ProjectProjection entity)
         {
-            _context.Projects.Upsert(entity);
+            var oldState =
+                _context.ProjectsProjection.FirstOrDefault(b => b.Id == entity.Id);
+
+            if (oldState == null)
+            {
+                _context.ProjectsProjection.Add(entity);
+            }
+            else
+            {
+                _context.Entry(oldState).CurrentValues.SetValues(entity);
+            }
         }
 
         public void Remove(ProjectProjection entity)
         {
-            _context.Projects.Delete( new BsonValue(entity.Id));
+            _context.ProjectsProjection.Remove(entity);
         }
 
         public IReadOnlyList<ProjectProjection> Find(Expression<Func<ProjectProjection, bool>> predicate)
         {
-            return _context.Projects.Query().Where(predicate).ToList();
+            return _context.ProjectsProjection.Where(predicate).ToList();
         }
     }
 }

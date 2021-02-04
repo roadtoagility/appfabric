@@ -22,7 +22,6 @@ using TodoAgility.Business.QueryHandlers.Filters;
 using TodoAgility.Domain.Framework.BusinessObjects;
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Framework.ReadModel.Repositories;
-using TodoAgility.Persistence.ReadModel.Projections;
 using TodoAgility.Persistence.ReadModel.Repositories;
 
 namespace TodoAgility.Business.QueryHandlers

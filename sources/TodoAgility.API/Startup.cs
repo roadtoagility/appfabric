@@ -14,12 +14,12 @@ using TodoAgility.Business.QueryHandlers.Filters;
 using TodoAgility.Domain.AggregationProject.Events;
 using TodoAgility.Domain.AggregationUser.Events;
 using TodoAgility.Domain.Framework.DomainEvents;
+using TodoAgility.Persistence;
 using TodoAgility.Persistence.Framework;
 using TodoAgility.Persistence.Framework.ReadModel.Projections;
 using TodoAgility.Persistence.Model;
 using TodoAgility.Persistence.Model.Repositories;
 using TodoAgility.Persistence.ReadModel;
-using TodoAgility.Persistence.ReadModel.Projections;
 using TodoAgility.Persistence.ReadModel.Repositories;
 using TodoAgility.Persistence.SyncModels.DomainEventHandlers;
 
@@ -45,13 +45,9 @@ namespace TodoAgility.API
             
             services.AddSwaggerGen();
             
-            services.Configure<ProjectionDbOptions>(Configuration.GetSection(
-                ProjectionDbOptions.ProjectionConnectionStrings));
-            services.AddSingleton<TodoAgilityProjectionsDbContext>();
-            
             services.AddDbContext<TodoAgilityDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("ModelConnection")));
-
+            
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IProjectProjectionRepository, ProjectProjectionRepository>();
             
@@ -59,10 +55,10 @@ namespace TodoAgility.API
             services.AddScoped<IUserProjectionRepository, UserProjectionRepository>();
             
             services.AddScoped<IDbSession<IProjectRepository>, DbSession<IProjectRepository>>();
-            services.AddScoped<IDbSession<IProjectProjectionRepository>, ProjectionDbSession<IProjectProjectionRepository>>();
+            services.AddScoped<IDbSession<IProjectProjectionRepository>, DbSession<IProjectProjectionRepository>>();
             
             services.AddScoped<IDbSession<IUserRepository>, DbSession<IUserRepository>>();
-            services.AddScoped<IDbSession<IUserProjectionRepository>, ProjectionDbSession<IUserProjectionRepository>>();
+            services.AddScoped<IDbSession<IUserProjectionRepository>, DbSession<IUserProjectionRepository>>();
             
             services.AddScoped<AddProjectCommandHandler>();
             services.AddScoped<UpdateProjectCommandHandler>();

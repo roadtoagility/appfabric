@@ -1,19 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using TodoAgility.Persistence.Framework.Model;
+using TodoAgility.Persistence.Model;
+using TodoAgility.Persistence.ReadModel;
 
-namespace TodoAgility.Persistence.Model
+namespace TodoAgility.Persistence
 {
     public class TodoAgilityDbContext : AggregateDbContext
     {
-        public TodoAgilityDbContext(DbContextOptions options)
+        public TodoAgilityDbContext(DbContextOptions<TodoAgilityDbContext> options)
             : base(options)
         {
 
         }
 
         public DbSet<ProjectState> Projects { get; set; }
+        public DbSet<ProjectProjection> ProjectsProjection { get; set; }
         public DbSet<UserState> Users { get; set; }
-
+        public DbSet<UserProjection> UsersProjection { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -63,6 +66,31 @@ namespace TodoAgility.Persistence.Model
                     b.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate().IsRowVersion();
                 });
 
+            #region projection
+            
+            modelBuilder.Entity<ProjectProjection>(p =>
+            {
+                p.Property(pr => pr.Id).ValueGeneratedNever();
+                p.HasKey(pr => pr.Id);
+                p.Property(pr => pr.Name);
+                p.Property(pr => pr.Code);
+                p.Property(pr => pr.StartDate);
+                p.Property(pr => pr.Budget);
+                p.Property(pr => pr.ClientId);
+                p.HasQueryFilter(proj => EF.Property<bool>(proj, "IsDeleted") == false);
+            });
+            
+            modelBuilder.Entity<UserProjection>(u =>
+            {
+                u.Property(pr => pr.Id).ValueGeneratedNever();
+                u.HasKey(pr => pr.Id);
+                u.Property(pr => pr.Name);
+                u.Property(pr => pr.Cnpj);
+                u.Property(pr => pr.CommercialEmail);
+                u.HasQueryFilter(user => EF.Property<bool>(user, "IsDeleted") == false);
+            });
+            
+            #endregion
         }
     }
 }

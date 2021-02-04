@@ -18,31 +18,34 @@
 
 
 using System;
+using Microsoft.EntityFrameworkCore;
 using TodoAgility.Persistence.Framework;
-using TodoAgility.Persistence.ReadModel.Projections;
 
-namespace TodoAgility.Persistence.ReadModel
+namespace TodoAgility.Persistence
 {
-    public class ProjectionDbSession<TRepository> : IDbSession<TRepository>, IDisposable
+    public class DbSession<TRepository>: IDbSession<TRepository>, IDisposable
     {
-
-        public ProjectionDbSession(TodoAgilityProjectionsDbContext context, TRepository repository)
+        public DbSession(TodoAgilityDbContext context, TRepository repository)
         {
             Context = context;
             Repository = repository;
+            
+            // context.Database.EnsureDeleted();
+            // context.Database.EnsureCreated();
         }
 
-        private TodoAgilityProjectionsDbContext Context { get; }
+        private DbContext Context { get; }
+        
         public TRepository Repository { get; }
 
         public void SaveChanges()
         {
-            Context.Database.Commit();
+            Context.SaveChanges();
         }
 
         public void Dispose()
         {
-            Context?.Database.Dispose();
+            Context?.Dispose();
         }
     }
 }

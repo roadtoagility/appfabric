@@ -19,7 +19,7 @@
 
 using System;
 
-namespace TodoAgility.Persistence.ReadModel.Projections
+namespace TodoAgility.Persistence.ReadModel
 {
     public class UserProjection
     {
@@ -32,12 +32,19 @@ namespace TodoAgility.Persistence.ReadModel.Projections
             Name = name;
             Cnpj = cnpj;
             CommercialEmail = commercialEmail;
+            IsDeleted = false;
         }
 
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Cnpj { get; set; }
         public string CommercialEmail { get; set; }
-       
+        
+        public bool IsDeleted { get; set; }
+
+        public static UserProjection Empty()
+        {
+            return new UserProjection(Guid.Empty, String.Empty, String.Empty, String.Empty);
+        }
     }
 }
