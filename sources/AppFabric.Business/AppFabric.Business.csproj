@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentMediator" Version="0.4.7" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AppFabric.Domain\AppFabric.Domain.csproj" />
+      <ProjectReference Include="..\AppFabric.Persistence\AppFabric.Persistence.csproj" />
+    </ItemGroup>
+    <PropertyGroup>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    </PropertyGroup>
+</Project>

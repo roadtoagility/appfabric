@@ -1,0 +1,26 @@
+<nb-card>
+    <nb-card-header>
+      Projects
+    </nb-card-header>
+  
+    <nb-card-body>
+
+        <form class="form-inline" [formGroup]="formSearch">
+            <input type="text" nbInput fullWidth placeholder="Search by project's name" formControlName="query">
+
+            <button class="btn btn-outline-secondary float-right" type="button" id="button-addon2" (click)="onSubmit(formSearch.value)">
+                Search
+            </button>
+
+            <button class="btn btn-primary float-right" type="button" id="button-addon2" (click)="new()">
+                New
+            </button>
+        </form>
+
+        <br>
+
+        <ng2-smart-table [settings]="settings" [source]="source" (delete)="onDeleteConfirm($event)" (edit)='onEdit($event)'>
+        </ng2-smart-table>
+    </nb-card-body>
+</nb-card>
+  

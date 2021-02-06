@@ -1,0 +1,29 @@
+
+
+<nb-card>
+    <nb-card-header>{{ title }}</nb-card-header>
+    <nb-card-body>
+        <div style="width: 600px;">
+            <div class="row">
+                <div class="col-lg-8">
+                    <input type="text" nbInput fullWidth placeholder="Search by project's title" [(ngModel)]="projectNameSearch" class="form-control">
+                </div>
+                <div class="col-lg-2">
+                    <button class="btn btn-outline-secondary float-right" type="button" id="button-addon2" (click)="searchProject()">
+                        Search
+                    </button>
+                </div>
+            </div>
+        
+            <br />
+        
+            <ng2-smart-table [settings]="settings" [source]="source" (edit)='onSelectProject($event)'>
+            </ng2-smart-table>
+        
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton matRipple status="primary" (click)="dismiss()">Close</button>
+    </nb-card-footer>
+  </nb-card>
+  

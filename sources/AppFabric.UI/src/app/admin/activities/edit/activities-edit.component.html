@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-12">
+      <nb-card class="inline-form-card">
+        <nb-card-header>Dados básicos</nb-card-header>
+        <nb-card-body>
+          <form class="form-inline">
+            <input type="text" nbInput fullWidth placeholder="Título">
+            <input type="text" nbInput fullWidth placeholder="Responsável">
+            <input type="text" nbInput fullWidth placeholder="Esforço">
+            <nb-select matRipple selected="SISRH" fullWidth>
+              <nb-option matRipple value="SISRH">SISRH</nb-option>
+              <nb-option matRipple value="MTRIP">MTRIP</nb-option>
+              <nb-option matRipple value="SGA">SGA</nb-option>
+            </nb-select>
+            <nb-select matRipple selected="Não Iniciado" fullWidth>
+                <nb-option matRipple value="Não Iniciado">Não Iniciado</nb-option>
+                <nb-option matRipple value="Iniciado">Iniciado</nb-option>
+                <nb-option matRipple value="Concluído">Concluído</nb-option>
+            </nb-select>
+          </form>
+        </nb-card-body>
+      </nb-card>
+    </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <nb-card class="inline-form-card">
+      <nb-card-header>Descrição</nb-card-header>
+      <nb-card-body>
+        <form class="form-inline">
+          <textarea rows="5" nbInput fullWidth shape="round" ></textarea>
+        </form>
+        <button type="button" nbButton matRipple status="primary" outline style="margin-right: 10px;" (click)="backClicked()">Cancelar</button>
+        <button type="submit" nbButton status="primary">Salvar</button>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

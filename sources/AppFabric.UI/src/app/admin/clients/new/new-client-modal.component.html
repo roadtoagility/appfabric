@@ -1,0 +1,57 @@
+<form>
+  <nb-card>
+    <nb-card-header>{{ title }}</nb-card-header>
+    <nb-card-body [nbSpinner]="loading">
+        <div style="width: 600px;">
+          
+          <div *ngIf="errors !== undefined && errors.length > 0" class="alert alert-danger" role="alert">
+            <label>Errors</label>
+            <ul>
+                <li *ngFor="let error of errors">{{error.message}}</li>
+            </ul>
+          </div>
+          
+          <form [formGroup]="form" #formSubmitted="ngForm">
+            <div class="form-group row">
+              <label for="name" class="label col-sm-3 col-form-label">Name</label>
+              <div class="col-sm-9">
+                <input type="text" nbInput formControlName="name" fullWidth id="name" [class.info]="form.get('name').valid && 
+                (form.get('name').dirty || form.get('name').touched)" [class.danger]="form.get('name').invalid && 
+                (form.get('name').dirty || form.get('name').touched)">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="cnpj" class="label col-sm-3 col-form-label">Cnpj</label>
+              <div class="col-sm-9">
+                <input type="text" nbInput formControlName="cnpj" fullWidth id="cnpj" [class.danger]="form.get('cnpj').invalid && 
+                (form.get('cnpj').dirty || form.get('cnpj').touched)">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="commercialEmail" class="label col-sm-3 col-form-label">Email</label>
+              <div class="col-sm-9">
+                <input type="text" nbInput formControlName="commercialEmail" fullWidth id="commercialEmail" [class.danger]="form.get('commercialEmail').invalid && 
+                (form.get('commercialEmail').dirty || form.get('commercialEmail').touched)">
+              </div>
+            </div>
+          </form>
+
+          <div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
+            Client created! To complete the form <a href="/admin/editar-cliente/{{savedObject.id}}" class="alert-link">click here</a>
+          </div>
+            
+        </div>
+    </nb-card-body>
+    <nb-card-footer>
+      
+      <div class="row">
+        <div class="col-sm-12">
+          <button type="button" nbButton matRipple status="primary" outline style="margin-right: 10px" (click)="dismiss()">Close</button>
+          <button type="button" nbButton status="primary" (click)="onSubmit(formSubmitted, form.value)" [disabled]="form.invalid">Save</button>
+        </div>
+      </div>
+
+    </nb-card-footer>
+  </nb-card>
+</form>
+  

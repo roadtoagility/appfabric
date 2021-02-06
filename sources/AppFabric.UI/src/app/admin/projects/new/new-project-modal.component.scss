@@ -1,0 +1,18 @@
+@import '../../../@theme/styles/themes.scss';
+
+@include nb-install-component() {
+  ::ng-deep .form {
+    display: flex;
+    flex-direction: column;
+
+    .text-label {
+      margin-top: 1.5rem;
+    }
+  }
+}
+
+.danger{
+  background-color: #f7f9fc !important;
+  border-color: #ff3d71 !important;
+  color: #222b45 !important;
+}

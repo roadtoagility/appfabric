@@ -1,0 +1,92 @@
+<div *ngIf="errors !== undefined && errors.length > 0" class="alert alert-danger" role="alert">
+  <label>Errors</label>
+  <ul>
+      <li *ngFor="let error of errors">{{error.message}}</li>
+  </ul>
+</div>
+
+<div class="alert alert-success" role="alert" *ngIf="success && errors.length == 0">
+  Client Updated!
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+      <nb-card class="inline-form-card">
+        <nb-card-header>Basic info</nb-card-header>
+        <nb-card-body [nbSpinner]="loading">
+          <form class="form-inline" [formGroup]="form">
+            <input type="text" nbInput fullWidth formControlName="name" placeholder="Company name" name="name" [class.danger]="form.get('name').invalid">
+            <input type="text" nbInput fullWidth formControlName="cnpj" placeholder="CNPJ" name="cnpj" [class.danger]="form.get('cnpj').invalid">
+            <input type="text" nbInput fullWidth formControlName="commercialEmail" placeholder="Commercial E-mail" name="commercialEmail" [class.danger]="form.get('commercialEmail').invalid">
+          </form>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+        <nb-card>
+            <nb-card-header></nb-card-header>
+            <nb-card-body [nbSpinner]="loading">
+              <form [formGroup]="formDetails">
+                <div class="row">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="address" class="label">Address</label>
+                        <input type="text" nbInput fullWidth id="address" formControlName="address" name="address" placeholder="SGAN 900 Módulo F LT 01">
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="state" class="label">State</label>
+                        <nb-select matRipple selected="AC" fullWidth required name="state" formControlName="state">
+                            <nb-option *ngFor="let item of states" [value]="item.value">{{item.viewValue}}</nb-option>
+                          </nb-select>
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                          <label for="city" class="label">City</label>
+                          <input type="text" nbInput fullWidth id="city" placeholder="Ex: Acrelândia" formControlName="city">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                          <label for="cep" class="label">CEP</label>
+                          <input type="text" nbInput fullWidth id="cep" placeholder="XXXXX-XXX" formControlName="cep">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="area" class="label">Business Area</label>
+                          <input type="text" nbInput fullWidth id="area" name="area" placeholder="Ex: Indústria Metalúrgica" formControlName="businessArea">
+                        </div>
+                      </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="businessManager" class="label">Business Manager</label>
+                        <input type="text" nbInput fullWidth id="businessManager" name="businessManager" formControlName="businessManager">
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="businessTelefone" class="label">Commercial Phone</label>
+                            <input type="text" nbInput fullWidth id="businessTelefone" name="businessTelefone" placeholder="61 9999 9999" formControlName="commercialPhone">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <button type="button" nbButton matRipple status="primary" outline style="margin-right: 10px" (click)="backClicked()">Cancel</button>
+                    <button type="submit" nbButton status="primary" (click)="onSubmit(formSubmitted, form.value, formDetails.value)" [disabled]="form.invalid">Save</button>
+                  </div>
+                </div>
+              </form>
+            </nb-card-body>
+          </nb-card>
+      </div>
+  </div>
