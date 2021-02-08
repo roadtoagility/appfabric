@@ -30,8 +30,8 @@ namespace AppFabric.Persistence
             Context = context;
             Repository = repository;
 
-            //context.Database.EnsureDeleted();
-            //context.Database.EnsureCreated();
+            // context.Database.EnsureDeleted();
+            // context.Database.EnsureCreated();
         }
 
         private DbContext Context { get; }
