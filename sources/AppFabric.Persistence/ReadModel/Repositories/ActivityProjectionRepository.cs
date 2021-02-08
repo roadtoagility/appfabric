@@ -28,8 +28,8 @@ namespace AppFabric.Persistence.ReadModel.Repositories
 {
     public sealed class ActivityProjectionRepository : IActivityProjectionRepository
     {
-        private AppFabricProjectionsDbContext Context { get; }
-        public ActivityProjectionRepository(AppFabricProjectionsDbContext context)
+        private AppFabricDbContext Context { get; }
+        public ActivityProjectionRepository(AppFabricDbContext context)
         {
             Context = context;
         }

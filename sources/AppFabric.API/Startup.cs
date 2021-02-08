@@ -16,10 +16,7 @@ using AppFabric.Domain.AggregationUser.Events;
 using AppFabric.Domain.Framework.DomainEvents;
 using AppFabric.Persistence;
 using AppFabric.Persistence.Framework;
-using AppFabric.Persistence.Framework.ReadModel.Projections;
-using AppFabric.Persistence.Model;
 using AppFabric.Persistence.Model.Repositories;
-using AppFabric.Persistence.ReadModel;
 using AppFabric.Persistence.ReadModel.Repositories;
 using AppFabric.Persistence.SyncModels.DomainEventHandlers;
 
