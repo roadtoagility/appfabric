@@ -45,7 +45,7 @@ namespace AppFabric.Domain.Framework.BusinessObjects
         
         public static EntityId Empty()
         {
-            return new EntityId(Guid.Empty);
+            return EntityId.From(Guid.Empty);
         }
         
         public static EntityId GetNext()

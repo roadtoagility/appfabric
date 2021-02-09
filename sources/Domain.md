@@ -1,12 +1,12 @@
-**Projeto** tem atividades, tem orçamento
+Executar a verificação de cobertura
 
-**Release** tem atividades, custo
+```bash
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./AppFabric.Tests/TestResults/Coverage/
+```
 
-**Atividade**  tem estado, release e projeto
+Gerar o relatório de cobertura
 
-
-
-**Projeto** tem **Atividades** tem **orçamento** (calculado no custo em horas das atividades)
-
-​	Release tem atividades 
+```bash
+dotnet ~/.nuget/packages/reportgenerator/4.8.5/tools/net5.0/ReportGenerator.dll "-reports:./AppFabric.Tests/TestsResults/coverage.cobertura.xml" "-targetdir:./AppFabric.Tests/TestsResults/"
+```
 

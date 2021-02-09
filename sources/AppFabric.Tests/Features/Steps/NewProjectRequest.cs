@@ -24,9 +24,9 @@ using AppFabric.Domain.Framework.BusinessObjects;
 using Xunit;
 using Xunit.Gherkin.Quick;
 
-namespace AppFabric.Tests.Features
+namespace AppFabric.Tests.Features.Steps
 {
-    [FeatureFile("./Features/NewProjectRequest.feature")]
+    [FeatureFile("../Features/new_project_request_created.feature")]
     public sealed class NewProjectRequest:Feature
     {
         private ProjectName _projectName;
