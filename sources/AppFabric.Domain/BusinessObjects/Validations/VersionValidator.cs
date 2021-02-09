@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,27 +16,19 @@
 // Boston, MA  02110-1301, USA.
 //
 
-
 using System;
-using AppFabric.Persistence.Framework.Model;
+using FluentValidation;
 
-namespace AppFabric.Persistence.Model
+namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public class ActivityState : PersistentState
+    public sealed class VersionValidator: AbstractValidator<Version>
     {
-        public ActivityState(int status, string description, uint activityId, uint projectId, byte[] rowVersion)
-            : base(DateTime.Now, rowVersion)
-        {
-            ActivityId = activityId;
-            Status = status;
-            Description = description;
-            ProjectId = projectId;
-        }
-
-        public uint ActivityId { get; set; }
-        public int Status { get; set; }
-        public string Description { get; set; }
         
-        public uint ProjectId { get; set; }
+        public VersionValidator()
+        {
+            RuleFor(version => version.Value).NotNull();
+            RuleFor(version => version.Value).GreaterThanOrEqualTo(0);
+            RuleFor(version => version.Value).LessThanOrEqualTo(int.MaxValue);
+        }
     }
 }

@@ -124,6 +124,7 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void user_project_command_failed()
         {
+            //given
             var fixture = new Fixture().Customize(new AutoNSubstituteCustomization{ ConfigureMembers = true });
             fixture.Customizations.Add(new RandomNumericSequenceGenerator(long.MinValue,-1));
             fixture.Register<Money>(() => Money.From(fixture.Create<Decimal>()));
@@ -140,10 +141,11 @@ namespace AppFabric.Tests.Domain
             var repo = Substitute.For<IProjectRepository>();
             var db = Substitute.For<IDbSession<IProjectRepository>>();
 
+            // when 
             var handler = new AddProjectCommandHandler(mediator,db);
-
             var result = handler.Execute(command);
 
+            // then
             Assert.True(!result.IsSucceed && result.Violations.Count == 4);
         }
     }

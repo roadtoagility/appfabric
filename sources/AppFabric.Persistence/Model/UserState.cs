@@ -24,8 +24,8 @@ namespace AppFabric.Persistence.Model
 {
     public class UserState : PersistentState
     {
-        public UserState(Guid id, string name, string cnpj, string commercialEmail)
-        :base(DateTime.Now)
+        public UserState(Guid id, string name, string cnpj, string commercialEmail, byte[] rowVersion)
+        :base(DateTime.Now, rowVersion)
         {
             Id = id;
             Name = name;

@@ -22,6 +22,7 @@ using System.Diagnostics;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Model;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Persistence.ExtensionMethods
 {
@@ -36,7 +37,8 @@ namespace AppFabric.Persistence.ExtensionMethods
                 project.ClientId.Value,
                 project.Owner.Value,
                 project.OrderNumber.Value,
-                project.Status.Value);
+                project.Status.Value,
+                BitConverter.GetBytes(project.Version.Value));
 
         public static Project ToProject(this ProjectState state)
             => Project.From(
@@ -48,20 +50,23 @@ namespace AppFabric.Persistence.ExtensionMethods
                 EntityId.From(state.ClientId),
                 Email.From(state.Owner),
                 ProjectStatus.From(state.Status),
-                ServiceOrderNumber.From(state.OrderNumber));
+                ServiceOrderNumber.From(state.OrderNumber),
+                Version.From(BitConverter.ToInt32(state.RowVersion)));
         
         public static UserState ToUserState(this User user)
             => new UserState(user.Id.Value,
                 user.Name.Value, 
                 user.Cnpj.Value, 
-                user.CommercialEmail.Value);
+                user.CommercialEmail.Value,
+                BitConverter.GetBytes(user.Version.Value));
 
         public static User ToUser(this UserState state)
             => User.From(
                     EntityId.From(state.Id),
                     Name.From(state.Name),
                     SocialSecurityId.From(state.Cnpj),
-                    Email.From(state.CommercialEmail));
+                    Email.From(state.CommercialEmail),
+                    Version.From(BitConverter.ToInt32(state.RowVersion)));
 
 
     }

@@ -24,8 +24,8 @@ namespace AppFabric.Persistence.Model
 {
     public class ProjectState : PersistentState
     {
-        public ProjectState(Guid id, string name, string code, decimal budget, DateTime startDate, Guid clientId, string owner, string orderNumber, int status)
-        :base(startDate)
+        public ProjectState(Guid id, string name, string code, decimal budget, DateTime startDate, Guid clientId, string owner, string orderNumber, int status, byte[] rowVersion)
+        :base(startDate, rowVersion)
         {
             Id = id;
             ClientId = clientId;
