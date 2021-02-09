@@ -36,7 +36,7 @@ namespace AppFabric.Persistence
                     b.Property(q => q.IsDeleted);
                     b.HasQueryFilter(project => EF.Property<bool>(project, "IsDeleted") == false);
                     b.Property(e => e.CreateAt);
-                    b.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate().IsRowVersion();
+                    b.Property(e => e.RowVersion);
                 });
 
             modelBuilder.Entity<UserState>(
@@ -50,7 +50,7 @@ namespace AppFabric.Persistence
                     b.Property(e => e.IsDeleted);
                     b.HasQueryFilter(user => EF.Property<bool>(user, "IsDeleted") == false);
                     b.Property(e => e.CreateAt);
-                    b.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate().IsRowVersion();
+                    b.Property(e => e.RowVersion);
                 });
             
             modelBuilder.Entity<ClientState>(
@@ -63,7 +63,7 @@ namespace AppFabric.Persistence
                     b.Property(q => q.IsDeleted);
                     b.HasQueryFilter(client => EF.Property<bool>(client, "IsDeleted") == false);
                     b.Property(e => e.CreateAt);
-                    b.Property(e => e.RowVersion).ValueGeneratedOnAddOrUpdate().IsRowVersion();
+                    b.Property(e => e.RowVersion);
                 });
 
             #region projection

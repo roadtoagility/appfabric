@@ -32,6 +32,10 @@ namespace AppFabric.Domain.AggregationProject
             if (project.ValidationResults.IsValid)
             {
                 Apply(project);
+            }
+
+            if (project.IsNew())
+            {
                 Raise(ProjectAddedEvent.For(project));
             }
 
@@ -61,7 +65,16 @@ namespace AppFabric.Domain.AggregationProject
         
         public static ProjectAggregationRoot ReconstructFrom(Project currentState)
         {
-            return new ProjectAggregationRoot(currentState);
+            return new ProjectAggregationRoot(Project.From(currentState.Id,
+                            currentState.Name,
+                            currentState.Code,
+                            currentState.StartDate,
+                            currentState.Budget,
+                            currentState.ClientId,
+                            currentState.Owner,
+                            currentState.Status,
+                            currentState.OrderNumber,
+                            Version.Next(currentState.Version)));
         }
 
         

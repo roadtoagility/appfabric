@@ -35,11 +35,12 @@ namespace AppFabric.Domain.AggregationUser
                 Apply(user);
             }
 
+            if (user.IsNew())
+            {
+                Raise(UserAddedEvent.For(user));
+            }
+
             ValidationResults = user.ValidationResults;
-        }
-        
-        private UserAggregationRoot()
-        {
         }
 
         #region Aggregation contruction
@@ -47,30 +48,20 @@ namespace AppFabric.Domain.AggregationUser
         
         public static UserAggregationRoot ReconstructFrom(User currentState)
         {
-            return new UserAggregationRoot(currentState);
+            var user = User.From(currentState.Id, currentState.Name, currentState.Cnpj,
+                currentState.CommercialEmail, Version.Next(currentState.Version));
+            return new UserAggregationRoot(user);
         }
 
         
         public static UserAggregationRoot CreateFrom(Name name, SocialSecurityId cnpj, Email commercialEmail)
         {
-            var user = User.From(EntityId.GetNext(), name, cnpj, commercialEmail);
-            var agg = new UserAggregationRoot();
-            agg.Add(user);
-            return agg;
+            var user = User.From(EntityId.GetNext(), name, cnpj, commercialEmail, Version.New());
+            return new UserAggregationRoot(user);
+            // agg.Add(user);
         }
 
         #endregion
-
-        private void Add(User user)
-        {
-            if (user.ValidationResults.IsValid)
-            {
-                Apply(user);
-                Raise(UserAddedEvent.For(user));
-            }
-
-            ValidationResults = user.ValidationResults;
-        }
 
         public void Remove()
         {

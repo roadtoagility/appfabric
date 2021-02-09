@@ -24,8 +24,8 @@ namespace AppFabric.Persistence.Model
 {
     public class ClientState : PersistentState
     {
-        public ClientState(long projectId, long clientId)
-        :base(DateTime.Now)
+        public ClientState(long projectId, long clientId, byte[] rowVersion)
+        :base(DateTime.Now,rowVersion)
         {
             ProjectId = projectId;
             ClientId = clientId;

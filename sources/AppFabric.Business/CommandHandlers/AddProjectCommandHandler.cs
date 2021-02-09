@@ -41,8 +41,6 @@ namespace AppFabric.Business.CommandHandlers
         
         protected override CommandResult<Guid> ExecuteCommand(AddProjectCommand command)
         {
-            // _dbSession.Repository.Get(id);
-                
             var agg = ProjectAggregationRoot.CreateFrom(
                 ProjectName.From(command.Name),
                 ProjectCode.From(command.Code), 

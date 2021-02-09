@@ -27,7 +27,7 @@ namespace AppFabric.Domain.BusinessObjects
     {
         private Project(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate
             , Money budget, EntityId clientId, Email owner, ProjectStatus status
-            , ServiceOrderNumber orderNumber)
+            , ServiceOrderNumber orderNumber, Version currentVersion)
         {
             Id = id;
             Name = name;
@@ -38,6 +38,7 @@ namespace AppFabric.Domain.BusinessObjects
             Status = status;
             OrderNumber = orderNumber;
             Owner = owner;
+            Version = currentVersion;
         }
         public EntityId Id { get; }
         
@@ -56,9 +57,13 @@ namespace AppFabric.Domain.BusinessObjects
         
         public ServiceOrderNumber OrderNumber { get; }
         
-        public static Project From(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner, ProjectStatus status, ServiceOrderNumber orderNumber)
+        public Version Version { get; }
+
+        public bool IsNew() => Version.Value == 0; 
+        
+        public static Project From(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner, ProjectStatus status, ServiceOrderNumber orderNumber, Version version)
         {
-            var project = new Project(id, name, code, startDate, budget, clientId, owner, status, orderNumber);
+            var project = new Project(id, name, code, startDate, budget, clientId, owner, status, orderNumber, version);
             var validator = new ProjectValidator();
             project.SetValidationResult(validator.Validate(project));
             return project;        
@@ -66,12 +71,12 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static Project NewRequest(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
         {
-            return From(id, name, code, startDate, budget, clientId, Email.Empty(), ProjectStatus.Default(), ServiceOrderNumber.Empty());
+            return From(id, name, code, startDate, budget, clientId, Email.Empty(), ProjectStatus.Default(), ServiceOrderNumber.Empty(), Version.New());
         }
         
         public static Project CombineWith(Project current, ProjectDetail detail)
         {
-            return From(current.Id, detail.Name, current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, detail.Status, detail.OrderNumber);
+            return From(current.Id, detail.Name, current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, detail.Status, detail.OrderNumber, Version.Next(current.Version));
         }
         
         public override string ToString()

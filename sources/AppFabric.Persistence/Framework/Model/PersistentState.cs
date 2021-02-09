@@ -23,10 +23,11 @@ namespace AppFabric.Persistence.Framework.Model
 {
     public abstract class PersistentState : IPersistentState
     {
-        protected PersistentState(DateTime createAt)
+        protected PersistentState(DateTime createAt, byte[] rowVersion)
         {
             PersistenceId = Guid.NewGuid();
             CreateAt = createAt;
+            RowVersion = rowVersion;
         }
 
         public DateTime CreateAt { get; set; }
