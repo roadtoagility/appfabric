@@ -88,7 +88,7 @@ namespace AppFabric.Tests.Domain
 
             var entityId = fixture.Create<EntityId>();
             
-            Assert.True(entityId.ValidationResults.IsValid);
+            Assert.False(entityId.ValidationResults.IsValid);
         }
         
         [Fact]
@@ -141,7 +141,7 @@ namespace AppFabric.Tests.Domain
         {
             var fixture = new Fixture();
             fixture.Customizations.Add(
-                new RandomNumericSequenceGenerator(long.MinValue,0));
+                new RandomNumericSequenceGenerator(long.MinValue,-1));
             fixture.Register<Money>(() => Money.From(fixture.Create<Decimal>()));
 
             var money = fixture.Create<Money>();

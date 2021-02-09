@@ -66,12 +66,12 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static Project NewRequest(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
         {
-            return Project.From(id, name, code, startDate, budget, clientId, Email.Empty(), ProjectStatus.Default(), ServiceOrderNumber.Empty());
+            return From(id, name, code, startDate, budget, clientId, Email.Empty(), ProjectStatus.Default(), ServiceOrderNumber.Empty());
         }
         
         public static Project CombineWith(Project current, ProjectDetail detail)
         {
-            return Project.From(current.Id, detail.Name, current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, detail.Status, detail.OrderNumber);
+            return From(current.Id, detail.Name, current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, detail.Status, detail.OrderNumber);
         }
         
         public override string ToString()

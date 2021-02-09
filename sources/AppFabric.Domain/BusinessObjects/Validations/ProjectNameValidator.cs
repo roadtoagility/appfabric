@@ -24,7 +24,7 @@ namespace AppFabric.Domain.BusinessObjects.Validations
     {
         public ProjectNameValidator()
         {
-            RuleFor(name => name.Value).NotNull();
+            RuleFor(name => name).NotNull();
             RuleFor(name => name.Value).NotEmpty();
         }
     }

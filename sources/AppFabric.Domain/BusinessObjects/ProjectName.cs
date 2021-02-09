@@ -41,7 +41,12 @@ namespace AppFabric.Domain.BusinessObjects
             
             return projectName;
         }
-
+        
+        public static ProjectName Empty()
+        {
+            return From(string.Empty);
+        }
+        
         public override string ToString()
         {
             return $"{Value}";

@@ -41,6 +41,11 @@ namespace AppFabric.Domain.BusinessObjects
             
             return validDate;
         }
+        
+        public static DateAndTime Empty()
+        {
+            return From(DateTime.UnixEpoch);
+        }
 
         public override string ToString()
         {
