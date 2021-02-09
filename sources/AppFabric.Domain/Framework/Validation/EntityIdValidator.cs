@@ -27,6 +27,7 @@ namespace AppFabric.Domain.Framework.Validation
         public EntityIdValidator()
         {
             RuleFor(id => id.Value).NotNull();
+            RuleFor(id => id.Value).NotEqual(Guid.Empty);
         }
     }
 }

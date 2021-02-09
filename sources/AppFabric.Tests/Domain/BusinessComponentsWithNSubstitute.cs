@@ -23,6 +23,7 @@ using System.Threading;
 using AppFabric.Business.CommandHandlers;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
+using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.AggregationUser;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
@@ -40,10 +41,8 @@ namespace AppFabric.Tests.Domain
 {
     public sealed class BusinessComponentsWithNSubstitute
     {
-      
-        
         [Fact]
-        public void user_add_command()
+        public void user_add_command_succed()
         {
             var fixture = new Fixture().Customize(new AutoNSubstituteCustomization{ ConfigureMembers = true });
             
@@ -73,61 +72,79 @@ namespace AppFabric.Tests.Domain
         }
         
         [Fact]
-        public void money_create_zero()
+        public void user_add_command_failed()
         {
-            var fixture = new Fixture();
-            fixture.Register<Money>(() => Money.Zero());
-
-            var money = fixture.Create<Money>();
+            var fixture = new Fixture().Customize(new AutoNSubstituteCustomization{ ConfigureMembers = true });
             
-            Assert.True(money.ValidationResults.IsValid);
-        }
+            fixture.Register<EntityId>(() => EntityId.Empty());
+            fixture.Register<Name>(() => Name.Empty());
+            fixture.Register<SocialSecurityId>(() => SocialSecurityId.Empty());
+            fixture.Register<Email>(() => Email.Empty());
+            
+            var command = new AddUserCommand();
+            
+            var mediator = Substitute.For<IMediator>();
+            var repo = Substitute.For<IUserRepository>();
+            var db = Substitute.For<IDbSession<IUserRepository>>();
 
+            var handler = new AddUserCommandHandler(mediator,db);
+
+            var result = handler.Execute(command);
+            
+            Assert.True(!result.IsSucceed && result.Violations.Count == 4);
+        } 
+        
         [Fact]
-        public void money_equality_valid_quantity_of()
+        public void user_project_command_succed()
         {
-            var fixture = new Fixture();
-            fixture.Register<Money>(() => Money.From(1));
-
-            var money = fixture.Create<Money>();
+            var fixture = new Fixture().Customize(new AutoNSubstituteCustomization{ ConfigureMembers = true });
             
-            Assert.True(money.ToString().Equals("1"));
+            fixture.Register<EntityId>(() => EntityId.From(fixture.Create<Guid>()));
+            fixture.Register<Name>(() => Name.From(fixture.Create<string>()));
+            fixture.Register<ProjectCode>(() => ProjectCode.From(fixture.Create<string>()));
+            fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
+            fixture.Register<DateAndTime>(() => DateAndTime.From(fixture.Create<DateTime>()));
+            fixture.Register<ProjectStatus>(() => ProjectStatus.Default());
+            fixture.Register<ServiceOrderNumber>(() => ServiceOrderNumber.From(fixture.Create<string>()));
+            fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
+
+            var command = fixture.Create<AddProjectCommand>();
+            
+            var mediator = Substitute.For<IMediator>();
+            var repo = Substitute.For<IProjectRepository>();
+            var db = Substitute.For<IDbSession<IProjectRepository>>();
+
+            var handler = new AddProjectCommandHandler(mediator,db);
+
+            var result = handler.Execute(command);
+            
+            Assert.True(result.IsSucceed);
         }
         
         [Fact]
-        public void money_tostring_valid_quantity_of()
+        public void user_project_command_failed()
         {
-            var fixture = new Fixture();
-            fixture.Register<Money>(() => Money.From(1));
-
-            var money1 = fixture.Create<Money>();
-            var money2 = fixture.Create<Money>();
-            
-            Assert.Equal(money1,money2);
-        }
-        
-        [Fact]
-        public void money_create_valid_quantity_of()
-        {
-            var fixture = new Fixture();
+            var fixture = new Fixture().Customize(new AutoNSubstituteCustomization{ ConfigureMembers = true });
+            fixture.Customizations.Add(new RandomNumericSequenceGenerator(long.MinValue,-1));
             fixture.Register<Money>(() => Money.From(fixture.Create<Decimal>()));
-
-            var money = fixture.Create<Money>();
             
-            Assert.True(money.ValidationResults.IsValid);
-        }
-        
-        [Fact]
-        public void money_create_negative_quantity_of()
-        {
-            var fixture = new Fixture();
-            fixture.Customizations.Add(
-                new RandomNumericSequenceGenerator(long.MinValue,0));
-            fixture.Register<Money>(() => Money.From(fixture.Create<Decimal>()));
-
-            var money = fixture.Create<Money>();
+            fixture.Register<EntityId>(() => EntityId.Empty());
+            fixture.Register<ProjectName>(() => ProjectName.Empty());
+            fixture.Register<ProjectCode>(() => ProjectCode.Empty());
+            fixture.Register<DateAndTime>(() => DateAndTime.Empty());
+            fixture.Register<Money>(() => fixture.Create<Money>());
             
-            Assert.False(money.ValidationResults.IsValid);
+            var command = new AddProjectCommand();
+            
+            var mediator = Substitute.For<IMediator>();
+            var repo = Substitute.For<IProjectRepository>();
+            var db = Substitute.For<IDbSession<IProjectRepository>>();
+
+            var handler = new AddProjectCommandHandler(mediator,db);
+
+            var result = handler.Execute(command);
+
+            Assert.True(!result.IsSucceed && result.Violations.Count == 4);
         }
     }
 }
