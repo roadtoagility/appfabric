@@ -44,7 +44,7 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static Money Zero()
         {
-            return new Money(0);
+            return Money.From(0);
         }
 
         

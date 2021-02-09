@@ -27,7 +27,6 @@ namespace AppFabric.Domain.BusinessObjects.Validations
         {
             RuleFor(code => code.Value).NotNull();
             RuleFor(code => code.Value).NotEmpty();
-            RuleFor(code => code.Value).Must(code => !code.Contains(" "));
         }
     }
 }
