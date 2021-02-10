@@ -21,13 +21,14 @@ using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.DomainEvents;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Domain.AggregationUser.Events
 {
     public class UserAddedEvent : DomainEvent
     {
-        private UserAddedEvent(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail)
-            : base(DateTime.Now)
+        private UserAddedEvent(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, Version version)
+            : base(DateTime.Now, version)
         {
             Id = clientId;
             Name = name;
@@ -43,7 +44,7 @@ namespace AppFabric.Domain.AggregationUser.Events
         
         public static UserAddedEvent For(User user)
         {
-            return new UserAddedEvent(user.Id,user.Name,user.Cnpj,user.CommercialEmail);
+            return new UserAddedEvent(user.Id,user.Name,user.Cnpj,user.CommercialEmail, user.Version);
         }
     }
 }

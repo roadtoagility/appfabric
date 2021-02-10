@@ -79,6 +79,14 @@ namespace AppFabric.Domain.BusinessObjects
             return From(current.Id, detail.Name, current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, detail.Status, detail.OrderNumber, Version.Next(current.Version));
         }
         
+        
+        public static Project Empty()
+        {
+            return From(EntityId.Empty(), ProjectName.Empty(), ProjectCode.Empty(), DateAndTime.Empty(), Money.Zero(),
+                EntityId.Empty(), Email.Empty(), ProjectStatus.Default(), ServiceOrderNumber.Empty(),
+                Version.Empty());
+        }
+        
         public override string ToString()
         {
             return $"[PROJECT]:[ID: {Id} Code:{Code}, Name: {Name}, Budget: {Budget} Start date: {StartDate}, Owner: {Owner}, Status: {Status}, Order Number: {OrderNumber}]";

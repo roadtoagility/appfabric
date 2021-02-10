@@ -3,14 +3,16 @@ using System;
 using AppFabric.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AppFabric.Persistence.Migrations
 {
     [DbContext(typeof(AppFabricDbContext))]
-    partial class AppFabricDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210210161238_Versioning")]
+    partial class Versioning
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

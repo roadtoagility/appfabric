@@ -23,10 +23,7 @@ namespace AppFabric.Persistence.ReadModel
 {
     public class ProjectProjection
     {
-        public ProjectProjection()
-        {
-        }
-        public ProjectProjection(Guid id, string name, string code, decimal budget, DateTime startDate, Guid clientId, string clientName, string owner, string orderNumber, int status, string statusName)
+        public ProjectProjection(Guid id, string name, string code, decimal budget, DateTime startDate, Guid clientId, string clientName, string owner, string orderNumber, int status, string statusName, int rowVersion)
         {
             Id = id;
             ClientId = clientId;
@@ -40,6 +37,7 @@ namespace AppFabric.Persistence.ReadModel
             StatusName = statusName;
             OrderNumber = orderNumber;
             IsDeleted = false;
+            RowVersion = rowVersion;
         }
 
         public Guid Id { get; set; }
@@ -58,11 +56,13 @@ namespace AppFabric.Persistence.ReadModel
         
         public bool IsDeleted { get; set; }
 
+        public int RowVersion { get; set; }
+        
         public static ProjectProjection Empty()
         {
             return new ProjectProjection(Guid.Empty, String.Empty, String.Empty, Decimal.Zero, 
                 DateTime.UnixEpoch,Guid.Empty, String.Empty, String.Empty, String.Empty, 
-                Int32.MinValue, String.Empty);
+                0, String.Empty, 0);
         }
     }
 }

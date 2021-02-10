@@ -23,5 +23,6 @@ namespace AppFabric.Business.CommandHandlers.Commands
     public class RemoveUserCommand
     {
         public Guid Id { get; set; }
+        public int Version { get; set; }
     }
 }

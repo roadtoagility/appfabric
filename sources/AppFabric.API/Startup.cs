@@ -59,9 +59,11 @@ namespace AppFabric.API
             
             services.AddScoped<AddProjectCommandHandler>();
             services.AddScoped<UpdateProjectCommandHandler>();
+            services.AddScoped<UpdateDetailsProjectProjectionHandler>();
             services.AddScoped<RemoveProjectCommandHandler>();
             services.AddScoped<GetProjectsByQueryHandler>();
             services.AddScoped<IDomainEventHandler<ProjectAddedEvent>, UpdateProjectProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ProjectDetailUpdatedEvent>, UpdateDetailsProjectProjectionHandler>();
             services.AddScoped<IDomainEventHandler<ProjectRemovedEvent>,RemoveProjectProjectionHandler>();
 
             services.AddScoped<AddUserCommandHandler>();

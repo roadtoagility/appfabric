@@ -52,15 +52,10 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
                 @event.Owner.Value,
                 @event.OrderNumber.Value,
                 @event.Status.Value,
-                @event.Status.ToString());
+                @event.Status.ToString(),
+                @event.Version.Value);
             
             _projectSession.Repository.Add(projection);
-            
-            //count releases
-            // available budget
-            // active tasks
-            //finished tasks
-            
             _projectSession.SaveChanges();
         }
     }

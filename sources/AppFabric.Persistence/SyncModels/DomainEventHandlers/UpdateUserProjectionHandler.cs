@@ -41,15 +41,10 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
                 @event.Id.Value,
                 @event.Name.Value,
                 @event.Cnpj.Value,
-                @event.CommercialEmail.Value);
+                @event.CommercialEmail.Value,
+                @event.Version.Value);
             
             _projectSession.Repository.Add(projection);
-            
-            //count releases
-            // available budget
-            // active tasks
-            //finished tasks
-            
             _projectSession.SaveChanges();
         }
     }

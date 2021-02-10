@@ -41,17 +41,14 @@ namespace AppFabric.Business.CommandHandlers
         
         protected override ExecutionResult ExecuteCommand(RemoveUserCommand command)
         {
-            var user = _userDb.Repository.Get(EntityId.From(command.Id));
-            // esse deveria ser o usuário do request
-            //var owner = _userDb.Repository.Get(command.ClientId);
-            
+            var user = _userDb.Repository.Get(EntityId.From(command.Id), Version.From(command.Version));
             var agg = UserAggregationRoot.ReconstructFrom(user);
-            agg.Remove();
-            
             var isSucceed = false;
       
             if (agg.ValidationResults.IsValid)
             {
+                agg.Remove();
+                
                 _userDb.Repository.Remove(agg.GetChange());
                 _userDb.SaveChanges();
                 agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));

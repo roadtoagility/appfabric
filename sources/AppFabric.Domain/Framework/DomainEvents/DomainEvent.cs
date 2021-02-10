@@ -16,17 +16,21 @@
 // Boston, MA  02110-1301, USA.
 //
 
+
 using System;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Domain.Framework.DomainEvents
 {
     public class DomainEvent : IDomainEvent
     {
-        protected DomainEvent(DateTime when)
+        protected DomainEvent(DateTime when, Version version)
         {
             When = when;
+            Version = version;
         }
 
         public DateTime When { get; }
+        public Version Version { get; }
     }
 }

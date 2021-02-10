@@ -25,6 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.ExtensionMethods;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
@@ -43,7 +44,10 @@ namespace AppFabric.Persistence.Model.Repositories
         {
             var entry = entity.ToProjectState();
             var oldState =
-                DbContext.Projects.FirstOrDefault(b => b.Id == entry.Id);
+                DbContext.Projects
+                    .OrderByDescending(ob => ob.Id)
+                    .ThenByDescending(ob => ob.RowVersion)
+                    .FirstOrDefault(b => b.Id.Equals(entry.Id));
 
             if (oldState == null)
             {
@@ -51,22 +55,40 @@ namespace AppFabric.Persistence.Model.Repositories
             }
             else
             {
-                DbContext.Entry(oldState).CurrentValues.SetValues(entry);
+                var currentVersion = BitConverter.ToInt32(oldState.RowVersion) + 1;
+
+                if (currentVersion.Equals(entity.Version.Value))
+                {
+                    DbContext.Entry(oldState).CurrentValues.SetValues(entry);                    
+                }
+                else
+                {
+                    throw new DbUpdateConcurrencyException($"Your version of the project {entity.Id} is out of date.");
+                }
             }
         }
 
         public void Remove(Project entity)
         {
+            var oldState = Get(entity.Id, entity.Version);
+
+            if (oldState.Equals(Project.Empty()))
+            {
+                throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
+            }
+            
             var entry = entity.ToProjectState();
 
             DbContext.Projects.Remove(entry);
         }
 
-        public Project Get(EntityId id)
+        public Project Get(EntityId id, Version version)
         {
             var project = DbContext.Projects.AsNoTracking()
                 .OrderByDescending(ob => ob.Id)
-                .First(t => t.Id == id.Value);
+                .ThenByDescending(ob => ob.RowVersion)
+                .First(t => t.Id.Equals(id.Value) && 
+                            t.RowVersion.Equals(BitConverter.GetBytes(version.Value)));
             return project.ToProject();
         }
 

@@ -23,5 +23,6 @@ namespace AppFabric.Business.CommandHandlers.Commands
     public class RemoveProjectCommand
     {
         public Guid Id { get; set; }
+        public int Version { get; set; }
     }
 }

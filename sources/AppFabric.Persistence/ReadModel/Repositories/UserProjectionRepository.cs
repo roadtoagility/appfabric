@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using AppFabric.Domain.Framework.BusinessObjects;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
 {
@@ -35,7 +36,8 @@ namespace AppFabric.Persistence.ReadModel.Repositories
 
         public UserProjection Get(EntityId id)
         {
-            var user = _context.UsersProjection.FirstOrDefault(ac => ac.Id == id.Value);
+            var user = _context.UsersProjection
+                .FirstOrDefault(ac => ac.Id.Equals(id.Value));
             
             if (user == null)
             {
@@ -62,6 +64,12 @@ namespace AppFabric.Persistence.ReadModel.Repositories
 
         public void Remove(UserProjection entity)
         {
+            var oldState =
+                _context.UsersProjection
+                    .OrderByDescending(or => or.RowVersion)
+                    .FirstOrDefault(b => b.Id.Equals(entity.Id) &&
+                                         b.RowVersion.Equals(entity.RowVersion));
+           
             _context.UsersProjection.Remove(entity);
         }
 

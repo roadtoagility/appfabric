@@ -32,11 +32,11 @@ namespace AppFabric.Domain.AggregationProject
             if (project.ValidationResults.IsValid)
             {
                 Apply(project);
-            }
-
-            if (project.IsNew())
-            {
-                Raise(ProjectAddedEvent.For(project));
+                
+                if (project.IsNew())
+                {
+                    Raise(ProjectAddedEvent.For(project));
+                }
             }
 
             ValidationResults = project.ValidationResults;
@@ -87,12 +87,10 @@ namespace AppFabric.Domain.AggregationProject
 
         public void Remove()
         {
-            if (this.GetChange().ValidationResults.IsValid)
+            if (ValidationResults.IsValid)
             {
                 Raise(ProjectRemovedEvent.For(this.GetChange()));
             }
-
-            ValidationResults = this.GetChange().ValidationResults;            
         }
     }
 }

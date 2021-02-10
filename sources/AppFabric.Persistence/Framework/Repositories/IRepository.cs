@@ -21,15 +21,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using AppFabric.Domain.Framework.BusinessObjects;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Persistence.Framework.Repositories
 {
     public interface IRepository<TState,TModel> where TModel : class
     {
-        TModel Get(EntityId id);
+        TModel Get(EntityId id, Version version);
+       
         void Add(TModel entity);
         void Remove(TModel entity);
-
+        
         IEnumerable<TModel> Find(Expression<Func<TState, bool>> predicate);
     }
 }

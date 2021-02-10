@@ -34,10 +34,10 @@ namespace AppFabric.API.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        [HttpDelete("{id}/{version}")]
+        public IActionResult Delete(Guid id, int version)
         {
-            var result = _mediator.Send<ExecutionResult>(new RemoveUserCommand{Id = id});
+            var result = _mediator.Send<ExecutionResult>(new RemoveUserCommand{Id = id, Version = version});
             return Ok(result);
         }
         
