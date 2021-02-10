@@ -1,0 +1,87 @@
+<div class="row">
+    <div class="col-md-12">
+        <nb-card>
+            <nb-card-header>Release</nb-card-header>
+            <nb-card-body>
+              <form>
+                <div class="row">
+                    <div class="col-sm-3">
+                      <div class="form-group">
+                        <label for="inputLastName" class="label">Status</label>
+                        <nb-select matRipple selected="1" fullWidth>
+                            <nb-option matRipple value="1">Not Billed</nb-option>
+                            <nb-option matRipple value="2">Billed</nb-option>
+                          </nb-select>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="inputLastName" class="label">Cliente</label>
+                          <div class="input-group mb-3">
+                            <input type="text" readonly class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" [(value)]="selectedClient.razaoSocial">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="selectClient()">
+                                <nb-icon class="search-icon" icon="search-outline" pack="eva"></nb-icon>
+                            </button>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="inputLastName" class="label">Projeto</label>
+                        <div class="input-group mb-3">
+                          <input type="text" readonly class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2" [(value)]="selectedProject.nome">
+                          <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="selectProject()">
+                              <nb-icon class="search-icon" icon="search-outline" pack="eva"></nb-icon>
+                          </button>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </form>
+            </nb-card-body>
+          </nb-card>
+      </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+        <nb-card>
+            <nb-card-header>Manage Activities</nb-card-header>
+            <nb-card-body>
+              <form>
+                <a href="javascript:void(0);" (click)="selectActivity()">Add Activity</a>
+
+                <br />
+                <br />
+
+                <div class="lists row">
+                    <div class="col-md-12 col-lg-7 col-xxxl-7">
+                      <nb-card class="list-card" size="medium">
+                        <nb-card-header>Selected Activities</nb-card-header>
+                        <nb-card-body>
+                          <nb-list>
+                            <nb-list-item *ngFor="let activity of activities">
+                              Name: {{activity.titulo}} <br />
+                              Effort: {{activity.esforco}} hours <br />
+                              <a class="btnRemove" href="javascript:void(0);" (click)="removeActivity(activity)">Remove</a>
+                            </nb-list-item>
+                          </nb-list>
+                        </nb-card-body>
+                      </nb-card>
+                    </div>
+                </div>
+                  
+                <br />
+                <br />
+                
+                <div class="row">
+                  <div class="col-sm-12">
+                    <button type="button" nbButton matRipple status="primary" outline style="margin-right: 10px" (click)="backClicked()">Cancelar</button>
+                    <button type="submit" nbButton status="primary">Salvar</button>
+                  </div>
+                </div>
+
+              </form>
+            </nb-card-body>
+          </nb-card>
+      </div>
+  </div>

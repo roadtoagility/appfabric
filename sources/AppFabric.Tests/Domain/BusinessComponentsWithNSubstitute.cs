@@ -50,8 +50,7 @@ namespace AppFabric.Tests.Domain
             fixture.Register<Name>(() => Name.From(fixture.Create<string>()));
             fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
-            fixture.Register<User>(() => User.From(fixture.Create<EntityId>(),
-                fixture.Create<Name>(), fixture.Create<SocialSecurityId>(), fixture.Create<Email>()));
+            
 
             fixture.Register<UserAggregationRoot>(
                 ()=> UserAggregationRoot.ReconstructFrom(fixture.Create<User>()));
