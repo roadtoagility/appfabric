@@ -4,6 +4,7 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ProjectService } from '../../services/project.service';
+import { ClientService } from '../../services/client.service';
 import { FormBuilder, FormGroup, Validators, NgForm } from '@angular/forms';
 import {Project} from '../../models/entities/Project';
 
@@ -21,13 +22,16 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
   loading = false;
   success = false;
   errors: any[];
+  clients: any[];
+  
   private _formSubmitted: any;
   savedObject: any;
 
-  constructor(private _projectService: ProjectService, protected ref: NbDialogRef<NewProjectFormComponent>) {
+  constructor(private _projectService: ProjectService, private _clientService:ClientService, protected ref: NbDialogRef<NewProjectFormComponent>) {
     this._unsubscribeAll = new Subject();
     this.errors = [];
-
+    this.clients = [];
+    
     this._projectService.onProjectChanged
     .pipe(takeUntil(this._unsubscribeAll))
     .subscribe(response => {
@@ -53,6 +57,15 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
         this.toggleLoadingAnimation();
       }
     });
+
+    this._clientService.onClientsChanged
+    .pipe(takeUntil(this._unsubscribeAll))
+    .subscribe(clients => {
+      if(Object.keys(clients).length > 0){
+        this.clients = clients;
+        this.toggleLoadingAnimation();
+      }
+    });
   }
 
   showCompleteForm(){
@@ -60,7 +73,7 @@ export class NewProjectFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    
+    this._clientService.loadAll("");
   }
 
   toggleLoadingAnimation() {

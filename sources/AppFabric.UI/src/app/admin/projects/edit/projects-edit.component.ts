@@ -89,6 +89,11 @@ export class EditarProjetosComponent implements OnInit, OnDestroy {
   }
 
   buildForm(project){
+    this.selectedClient = { 
+      name: project.clientName,
+      id: project.id
+    };
+
     this.form = this._formBuilder.group({
       id: [project.id, Validators.required],
       name: [project.name, Validators.required],

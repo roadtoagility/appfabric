@@ -37,8 +37,9 @@
             <div class="form-group row">
               <label for="clientId" class="label col-sm-3 col-form-label">Client</label>
               <div class="col-sm-9">
-                <input type="text" nbInput formControlName="clientId" fullWidth id="clientId" [class.danger]="form.get('clientId').invalid && 
-                (form.get('clientId').dirty || form.get('clientId').touched)">
+                <nb-select matRipple fullWidth formControlName="clientId" [class.danger]="form.get('clientId').invalid">
+                  <nb-option *ngFor="let client of clients" matRipple value="{{client.id}}">{{client.name}}</nb-option>
+                </nb-select>
               </div>
             </div>
           </form>

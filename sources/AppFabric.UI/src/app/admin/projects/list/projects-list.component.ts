@@ -45,7 +45,7 @@ export class ListarProjetosComponent implements OnDestroy {
         editable: false,
         filter: false
       },
-      clientId: {
+      clientName: {
         title: 'Client',
         type: 'string',
         filter: false
