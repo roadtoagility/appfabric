@@ -29,6 +29,9 @@ namespace AppFabric.Business.QueryHandlers.Filters
         
         public static GetClientsByFilter From(string name)
         {
+            if (name == null)
+                name = string.Empty;
+
             return new GetClientsByFilter(name);
         }
     }

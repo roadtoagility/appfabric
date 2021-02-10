@@ -41,7 +41,7 @@ namespace AppFabric.Business.QueryHandlers
 
             var clients = _dbSession.Repository
                 .Find(up=>  up.Name.Contains(filter.Name));
-           
+
             return GetClientsResponse.From(true, clients);
         }
     }
