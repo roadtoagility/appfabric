@@ -42,7 +42,7 @@ namespace AppFabric.Domain.BusinessObjects
         
         public Version Version { get; }
 
-        public bool IsNew() => Version.Value == 0;
+        public bool IsNew() => Version.Value == 1;
                 
         public static User From(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, Version version)
         {

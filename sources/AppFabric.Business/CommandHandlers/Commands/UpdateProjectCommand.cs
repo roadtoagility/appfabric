@@ -28,5 +28,7 @@ namespace AppFabric.Business.CommandHandlers.Commands
         public string Owner { get; set; }
         public string OrderNumber { get; set; }
         public int Status { get; set; }
+        
+        public int Version { get; set; }
     }
 }

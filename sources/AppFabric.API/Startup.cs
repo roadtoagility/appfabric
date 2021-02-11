@@ -60,18 +60,23 @@ namespace AppFabric.API
             services.AddScoped<AddProjectCommandHandler>();
             services.AddScoped<UpdateProjectCommandHandler>();
             services.AddScoped<RemoveProjectCommandHandler>();
+            
             services.AddScoped<GetProjectsByQueryHandler>();
-            services.AddScoped<IDomainEventHandler<ProjectAddedEvent>, UpdateProjectProjectionHandler>();
+            services.AddScoped<GetProjectByIdQueryHandler>();
+            
+            services.AddScoped<IDomainEventHandler<ProjectAddedEvent>, AddProjectProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ProjectDetailUpdatedEvent>, UpdateDetailsProjectProjectionHandler>();
             services.AddScoped<IDomainEventHandler<ProjectRemovedEvent>,RemoveProjectProjectionHandler>();
 
             services.AddScoped<AddUserCommandHandler>();
             services.AddScoped<RemoveUserCommandHandler>();
-            services.AddScoped<IDomainEventHandler<UserAddedEvent>, UpdateUserProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
+            
             services.AddScoped<GetClientsByQueryHandler>();
             services.AddScoped<GetClientByIdQueryHandler>();
-            services.AddScoped<GetProjectByIdQueryHandler>();
             
+            services.AddScoped<IDomainEventHandler<UserAddedEvent>, UpdateUserProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
+          
             
 
             services.AddFluentMediator(builder =>
@@ -121,7 +126,11 @@ namespace AppFabric.API
                         (handler, request) => handler.Handle(request));
                 
                 builder.On<ProjectDetailUpdatedEvent>().Pipeline()
-                    .Call<UpdateDetailsProjectProjectionHandler>(
+                    .Call<IDomainEventHandler<ProjectDetailUpdatedEvent>>(
+                        (handler, request) => handler.Handle(request));
+                
+                builder.On<ProjectRemovedEvent>().Pipeline()
+                    .Call<IDomainEventHandler<ProjectRemovedEvent>>(
                         (handler, request) => handler.Handle(request));
                 
                 builder.On<UserAddedEvent>()
@@ -131,10 +140,6 @@ namespace AppFabric.API
                 
                 builder.On<UserRemovedEvent>().Pipeline()
                     .Call<IDomainEventHandler<UserRemovedEvent>>(
-                        (handler, request) => handler.Handle(request));
-                
-                builder.On<ProjectRemovedEvent>().Pipeline()
-                    .Call<IDomainEventHandler<ProjectRemovedEvent>>(
                         (handler, request) => handler.Handle(request));
             });
             

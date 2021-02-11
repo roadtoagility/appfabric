@@ -25,6 +25,7 @@ using AppFabric.Domain.Framework.BusinessObjects;
 using AutoFixture;
 using Xunit;
 using Xunit.Gherkin.Quick;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Tests.Domain
 {
@@ -54,10 +55,13 @@ namespace AppFabric.Tests.Domain
         {
             var fixture = new Fixture();
             fixture.Register<EntityId>(() => EntityId.From(fixture.Create<Guid>()));
+            fixture.Register<Version>(() => Version.From(fixture.Create<int>()));
             fixture.Register<Name>(() => Name.From(fixture.Create<string>()));
             fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
-            
+            fixture.Register<User>(() => User.From(fixture.Create<EntityId>(),
+                fixture.Create<Name>(),fixture.Create<SocialSecurityId>(),
+                fixture.Create<Email>(), fixture.Create<Version>()));
 
             fixture.Register<UserAggregationRoot>(
                 ()=> UserAggregationRoot.ReconstructFrom(fixture.Create<User>()));

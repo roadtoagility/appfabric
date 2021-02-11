@@ -20,15 +20,16 @@ using System;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.DomainEvents;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Domain.AggregationProject.Events
 {
     public class ProjectDetailUpdatedEvent : DomainEvent
     {
-        private ProjectDetailUpdatedEvent(EntityId id, ProjectName name, Email owner, ProjectStatus status, Money budget, ServiceOrderNumber orderNumber)
-            : base(DateTime.Now)
+        private ProjectDetailUpdatedEvent(EntityId id, ProjectName name, Email owner, ProjectStatus status, Money budget, ServiceOrderNumber orderNumber, Version version)
+            : base(DateTime.Now, version)
         {
-            Id = Id;
+            Id = id;
             Name = name;
             Owner = owner;
             Status = status;
@@ -54,7 +55,8 @@ namespace AppFabric.Domain.AggregationProject.Events
                 project.Owner,
                 project.Status, 
                 project.Budget, 
-                project.OrderNumber);
+                project.OrderNumber,
+                project.Version);
         }
     }
 }

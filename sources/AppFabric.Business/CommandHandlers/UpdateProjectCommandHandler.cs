@@ -22,6 +22,7 @@ using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.CommandHandlers.ExtensionMethods;
 using AppFabric.Business.Framework;
 using AppFabric.Domain.AggregationProject;
+using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
@@ -40,17 +41,14 @@ namespace AppFabric.Business.CommandHandlers
         
         protected override ExecutionResult ExecuteCommand(UpdateProjectCommand command)
         {
-            var project = _dbSession.Repository.Get(EntityId.From(command.Id));
-
-            var detail = command.ToProjectDetail();
+            var project = _dbSession.Repository.Get(EntityId.From(command.Id), Version.From(command.Version));
             var agg = ProjectAggregationRoot.ReconstructFrom(project);
-
-            agg.UpdateDetail(command.ToProjectDetail());
-            
             var isSucceed = false;
       
             if (agg.ValidationResults.IsValid)
             {
+                agg.UpdateDetail(command.ToProjectDetail());
+                
                 _dbSession.Repository.Add(agg.GetChange());
                 _dbSession.SaveChanges();
                 agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));

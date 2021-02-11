@@ -26,13 +26,14 @@ namespace AppFabric.Persistence.ReadModel
         public UserProjection()
         {
         }
-        public UserProjection(Guid id, string name, string cnpj, string commercialEmail)
+        public UserProjection(Guid id, string name, string cnpj, string commercialEmail, int rowVersion)
         {
             Id = id;
             Name = name;
             Cnpj = cnpj;
             CommercialEmail = commercialEmail;
             IsDeleted = false;
+            RowVersion = rowVersion;
         }
 
         public Guid Id { get; set; }
@@ -42,9 +43,11 @@ namespace AppFabric.Persistence.ReadModel
         
         public bool IsDeleted { get; set; }
 
+        public int RowVersion { get; set; }
+        
         public static UserProjection Empty()
         {
-            return new UserProjection(Guid.Empty, String.Empty, String.Empty, String.Empty);
+            return new UserProjection(Guid.Empty, String.Empty, String.Empty, String.Empty,0);
         }
     }
 }

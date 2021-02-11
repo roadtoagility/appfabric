@@ -46,18 +46,13 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
                 project.StartDate,
                 project.ClientId,
                 project.ClientName,
-                project.Owner,
-                project.OrderNumber,
+                @event.Owner.Value,
+                @event.OrderNumber.Value,
                 project.Status,
-                project.StatusName);
+                project.StatusName,
+                @event.Version.Value);
             
             _projectSession.Repository.Add(projection);
-            
-            //count releases
-            // available budget
-            // active tasks
-            //finished tasks
-            
             _projectSession.SaveChanges();
         }
     }

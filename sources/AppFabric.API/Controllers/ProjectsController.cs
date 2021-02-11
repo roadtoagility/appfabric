@@ -47,10 +47,10 @@ namespace AppFabric.API.Controllers
             var result = _mediator.Send<GetProjectResponse>(GetProjectByIdFilter.From(id));
             return Ok(result);
         }
-        [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        [HttpDelete("{id}/{version}")]
+        public IActionResult Delete(Guid id, int version)
         {
-            var result = _mediator.Send<ExecutionResult>(new RemoveProjectCommand{Id = id});
+            var result = _mediator.Send<ExecutionResult>(new RemoveProjectCommand{Id = id, Version = version});
             return Ok(result);
         }
         
@@ -63,7 +63,7 @@ namespace AppFabric.API.Controllers
         }
         
         [HttpPost("save/{id}")]
-        public IActionResult Update(Guid id, UpdateProjectCommand entity)
+        public IActionResult Update(Guid id, [FromBody] UpdateProjectCommand entity)
         {
             var result = _mediator.Send<ExecutionResult>(entity);
 

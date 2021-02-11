@@ -51,10 +51,6 @@ namespace AppFabric.Tests.Domain
             fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
             
-
-            fixture.Register<UserAggregationRoot>(
-                ()=> UserAggregationRoot.ReconstructFrom(fixture.Create<User>()));
-            
             var command = fixture.Build<AddUserCommand>()
                 .With(user => user.CommercialEmail, string.Format($"{fixture.Create<string>()}@teste.com"))
                 .Create();

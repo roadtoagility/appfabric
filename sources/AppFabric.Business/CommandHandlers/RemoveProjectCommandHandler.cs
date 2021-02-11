@@ -43,17 +43,17 @@ namespace AppFabric.Business.CommandHandlers
         
         protected override ExecutionResult ExecuteCommand(RemoveProjectCommand command)
         {
-            var project = _projectDb.Repository.Get(EntityId.From(command.Id));
+            var project = _projectDb.Repository.Get(EntityId.From(command.Id), Version.From(command.Version));
             // esse deveria ser o usuário do request
             //var owner = _userDb.Repository.Get(command.ClientId);
             
             var agg = ProjectAggregationRoot.ReconstructFrom(project);
-            agg.Remove();
-            
             var isSucceed = false;
       
             if (agg.ValidationResults.IsValid)
             {
+                agg.Remove();
+                
                 _projectDb.Repository.Remove(agg.GetChange());
                 _projectDb.SaveChanges();
                 agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));

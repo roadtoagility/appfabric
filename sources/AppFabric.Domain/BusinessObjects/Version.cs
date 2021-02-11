@@ -46,12 +46,12 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static Version Empty()
         {
-            return From(-1);
+            return From(0);
         }
 
         public static Version New()
         {
-            return From(0);
+            return From(1);
         }
 
         public static Version Next(Version current)

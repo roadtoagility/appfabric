@@ -20,13 +20,14 @@ using System;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.DomainEvents;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Domain.AggregationProject.Events
 {
     public class UserRemovedEvent : DomainEvent
     {
-        private UserRemovedEvent(EntityId id)
-            : base(DateTime.Now)
+        private UserRemovedEvent(EntityId id, Version version)
+            : base(DateTime.Now, version)
         {
             Id = id;
         }
@@ -34,7 +35,7 @@ namespace AppFabric.Domain.AggregationProject.Events
         
         public static UserRemovedEvent For(User user)
         {
-            return new UserRemovedEvent(user.Id);
+            return new UserRemovedEvent(user.Id, user.Version);
         }
     }
 }

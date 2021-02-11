@@ -49,7 +49,7 @@ namespace AppFabric.Domain.BusinessObjects.Validations
             
             RuleFor(project => project.Budget).SetValidator(new MoneyValidator());
             RuleFor(project => project.Status).SetValidator(new ProjectStatusValidator())
-                .Must(status=> status.Equals(ProjectStatus.Default()));
+                .When(status=> !status.Equals(ProjectStatus.Default()));
             
             RuleFor(project => project.Owner).SetValidator(new EmailValidator())
                 .When(project => !project.Owner.Equals(Email.Empty()));

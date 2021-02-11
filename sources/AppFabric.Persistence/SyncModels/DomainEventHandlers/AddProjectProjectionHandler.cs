@@ -25,12 +25,12 @@ using AppFabric.Persistence.ReadModel.Repositories;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {
-    public sealed class UpdateProjectProjectionHandler : DomainEventHandler<ProjectAddedEvent>
+    public sealed class AddProjectProjectionHandler : DomainEventHandler<ProjectAddedEvent>
     {
         private readonly IDbSession<IProjectProjectionRepository> _projectSession;
         private readonly IDbSession<IUserProjectionRepository> _userSession;
 
-        public UpdateProjectProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession,
+        public AddProjectProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession,
             IDbSession<IUserProjectionRepository> userSession)
         {
             _projectSession = projectSession;
@@ -52,15 +52,10 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
                 @event.Owner.Value,
                 @event.OrderNumber.Value,
                 @event.Status.Value,
-                @event.Status.ToString());
+                @event.Status.ToString(),
+                @event.Version.Value);
             
             _projectSession.Repository.Add(projection);
-            
-            //count releases
-            // available budget
-            // active tasks
-            //finished tasks
-            
             _projectSession.SaveChanges();
         }
     }

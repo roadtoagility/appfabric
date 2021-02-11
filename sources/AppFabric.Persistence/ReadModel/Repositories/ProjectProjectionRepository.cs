@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using AppFabric.Domain.Framework.BusinessObjects;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
 {
@@ -35,7 +36,8 @@ namespace AppFabric.Persistence.ReadModel.Repositories
 
         public ProjectProjection Get(EntityId id)
         {
-            var project = _context.ProjectsProjection.FirstOrDefault(ac => ac.Id == id.Value);
+            var project = _context.ProjectsProjection
+                .FirstOrDefault(ac => ac.Id.Equals(id.Value));
             
             if (project == null)
             {
@@ -48,7 +50,8 @@ namespace AppFabric.Persistence.ReadModel.Repositories
         public void Add(ProjectProjection entity)
         {
             var oldState =
-                _context.ProjectsProjection.FirstOrDefault(b => b.Id == entity.Id);
+                _context.ProjectsProjection
+                    .FirstOrDefault(b => b.Id == entity.Id);
 
             if (oldState == null)
             {

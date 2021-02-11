@@ -25,6 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.ExtensionMethods;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
@@ -57,15 +58,24 @@ namespace AppFabric.Persistence.Model.Repositories
 
         public void Remove(User entity)
         {
-            var entry = entity.ToUserState();
+            var earlierVersion = Version.From(entity.Version.Value - 1);
+            var oldState = Get(entity.Id, earlierVersion);
 
+            if (oldState.Equals(User.Empty()))
+            {
+                throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
+            }
+            
+            var entry = entity.ToUserState();
+            
             DbContext.Users.Remove(entry);
         }
 
-        public User Get(EntityId id)
+        public User Get(EntityId id, Version version)
         {
             var user = DbContext.Users.AsNoTracking()
                 .OrderByDescending(ob => ob.Id)
+                .ThenByDescending(ob => ob.RowVersion)
                 .FirstOrDefault(t =>t.Id.Equals(id.Value));
             
             if (user == null)

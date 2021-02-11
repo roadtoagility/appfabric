@@ -20,13 +20,14 @@ using System;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.DomainEvents;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Domain.AggregationProject.Events
 {
     public class ProjectAddedEvent : DomainEvent
     {
-        private ProjectAddedEvent(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
-            : base(DateTime.Now)
+        private ProjectAddedEvent(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Version version)
+            : base(DateTime.Now, version)
         {
             Id = id;
             Code = code;
@@ -60,7 +61,8 @@ namespace AppFabric.Domain.AggregationProject.Events
                 project.Code,
                 project.StartDate, 
                 project.Budget, 
-                project.ClientId);
+                project.ClientId,
+                project.Version);
         }
     }
 }

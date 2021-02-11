@@ -59,7 +59,7 @@ namespace AppFabric.Domain.BusinessObjects
         
         public Version Version { get; }
 
-        public bool IsNew() => Version.Value == 0; 
+        public bool IsNew() => Version.Value == 1; 
         
         public static Project From(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner, ProjectStatus status, ServiceOrderNumber orderNumber, Version version)
         {
@@ -76,7 +76,15 @@ namespace AppFabric.Domain.BusinessObjects
         
         public static Project CombineWith(Project current, ProjectDetail detail)
         {
-            return From(current.Id, detail.Name, current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, detail.Status, detail.OrderNumber, Version.Next(current.Version));
+            return From(current.Id, detail.Name, current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, detail.Status, detail.OrderNumber, current.Version);
+        }
+        
+        
+        public static Project Empty()
+        {
+            return From(EntityId.Empty(), ProjectName.Empty(), ProjectCode.Empty(), DateAndTime.Empty(), Money.Zero(),
+                EntityId.Empty(), Email.Empty(), ProjectStatus.Default(), ServiceOrderNumber.Empty(),
+                Version.Empty());
         }
         
         public override string ToString()
