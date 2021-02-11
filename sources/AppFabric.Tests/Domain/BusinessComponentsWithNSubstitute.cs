@@ -25,6 +25,7 @@ using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
 using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.AggregationUser;
+using AppFabric.Domain.AggregationUser.Events;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Framework;
@@ -34,8 +35,10 @@ using AutoFixture.AutoNSubstitute;
 using FluentMediator;
 using FluentValidation.Results;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using Xunit;
 using Xunit.Gherkin.Quick;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Tests.Domain
 {
@@ -48,20 +51,30 @@ namespace AppFabric.Tests.Domain
             
             fixture.Register<EntityId>(() => EntityId.From(fixture.Create<Guid>()));
             fixture.Register<Name>(() => Name.From(fixture.Create<string>()));
+            fixture.Register<Version>(() => Version.From(fixture.Create<int>()));
             fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
+            fixture.Register<User>(() => User.From(fixture.Create<EntityId>(),
+                fixture.Create<Name>(),fixture.Create<SocialSecurityId>(),
+                fixture.Create<Email>(), fixture.Create<Version>()));
+
+            var finalUser = fixture.Create<User>();
             
             var command = fixture.Build<AddUserCommand>()
-                .With(user => user.CommercialEmail, string.Format($"{fixture.Create<string>()}@teste.com"))
+                .With(user => user.CommercialEmail, finalUser.CommercialEmail.Value)
+                .With(user => user.Cnpj, finalUser.Cnpj.Value)
+                .With(user => user.Name, finalUser.Name.Value)
                 .Create();
-            
-            var mediator = Substitute.For<IMediator>();
-            var repo = Substitute.For<IUserRepository>();
-            var db = Substitute.For<IDbSession<IUserRepository>>();
 
+            var mediator = fixture.Create<IMediator>();
+            var db = fixture.Create<IDbSession<IUserRepository>>();
             var handler = new AddUserCommandHandler(mediator,db);
 
             var result = handler.Execute(command);
+            
+            db.Received().Repository.Add(finalUser);
+            db.Received().SaveChanges();
+            mediator.Received(1).Publish(Arg.Any<UserAddedEvent>());
             
             Assert.True(result.IsSucceed);
         }
@@ -71,22 +84,23 @@ namespace AppFabric.Tests.Domain
         {
             var fixture = new Fixture().Customize(new AutoNSubstituteCustomization{ ConfigureMembers = true });
             
-            fixture.Register<EntityId>(() => EntityId.Empty());
-            fixture.Register<Name>(() => Name.Empty());
-            fixture.Register<SocialSecurityId>(() => SocialSecurityId.Empty());
-            fixture.Register<Email>(() => Email.Empty());
+            var finalUser = fixture.Create<User>();
+            var command = fixture.Build<AddUserCommand>()
+                .With(user => user.CommercialEmail, finalUser.CommercialEmail.Value)
+                .With(user => user.Cnpj, finalUser.Cnpj.Value)
+                .With(user => user.Name, finalUser.Name.Value)
+                .Create();
             
-            var command = new AddUserCommand();
-            
-            var mediator = Substitute.For<IMediator>();
-            var repo = Substitute.For<IUserRepository>();
-            var db = Substitute.For<IDbSession<IUserRepository>>();
-
+            var mediator = fixture.Create<IMediator>();
+            var db = fixture.Create<IDbSession<IUserRepository>>();
             var handler = new AddUserCommandHandler(mediator,db);
 
+
             var result = handler.Execute(command);
+            db.DidNotReceive().Repository.Add(finalUser);
+            db.DidNotReceive().SaveChanges();
             
-            Assert.True(!result.IsSucceed && result.Violations.Count == 4);
+            Assert.True(!result.IsSucceed && result.Violations.Count == 3);
         } 
         
         [Fact]
