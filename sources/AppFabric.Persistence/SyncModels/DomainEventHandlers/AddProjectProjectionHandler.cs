@@ -25,12 +25,12 @@ using AppFabric.Persistence.ReadModel.Repositories;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {
-    public sealed class UpdateProjectProjectionHandler : DomainEventHandler<ProjectAddedEvent>
+    public sealed class AddProjectProjectionHandler : DomainEventHandler<ProjectAddedEvent>
     {
         private readonly IDbSession<IProjectProjectionRepository> _projectSession;
         private readonly IDbSession<IUserProjectionRepository> _userSession;
 
-        public UpdateProjectProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession,
+        public AddProjectProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession,
             IDbSession<IUserProjectionRepository> userSession)
         {
             _projectSession = projectSession;

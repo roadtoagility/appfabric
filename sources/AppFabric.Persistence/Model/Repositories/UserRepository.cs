@@ -75,8 +75,8 @@ namespace AppFabric.Persistence.Model.Repositories
         {
             var user = DbContext.Users.AsNoTracking()
                 .OrderByDescending(ob => ob.Id)
-                .FirstOrDefault(t =>t.Id.Equals(id.Value) && 
-                                    t.RowVersion.Equals(BitConverter.GetBytes(version.Value)));
+                .ThenByDescending(ob => ob.RowVersion)
+                .FirstOrDefault(t =>t.Id.Equals(id.Value));
             
             if (user == null)
             {

@@ -43,7 +43,7 @@ namespace AppFabric.Domain.AggregationProject
         }
         
         private ProjectAggregationRoot(EntityId id, ProjectName name, ProjectCode code, 
-            Money budget, DateAndTime startDate, EntityId clientId )
+            Money budget, DateAndTime startDate, EntityId clientId)
             : this(Project.NewRequest(id, name,code,startDate,budget,clientId))
         {
         }

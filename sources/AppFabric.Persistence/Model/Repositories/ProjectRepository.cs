@@ -87,8 +87,13 @@ namespace AppFabric.Persistence.Model.Repositories
             var project = DbContext.Projects.AsNoTracking()
                 .OrderByDescending(ob => ob.Id)
                 .ThenByDescending(ob => ob.RowVersion)
-                .First(t => t.Id.Equals(id.Value) && 
-                            t.RowVersion.Equals(BitConverter.GetBytes(version.Value)));
+                .FirstOrDefault(t => t.Id == id.Value);
+            
+            if (project == null)
+            {
+                return Project.Empty();
+            }
+            
             return project.ToProject();
         }
 
