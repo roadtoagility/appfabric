@@ -25,6 +25,7 @@ using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.CommandHandlers
 {
@@ -32,13 +33,15 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IProjectRepository> _projectDb;
         private readonly IDbSession<IUserRepository> _userDb;
+        private readonly ILogger<RemoveProjectCommandHandler> _logger;
         
-        public RemoveProjectCommandHandler(IMediator publisher, IDbSession<IProjectRepository> projectDb,
+        public RemoveProjectCommandHandler(ILogger<RemoveProjectCommandHandler> logger, IMediator publisher, IDbSession<IProjectRepository> projectDb,
             IDbSession<IUserRepository> userDb)
-            :base(publisher)
+            :base(logger, publisher)
         {
             _projectDb = projectDb;
             _userDb = userDb;
+            _logger = logger;
         }
         
         protected override ExecutionResult ExecuteCommand(RemoveProjectCommand command)

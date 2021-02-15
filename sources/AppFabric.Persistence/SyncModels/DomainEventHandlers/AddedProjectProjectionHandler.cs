@@ -25,31 +25,34 @@ using AppFabric.Persistence.ReadModel.Repositories;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {
-    public class UpdateDetailsProjectProjectionHandler : DomainEventHandler<ProjectDetailUpdatedEvent>
+    public sealed class AddedProjectProjectionHandler : DomainEventHandler<ProjectAddedEvent>
     {
         private readonly IDbSession<IProjectProjectionRepository> _projectSession;
+        private readonly IDbSession<IUserProjectionRepository> _userSession;
 
-        public UpdateDetailsProjectProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession)
+        public AddedProjectProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession,
+            IDbSession<IUserProjectionRepository> userSession)
         {
             _projectSession = projectSession;
+            _userSession = userSession;
         }
 
-        protected override void ExecuteHandle(ProjectDetailUpdatedEvent @event)
+        protected override void ExecuteHandle(ProjectAddedEvent @event)
         {
-            var project = _projectSession.Repository.Get(@event.Id);
-            
+            var client = _userSession.Repository.Get(@event.ClientId);
+                
             var projection = new ProjectProjection(
-                project.Id,
+                @event.Id.Value,
                 @event.Name.Value,
-                project.Code,
+                @event.Code.Value,
                 @event.Budget.Value,
-                project.StartDate,
-                project.ClientId,
-                project.ClientName,
+                @event.StartDate.Value,
+                @event.ClientId.Value,
+                client.Name,
                 @event.Owner.Value,
                 @event.OrderNumber.Value,
-                project.Status,
-                project.StatusName,
+                @event.Status.Value,
+                @event.Status.ToString(),
                 @event.Version.Value);
             
             _projectSession.Repository.Add(projection);
