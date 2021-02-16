@@ -1,20 +1,39 @@
+## App Fabric 
+
+## Preparação Ambiente
+
+### Plataformas usadas
+
+- nodejs LTS
+  - Angular 10
+  - Typescript
+  - NGX Admin Template (veja https://github.com/akveo/ngx-admin)
+- dotnet core LTS
+  - dotnet tool install --global -ef
+
+## Estrutura
+
+![image-20210216161852386](/home/adriano/Projects/roadtoagility/workshop/todoagilityapi/docs/images/project-structure.png)
+
+## Inicialização
+
+Frontend
+
+1. cd {PROJETO}/sources/AppFabric.UI/src
+
+2. npm install
+
+3. ng serve
+
+Backend
+
+1. cd {PROJETO}/sources/AppFabric.API
+2. dotnet restore
+3. dotnet run
+
+## Migrações
 
 
-Executar a verificação de cobertura
-
-```bash
-dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./AppFabric.Tests/TestResults/Coverage/
-```
-
-Gerar o relatório de cobertura
-
-```bash
-dotnet ~/.nuget/packages/reportgenerator/4.8.5/tools/net5.0/ReportGenerator.dll "-reports:./AppFabric.Tests/TestsResults/coverage.cobertura.xml" "-targetdir:./AppFabric.Tests/TestsResults/"
-```
-
-###########################################################
-
-Migrate
 
 Criando uma migração após a modificação no contexto
 
@@ -63,6 +82,36 @@ Gerar script para migrações específicas
 ```bash
 dotnet ef migrations script {nome-da-migração-1  nome-da-migração-X }
 ```
+
+
+
+## Começando a Modificar
+
+
+
+## Qualidade
+
+### Rodando Testes
+
+dotnet test
+
+### Métricas
+
+Executar a verificação de cobertura
+
+```bash
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./AppFabric.Tests/TestResults/Coverage/
+```
+
+Gerar o relatório de cobertura
+
+```bash
+dotnet ~/.nuget/packages/reportgenerator/4.8.5/tools/net5.0/ReportGenerator.dll "-reports:./AppFabric.Tests/TestsResults/coverage.cobertura.xml" "-targetdir:./AppFabric.Tests/TestsResults/"
+```
+
+## Materiais Recomendados
+
+- nossos vídeos
 
 Referencias:
 
