@@ -23,7 +23,7 @@ namespace AppFabric.Business.QueryHandlers
 {
     public class GetClientResponse:QueryResult<UserProjection>
     {
-        private GetClientResponse(bool isSucceed, UserProjection item)
+        public GetClientResponse(bool isSucceed, UserProjection item)
         :base(isSucceed, item)
         {
         }

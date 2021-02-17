@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AppFabric.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -24,7 +25,8 @@ namespace AppFabric.Tests.Integration.Support
 
                 services.AddDbContext<AppFabricDbContext>(options =>
                 {
-                    options.UseSqlite("Data Source=:memory:");
+                    options.UseInMemoryDatabase("EmMemoriaBancoParaTeste");
+                    options.EnableSensitiveDataLogging();
                 });
 
                 var sp = services.BuildServiceProvider();
@@ -36,17 +38,19 @@ namespace AppFabric.Tests.Integration.Support
                     var logger = scopedServices
                         .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
 
+                    db.Database.EnsureDeleted();
                     db.Database.EnsureCreated();
 
-                    // try
-                    // {
-                    //     Utilities.InitializeDbForTests(db);
-                    // }
-                    // catch (Exception ex)
-                    // {
-                    //     logger.LogError(ex, "An error occurred seeding the " +
-                    //                         "database with test messages. Error: {Message}", ex.Message);
-                    // }
+                    try
+                    {
+                        var dbInit = new IntegrationDataset(db);
+                        dbInit.InitializeDbForTests();
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogError(ex, "An error occurred seeding the " +
+                                            "database with test messages. Error: {Message}", ex.Message);
+                    }
                 }
             });
         }

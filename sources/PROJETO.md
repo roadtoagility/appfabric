@@ -9,7 +9,6 @@
   - Typescript
   - NGX Admin Template (veja https://github.com/akveo/ngx-admin)
 - dotnet core LTS
-  - dotnet tool install --global -ef
 
 ## Estrutura
 
@@ -17,7 +16,7 @@
 
 ## Inicialização
 
-Frontend
+### Frontend
 
 1. cd {PROJETO}/sources/AppFabric.UI/src
 
@@ -25,27 +24,37 @@ Frontend
 
 3. ng serve
 
-Backend
+### Backend
 
 1. cd {PROJETO}/sources/AppFabric.API
 2. dotnet restore
-3. dotnet run
+3. dotnet build
 
-## Migrações
-
-
+### Migrações (opcional - o projeto já vem com a base de dados atualizada)
 
 Criando uma migração após a modificação no contexto
 
-Alguns destaques:
+##### Instalar dotnet tools para entity framework
+
+```bash
+dotnet tool install --global -ef
+```
+
+##### Algumas opções relevantes
+
+Toda migração tem um nome, no caso abaixo foi usado InitialCreate
 
 **--project**:  é o projeto onde os códigos das migrações serão criados
 
 **context**: define qual mapeamento será usado, caso exista apenas um na aplicação, ele não é necessário.
 
+**output-dir**: diretório para os códigos referentes aos scripts de migração gerados.
+
 ```bash
 dotnet ef migrations add InitialCreate  --project ../AppFabric.Persistence/AppFabric.Persistence.csproj --context AppFabricDbContext --output-dir ../AppFabric.Persistence/Migrations
 ```
+
+##### Gestão de banco via migrações
 
 Listando as migrações
 
@@ -82,12 +91,6 @@ Gerar script para migrações específicas
 ```bash
 dotnet ef migrations script {nome-da-migração-1  nome-da-migração-X }
 ```
-
-
-
-## Começando a Modificar
-
-
 
 ## Qualidade
 

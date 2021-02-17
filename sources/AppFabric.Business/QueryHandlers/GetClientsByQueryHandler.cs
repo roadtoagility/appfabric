@@ -37,12 +37,10 @@ namespace AppFabric.Business.QueryHandlers
 
         protected override GetClientsResponse ExecuteQuery(GetClientsByFilter filter)
         {
-            //we need a validation like a commandhandler here
-
             var clients = _dbSession.Repository
                 .Find(up=>  up.Name.Contains(filter.Name));
 
-            return GetClientsResponse.From(true, clients);
+            return GetClientsResponse.From(clients.Count>0, clients);
         }
     }
 }
