@@ -24,12 +24,6 @@ namespace AppFabric.Business.Framework
 {
     public class ExecutionResult
     {
-
-        public ExecutionResult(bool isSucceed)
-        :this(isSucceed, ImmutableArray<ValidationFailure>.Empty)
-        {
-        }
-        
         public ExecutionResult(bool isSucceed, IReadOnlyList<ValidationFailure> violations)
         {
             IsSucceed = isSucceed;

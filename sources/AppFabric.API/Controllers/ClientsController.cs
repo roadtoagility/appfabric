@@ -25,7 +25,7 @@ namespace AppFabric.API.Controllers
         {
             var result = _mediator.Send<GetClientsResponse>(GetClientsByFilter.From(name));
 
-            if (result.Items.Count.Equals(0))
+            if (result.Data.Count.Equals(0))
             {
                 return NotFound();
             }

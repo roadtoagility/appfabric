@@ -24,8 +24,8 @@ namespace AppFabric.Business.QueryHandlers
 {
     public class GetClientsResponse:QueryResult<IReadOnlyList<UserProjection>>
     {
-        public GetClientsResponse(bool isSucceed, IReadOnlyList<UserProjection> items)
-        :base(isSucceed, items)
+        public GetClientsResponse(bool isSucceed, IReadOnlyList<UserProjection> data)
+        :base(isSucceed, data)
         {
         }
 

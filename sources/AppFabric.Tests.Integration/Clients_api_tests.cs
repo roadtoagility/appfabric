@@ -7,15 +7,16 @@ using AppFabric.Business.QueryHandlers;
 using AppFabric.Tests.Integration.Support;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace AppFabric.Tests.Integration
 {
-    public class AppFabricClientTests:IClassFixture<CustomWebApplicationFactory<AppFabric.API.Startup>>
+    public class Clients_api_tests:IClassFixture<CustomWebApplicationFactory<AppFabric.API.Startup>>
     {
         private readonly CustomWebApplicationFactory<AppFabric.API.Startup> _factory;
         
-        public AppFabricClientTests(CustomWebApplicationFactory<AppFabric.API.Startup> factory)
+        public Clients_api_tests(CustomWebApplicationFactory<AppFabric.API.Startup> factory)
         {
             _factory = factory;
         }
@@ -39,7 +40,7 @@ namespace AppFabric.Tests.Integration
             });
 
             // Act
-            var response = await client.PostAsJsonAsync<AddUserCommand>(url, command);
+            var response = await client.PostAsJsonAsync(url, command);
             
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
@@ -72,11 +73,9 @@ namespace AppFabric.Tests.Integration
         }
         
         [Theory]
-        [InlineData("/api/clients/117EB8AE-21EF-4049-B11C-36DB81D182E9")]
-        [InlineData("/api/clients/77E69C95-E50C-410A-AC07-14D1F0D5CCA0")]
-        [InlineData("/api/clients/81DC52BA-5D45-4E17-97EC-BEE71E459232")]
-        [InlineData("/api/clients/E2528E3F-601F-4B67-92BA-D9E27462006F")]
-        public async Task Get_Client_By_Id(string url)
+        [InlineData("/api/clients/","81DC52BA-5D45-4E17-97EC-BEE71E459232")]
+        [InlineData("/api/clients/","E2528E3F-601F-4B67-92BA-D9E27462006F")]
+        public async Task Get_Client_By_Id(string url, Guid id)
         {
             // Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -86,22 +85,18 @@ namespace AppFabric.Tests.Integration
             });
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync(String.Concat(url,id));
 
             // Assert
-            
             response.EnsureSuccessStatusCode(); // Status Code 200-299
-            
-            var data = await response.Content.ReadAsStringAsync();
-            var clients = await response.Content.ReadFromJsonAsync<GetClientResponse>();
-            Assert.True(clients?.IsSucceed);
+            var found = await response.Content.ReadFromJsonAsync<GetClientResponse>();
+            Assert.True(found?.IsSucceed);
+            Assert.Equal(id,found?.Data.Id);
         }
         
         [Theory]
-        [InlineData("/api/clients/65CC91A2-267F-4FFE-8CE0-796AECD6AB4D/1")]
-        [InlineData("/api/clients/1107FA5B-6DFC-45BB-9F58-5834F1F1A38C/1")]
-        [InlineData("/api/clients/2E28CC8F-2127-4313-BA61-6063F8983585/1")]
-        public async Task Delete_Client(string url)
+        [InlineData("/api/clients/{0}/{1}","65CC91A2-267F-4FFE-8CE0-796AECD6AB4D",1)]
+        public async Task Delete_Client(string url, Guid id, int version)
         {
             // Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -111,16 +106,13 @@ namespace AppFabric.Tests.Integration
             });
 
             // Act
-            var response = await client.DeleteAsync(url);
+            var response = await client.DeleteAsync(String.Format(url,id,version));
 
             // Assert
-            
             response.EnsureSuccessStatusCode(); // Status Code 200-299
-            // var data = await response.Content.ReadAsStringAsync();
-            var clients = await response.Content.ReadFromJsonAsync<ExecutionResult>();
-            Assert.True(clients?.IsSucceed);
+            var data = await response.Content.ReadAsStringAsync();
+            var result = await Task.Factory.StartNew(()=> JsonConvert.DeserializeObject<ExecutionResult>(data));
+            Assert.True(result?.IsSucceed);
         }
-
-        
     }
 }
