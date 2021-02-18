@@ -10,19 +10,29 @@
   - NGX Admin Template (veja https://github.com/akveo/ngx-admin)
 - dotnet core LTS
 
-## Estrutura
+## Estrutura do Projeto
 
-![image-20210216161852386](/home/adriano/Projects/roadtoagility/workshop/todoagilityapi/docs/images/project-structure.png)
+![image-20210216161852386](../docs/images/project-structure.png)
 
 ## Inicialização
 
 ### Frontend
 
-1. cd {PROJETO}/sources/AppFabric.UI/src
+```bash
+cd {workshop}/sources/AppFabric.UI/src
+```
 
-2. npm install
+Instalação preparação para execução do front
 
-3. ng serve
+```bash
+npm install @angular/cli@10.2.1 --save-dev
+```
+
+Executar a aplicação front
+
+```bash
+../node_modules/@angular/cli/bin/ng serve
+```
 
 ### Backend
 
