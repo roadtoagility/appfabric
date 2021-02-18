@@ -22,7 +22,7 @@ export class ClientService implements Resolve<any>
     onClientUpdateError: BehaviorSubject<any>;
     onClientDeleted: BehaviorSubject<any>;
 
-    baseAdddress: string = "https://localhost:44353/api";
+    baseAdddress: string = "https://localhost:5001/api";
     
     constructor(
         private _httpClient: HttpClient
