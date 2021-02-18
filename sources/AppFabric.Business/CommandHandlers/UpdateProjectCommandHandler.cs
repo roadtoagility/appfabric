@@ -44,7 +44,7 @@ namespace AppFabric.Business.CommandHandlers
         
         protected override ExecutionResult ExecuteCommand(UpdateProjectCommand command)
         {
-            var project = _dbSession.Repository.Get(EntityId.From(command.Id), Version.From(command.Version));
+            var project = _dbSession.Repository.Get(EntityId.From(command.Id));
             var agg = ProjectAggregationRoot.ReconstructFrom(project);
             var isSucceed = false;
       

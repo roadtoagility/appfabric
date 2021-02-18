@@ -43,25 +43,29 @@ namespace AppFabric.Persistence.Model.Repositories
         public void Add(User entity)
         {
             var entry = entity.ToUserState();
-            var oldState =
-                DbContext.Users.FirstOrDefault(b => b.Id == entry.Id);
 
-            if (oldState == null)
+            var oldState = Get(entity.Id);
+
+            if (oldState.Equals(User.Empty()))
             {
                 DbContext.Users.Add(entry);
             }
             else
             {
+                if (Version.Next(oldState.Version) > entity.Version)
+                {
+                    throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
+                }
+
                 DbContext.Entry(oldState).CurrentValues.SetValues(entry);
             }
         }
 
         public void Remove(User entity)
         {
-            var earlierVersion = Version.From(entity.Version.Value - 1);
-            var oldState = Get(entity.Id, earlierVersion);
+            var oldState = Get(entity.Id);
 
-            if (oldState.Equals(User.Empty()))
+            if (Version.Next(oldState.Version) > entity.Version)
             {
                 throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
             }
@@ -71,7 +75,7 @@ namespace AppFabric.Persistence.Model.Repositories
             DbContext.Users.Remove(entry);
         }
 
-        public User Get(EntityId id, Version version)
+        public User Get(EntityId id)
         {
             var user = DbContext.Users.AsNoTracking()
                 .OrderByDescending(ob => ob.Id)

@@ -24,7 +24,7 @@ namespace AppFabric.Business.QueryHandlers
 {
     public class GetProjectResponse:QueryResult<ProjectProjection>
     {
-        private GetProjectResponse(bool isSucceed, ProjectProjection data)
+        public GetProjectResponse(bool isSucceed, ProjectProjection data)
         :base(isSucceed, data)
         {
         }

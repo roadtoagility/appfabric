@@ -46,9 +46,7 @@ namespace AppFabric.Business.CommandHandlers
         
         protected override ExecutionResult ExecuteCommand(RemoveProjectCommand command)
         {
-            var project = _projectDb.Repository.Get(EntityId.From(command.Id), Version.From(command.Version));
-            // esse deveria ser o usuário do request
-            //var owner = _userDb.Repository.Get(command.ClientId);
+            var project = _projectDb.Repository.Get(EntityId.From(command.Id));
             
             var agg = ProjectAggregationRoot.ReconstructFrom(project);
             var isSucceed = false;

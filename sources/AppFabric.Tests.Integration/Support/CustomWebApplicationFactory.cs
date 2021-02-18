@@ -43,8 +43,11 @@ namespace AppFabric.Tests.Integration.Support
 
                     try
                     {
-                        var dbInit = new IntegrationDataset(db);
-                        dbInit.InitializeDbForTests();
+                        var dbClientInit = new IntegrationClientDataset(db);
+                        dbClientInit.InitializeDbForTests();
+                        var dbProjectInit = new IntegrationProjectDataset(db);
+                        dbProjectInit.InitializeDbForTests();
+
                     }
                     catch (Exception ex)
                     {

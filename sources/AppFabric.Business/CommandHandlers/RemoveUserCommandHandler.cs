@@ -44,7 +44,7 @@ namespace AppFabric.Business.CommandHandlers
         
         protected override ExecutionResult ExecuteCommand(RemoveUserCommand command)
         {
-            var user = _userDb.Repository.Get(EntityId.From(command.Id), Version.From(command.Version));
+            var user = _userDb.Repository.Get(EntityId.From(command.Id));
             var agg = UserAggregationRoot.ReconstructFrom(user);
             var isSucceed = false;
       

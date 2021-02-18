@@ -122,7 +122,6 @@ namespace AppFabric.Tests.Domain
             fixture.Register<Project>(() => Project.NewRequest(fixture.Create<EntityId>(),
                 fixture.Create<ProjectName>(),fixture.Create<ProjectCode>(),
                 fixture.Create<DateAndTime>(), fixture.Create<Money>(), fixture.Create<EntityId>()));
-
             var finalProject = fixture.Create<Project>();
 
             var command = fixture.Build<AddProjectCommand>()
@@ -135,13 +134,15 @@ namespace AppFabric.Tests.Domain
 
             var mediator = fixture.Create<IMediator>();
             var logger = fixture.Create<ILogger<AddProjectCommandHandler>>();
-            var db = fixture.Create<IDbSession<IProjectRepository>>();
-            var handler = new AddProjectCommandHandler(logger,mediator,db);
+            var projectDb = fixture.Create<IDbSession<IProjectRepository>>();
+            var userDb = fixture.Create<IDbSession<IUserRepository>>();
+            var handler = new AddProjectCommandHandler(logger,mediator,projectDb,userDb);
 
             var result = handler.Execute(command);
-            
-            db.Received().Repository.Add(finalProject);
-            db.Received().SaveChanges();
+
+            userDb.Received().Repository.Get(finalProject.ClientId);
+            projectDb.Received().Repository.Add(finalProject);
+            projectDb.Received().SaveChanges();
             mediator.Received(1).Publish(Arg.Any<ProjectAddedEvent>());
             
             Assert.True(result.IsSucceed);
@@ -163,13 +164,14 @@ namespace AppFabric.Tests.Domain
             
             var command = new AddProjectCommand();
             
-            var mediator = Substitute.For<IMediator>();
+            var mediator = fixture.Create<IMediator>();
             var logger = fixture.Create<ILogger<AddProjectCommandHandler>>();
-            var repo = Substitute.For<IProjectRepository>();
-            var db = Substitute.For<IDbSession<IProjectRepository>>();
+            var projectDb = fixture.Create<IDbSession<IProjectRepository>>();
+            var userDb = fixture.Create<IDbSession<IUserRepository>>();
 
             // when 
-            var handler = new AddProjectCommandHandler(logger,mediator,db);
+            var handler = new AddProjectCommandHandler(logger,mediator,projectDb,userDb);
+
             var result = handler.Execute(command);
 
             // then

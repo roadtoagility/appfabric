@@ -7,12 +7,12 @@ using AutoFixture;
 
 namespace AppFabric.Tests.Integration.Support
 {
-    public class IntegrationDataset
+    public class IntegrationClientDataset
     {
         public Fixture DatabaseFixture { get; }
         public AppFabricDbContext DbContext { get; }
 
-        public IntegrationDataset(AppFabricDbContext db)
+        public IntegrationClientDataset(AppFabricDbContext db)
         {
             DbContext = db;
 
