@@ -16,15 +16,18 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System.Collections.Immutable;
+using FluentValidation.Results;
+
 namespace AppFabric.Business.Framework
 {
     public class QueryResult<TResult>: ExecutionResult
     {
-        public QueryResult(bool isSucceed, TResult items)
-            :base(isSucceed)
+        public QueryResult(bool isSucceed, TResult data)
+            :base(isSucceed, ImmutableList<ValidationFailure>.Empty)
         {
-            Items = items;
+            Data = data;
         }
-        public TResult Items { get;}
+        public TResult Data { get;}
     }
 }

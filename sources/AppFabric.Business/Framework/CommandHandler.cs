@@ -19,28 +19,32 @@
 using System;
 using FluentMediator;
 using AppFabric.Domain.Framework.DomainEvents;
+using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.Framework
 {
     public abstract class CommandHandler<TCommand, TResult> : ICommandHandler<TCommand, TResult>
     {
+        private readonly ILogger _logger;
         protected IMediator Publisher { get; }
         
-        protected CommandHandler(IMediator publisher)
+        protected CommandHandler(ILogger logger, IMediator publisher)
         {
+            _logger = logger;
             Publisher = publisher;
         }
 
         public TResult Execute(TCommand command)
         {
-            // try
-            // {
+            try
+            {
                 return ExecuteCommand(command);
-            // }
-            // catch (Exception ex)
-            // {
-            //     //logar e deixar seguir
-            // }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,$"Command Execution Failed with exception {ex.Message}");
+                throw;
+            }
         }
 
         protected abstract TResult ExecuteCommand(TCommand command);

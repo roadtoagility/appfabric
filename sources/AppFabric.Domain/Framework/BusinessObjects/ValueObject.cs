@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AppFabric.Agile.Domain.Framework.BusinessObjects
+namespace AppFabric.Domain.Framework.BusinessObjects
 {
     public abstract class ValueObject
     {

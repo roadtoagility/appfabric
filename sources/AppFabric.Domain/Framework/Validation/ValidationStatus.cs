@@ -19,6 +19,7 @@
 
 using FluentValidation.Results;
 using AppFabric.Agile.Domain.Framework.BusinessObjects;
+using AppFabric.Domain.Framework.BusinessObjects;
 
 namespace AppFabric.Domain.Framework.Validation
 {

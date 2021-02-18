@@ -1,5 +1,5 @@
 export class ResponseData {
-    items: any[];
+    data: any[];
     isSucceed: boolean;
     violations: any[];
 

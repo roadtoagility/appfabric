@@ -27,8 +27,7 @@ namespace AppFabric.Persistence.Framework.Repositories
 {
     public interface IRepository<TState,TModel> where TModel : class
     {
-        TModel Get(EntityId id, Version version);
-       
+        TModel Get(EntityId id);
         void Add(TModel entity);
         void Remove(TModel entity);
         

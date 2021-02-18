@@ -26,21 +26,21 @@ namespace AppFabric.Domain.BusinessObjects
     public sealed class Version : ValidationStatus
     {
         public int Value { get; }
-        
+
         private Version(int version)
         {
             Value = version;
         }
 
 
-        
+
         public static Version From(int current)
         {
             var version = new Version(current);
             var validator = new VersionValidator();
-            
+
             version.SetValidationResult(validator.Validate(version));
-             
+
             return new Version(current);
         }
 
@@ -56,9 +56,9 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static Version Next(Version current)
         {
-            return From(current.Value +1);
+            return From(current.Value + 1);
         }
-        
+
         public override string ToString()
         {
             return $"{Value}";
@@ -70,7 +70,19 @@ namespace AppFabric.Domain.BusinessObjects
         {
             yield return Value;
         }
+
         #endregion
 
+        public static bool operator >=(Version a, Version b)
+            => a.Value >= b.Value;
+
+        public static bool operator <=(Version a, Version b)
+            => a.Value <= b.Value;
+        
+        public static bool operator >(Version a, Version b)
+            => a.Value > b.Value;
+
+        public static bool operator <(Version a, Version b)
+            => a.Value < b.Value;
     }
 }

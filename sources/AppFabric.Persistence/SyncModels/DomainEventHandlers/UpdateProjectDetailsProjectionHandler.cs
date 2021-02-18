@@ -25,34 +25,31 @@ using AppFabric.Persistence.ReadModel.Repositories;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {
-    public sealed class AddProjectProjectionHandler : DomainEventHandler<ProjectAddedEvent>
+    public class UpdateProjectDetailsProjectionHandler : DomainEventHandler<ProjectDetailUpdatedEvent>
     {
         private readonly IDbSession<IProjectProjectionRepository> _projectSession;
-        private readonly IDbSession<IUserProjectionRepository> _userSession;
 
-        public AddProjectProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession,
-            IDbSession<IUserProjectionRepository> userSession)
+        public UpdateProjectDetailsProjectionHandler(IDbSession<IProjectProjectionRepository> projectSession)
         {
             _projectSession = projectSession;
-            _userSession = userSession;
         }
 
-        protected override void ExecuteHandle(ProjectAddedEvent @event)
+        protected override void ExecuteHandle(ProjectDetailUpdatedEvent @event)
         {
-            var client = _userSession.Repository.Get(@event.ClientId);
-                
+            var project = _projectSession.Repository.Get(@event.Id);
+            
             var projection = new ProjectProjection(
-                @event.Id.Value,
+                project.Id,
                 @event.Name.Value,
-                @event.Code.Value,
+                project.Code,
                 @event.Budget.Value,
-                @event.StartDate.Value,
-                @event.ClientId.Value,
-                client.Name,
+                project.StartDate,
+                project.ClientId,
+                project.ClientName,
                 @event.Owner.Value,
                 @event.OrderNumber.Value,
-                @event.Status.Value,
-                @event.Status.ToString(),
+                project.Status,
+                project.StatusName,
                 @event.Version.Value);
             
             _projectSession.Repository.Add(projection);

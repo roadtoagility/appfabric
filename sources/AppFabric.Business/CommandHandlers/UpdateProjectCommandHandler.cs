@@ -26,22 +26,25 @@ using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public sealed class UpdateProjectCommandHandler : CommandHandler<UpdateProjectCommand, ExecutionResult>
     {
         private readonly IDbSession<IProjectRepository> _dbSession;
+        private readonly ILogger<UpdateProjectCommandHandler> _logger;
         
-        public UpdateProjectCommandHandler(IMediator publisher, IDbSession<IProjectRepository> dbSession)
-            :base(publisher)
+        public UpdateProjectCommandHandler(ILogger<UpdateProjectCommandHandler> logger, IMediator publisher, IDbSession<IProjectRepository> dbSession)
+            :base(logger,publisher)
         {
             _dbSession = dbSession;
+            _logger = logger;
         }
         
         protected override ExecutionResult ExecuteCommand(UpdateProjectCommand command)
         {
-            var project = _dbSession.Repository.Get(EntityId.From(command.Id), Version.From(command.Version));
+            var project = _dbSession.Repository.Get(EntityId.From(command.Id));
             var agg = ProjectAggregationRoot.ReconstructFrom(project);
             var isSucceed = false;
       

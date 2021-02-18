@@ -24,6 +24,7 @@ using AppFabric.Business.CommandHandlers;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
 using AppFabric.Domain.AggregationProject;
+using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.AggregationUser;
 using AppFabric.Domain.AggregationUser.Events;
 using AppFabric.Domain.BusinessObjects;
@@ -34,6 +35,7 @@ using AutoFixture;
 using AutoFixture.AutoNSubstitute;
 using FluentMediator;
 using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using Xunit;
@@ -59,7 +61,7 @@ namespace AppFabric.Tests.Domain
                 fixture.Create<Email>(), fixture.Create<Version>()));
 
             var finalUser = fixture.Create<User>();
-            
+
             var command = fixture.Build<AddUserCommand>()
                 .With(user => user.CommercialEmail, finalUser.CommercialEmail.Value)
                 .With(user => user.Cnpj, finalUser.Cnpj.Value)
@@ -67,8 +69,9 @@ namespace AppFabric.Tests.Domain
                 .Create();
 
             var mediator = fixture.Create<IMediator>();
+            var logger = fixture.Create<ILogger<AddUserCommandHandler>>();
             var db = fixture.Create<IDbSession<IUserRepository>>();
-            var handler = new AddUserCommandHandler(mediator,db);
+            var handler = new AddUserCommandHandler(logger,mediator,db);
 
             var result = handler.Execute(command);
             
@@ -92,8 +95,9 @@ namespace AppFabric.Tests.Domain
                 .Create();
             
             var mediator = fixture.Create<IMediator>();
+            var logger = fixture.Create<ILogger<AddUserCommandHandler>>();
             var db = fixture.Create<IDbSession<IUserRepository>>();
-            var handler = new AddUserCommandHandler(mediator,db);
+            var handler = new AddUserCommandHandler(logger, mediator,db);
 
 
             var result = handler.Execute(command);
@@ -104,28 +108,42 @@ namespace AppFabric.Tests.Domain
         } 
         
         [Fact]
-        public void user_project_command_succed()
+        public void project_add_command_succed()
         {
             var fixture = new Fixture().Customize(new AutoNSubstituteCustomization{ ConfigureMembers = true });
             
             fixture.Register<EntityId>(() => EntityId.From(fixture.Create<Guid>()));
-            fixture.Register<Name>(() => Name.From(fixture.Create<string>()));
+            fixture.Register<ProjectName>(() => ProjectName.From(fixture.Create<string>()));
             fixture.Register<ProjectCode>(() => ProjectCode.From(fixture.Create<string>()));
-            fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
             fixture.Register<DateAndTime>(() => DateAndTime.From(fixture.Create<DateTime>()));
             fixture.Register<ProjectStatus>(() => ProjectStatus.Default());
-            fixture.Register<ServiceOrderNumber>(() => ServiceOrderNumber.From(fixture.Create<string>()));
+            fixture.Register<ServiceOrderNumber>(() => ServiceOrderNumber.Empty());
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
+            fixture.Register<Project>(() => Project.NewRequest(fixture.Create<EntityId>(),
+                fixture.Create<ProjectName>(),fixture.Create<ProjectCode>(),
+                fixture.Create<DateAndTime>(), fixture.Create<Money>(), fixture.Create<EntityId>()));
+            var finalProject = fixture.Create<Project>();
 
-            var command = fixture.Create<AddProjectCommand>();
-            
-            var mediator = Substitute.For<IMediator>();
-            var repo = Substitute.For<IProjectRepository>();
-            var db = Substitute.For<IDbSession<IProjectRepository>>();
+            var command = fixture.Build<AddProjectCommand>()
+                .With(project => project.Name, finalProject.Name.Value)
+                .With(project => project.Code, finalProject.Code.Value)
+                .With(project => project.Budget, finalProject.Budget.Value)
+                .With(project => project.ClientId, finalProject.ClientId.Value)
+                .With(project => project.StartDate, finalProject.StartDate.Value)
+                .Create();
 
-            var handler = new AddProjectCommandHandler(mediator,db);
+            var mediator = fixture.Create<IMediator>();
+            var logger = fixture.Create<ILogger<AddProjectCommandHandler>>();
+            var projectDb = fixture.Create<IDbSession<IProjectRepository>>();
+            var userDb = fixture.Create<IDbSession<IUserRepository>>();
+            var handler = new AddProjectCommandHandler(logger,mediator,projectDb,userDb);
 
             var result = handler.Execute(command);
+
+            userDb.Received().Repository.Get(finalProject.ClientId);
+            projectDb.Received().Repository.Add(finalProject);
+            projectDb.Received().SaveChanges();
+            mediator.Received(1).Publish(Arg.Any<ProjectAddedEvent>());
             
             Assert.True(result.IsSucceed);
         }
@@ -146,12 +164,14 @@ namespace AppFabric.Tests.Domain
             
             var command = new AddProjectCommand();
             
-            var mediator = Substitute.For<IMediator>();
-            var repo = Substitute.For<IProjectRepository>();
-            var db = Substitute.For<IDbSession<IProjectRepository>>();
+            var mediator = fixture.Create<IMediator>();
+            var logger = fixture.Create<ILogger<AddProjectCommandHandler>>();
+            var projectDb = fixture.Create<IDbSession<IProjectRepository>>();
+            var userDb = fixture.Create<IDbSession<IUserRepository>>();
 
             // when 
-            var handler = new AddProjectCommandHandler(mediator,db);
+            var handler = new AddProjectCommandHandler(logger,mediator,projectDb,userDb);
+
             var result = handler.Execute(command);
 
             // then

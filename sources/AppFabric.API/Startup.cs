@@ -64,8 +64,8 @@ namespace AppFabric.API
             services.AddScoped<GetProjectsByQueryHandler>();
             services.AddScoped<GetProjectByIdQueryHandler>();
             
-            services.AddScoped<IDomainEventHandler<ProjectAddedEvent>, AddProjectProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<ProjectDetailUpdatedEvent>, UpdateDetailsProjectProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ProjectAddedEvent>, AddedProjectProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ProjectDetailUpdatedEvent>, UpdateProjectDetailsProjectionHandler>();
             services.AddScoped<IDomainEventHandler<ProjectRemovedEvent>,RemoveProjectProjectionHandler>();
 
             services.AddScoped<AddUserCommandHandler>();
@@ -74,7 +74,7 @@ namespace AppFabric.API
             services.AddScoped<GetClientsByQueryHandler>();
             services.AddScoped<GetClientByIdQueryHandler>();
             
-            services.AddScoped<IDomainEventHandler<UserAddedEvent>, UpdateUserProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<UserAddedEvent>, AddedUserProjectionHandler>();
             services.AddScoped<IDomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
           
             
@@ -154,6 +154,7 @@ namespace AppFabric.API
                           .AllowAnyHeader();
                 });
             });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -26,22 +26,25 @@ using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public sealed class RemoveUserCommandHandler : CommandHandler<RemoveUserCommand, ExecutionResult>
     {
         private readonly IDbSession<IUserRepository> _userDb;
+        private readonly ILogger<RemoveUserCommandHandler> _logger;
         
-        public RemoveUserCommandHandler(IMediator publisher, IDbSession<IUserRepository> userDb)
-            :base(publisher)
+        public RemoveUserCommandHandler(ILogger<RemoveUserCommandHandler> logger, IMediator publisher, IDbSession<IUserRepository> userDb)
+            :base(logger,publisher)
         {
             _userDb = userDb;
+            _logger = logger;
         }
         
         protected override ExecutionResult ExecuteCommand(RemoveUserCommand command)
         {
-            var user = _userDb.Repository.Get(EntityId.From(command.Id), Version.From(command.Version));
+            var user = _userDb.Repository.Get(EntityId.From(command.Id));
             var agg = UserAggregationRoot.ReconstructFrom(user);
             var isSucceed = false;
       

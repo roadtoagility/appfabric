@@ -27,16 +27,19 @@ using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public sealed class AddUserCommandHandler : CommandHandler<AddUserCommand, CommandResult<Guid>>
     {
         private readonly IDbSession<IUserRepository> _dbSession;
+        private readonly ILogger<AddUserCommandHandler> _logger;
         
-        public AddUserCommandHandler(IMediator publisher, IDbSession<IUserRepository> dbSession)
-            :base(publisher)
+        public AddUserCommandHandler(ILogger<AddUserCommandHandler> logger,IMediator publisher, IDbSession<IUserRepository> dbSession)
+            :base(logger, publisher)
         {
+            _logger = logger;
             _dbSession = dbSession;
         }
         

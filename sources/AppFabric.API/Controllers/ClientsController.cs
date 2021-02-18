@@ -24,6 +24,12 @@ namespace AppFabric.API.Controllers
         public IActionResult List([FromQuery] string name)
         {
             var result = _mediator.Send<GetClientsResponse>(GetClientsByFilter.From(name));
+
+            if (result.Data.Count.Equals(0))
+            {
+                return NotFound();
+            }
+            
             return Ok(result);
         }
 
@@ -31,13 +37,14 @@ namespace AppFabric.API.Controllers
         public IActionResult Get(Guid id)
         {
             var result = _mediator.Send<GetClientResponse>(GetClientByIdFilter.From(id));
+            
             return Ok(result);
         }
 
-        [HttpDelete("{id}/{version}")]
-        public IActionResult Delete(Guid id, int version)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
         {
-            var result = _mediator.Send<ExecutionResult>(new RemoveUserCommand{Id = id, Version = version});
+            var result = _mediator.Send<ExecutionResult>(new RemoveUserCommand{Id = id});
             return Ok(result);
         }
         
@@ -45,6 +52,12 @@ namespace AppFabric.API.Controllers
         public IActionResult Save([FromBody] AddUserCommand entity)
         {
             var result = _mediator.Send<ExecutionResult>(entity);
+            
+            if (!result.IsSucceed)
+            {
+                return BadRequest(result);
+            }
+            
             return Ok(result);
         }
     }

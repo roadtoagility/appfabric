@@ -25,6 +25,7 @@ using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.CommandHandlers
 {
@@ -32,20 +33,20 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IProjectRepository> _projectDb;
         private readonly IDbSession<IUserRepository> _userDb;
+        private readonly ILogger<RemoveProjectCommandHandler> _logger;
         
-        public RemoveProjectCommandHandler(IMediator publisher, IDbSession<IProjectRepository> projectDb,
+        public RemoveProjectCommandHandler(ILogger<RemoveProjectCommandHandler> logger, IMediator publisher, IDbSession<IProjectRepository> projectDb,
             IDbSession<IUserRepository> userDb)
-            :base(publisher)
+            :base(logger, publisher)
         {
             _projectDb = projectDb;
             _userDb = userDb;
+            _logger = logger;
         }
         
         protected override ExecutionResult ExecuteCommand(RemoveProjectCommand command)
         {
-            var project = _projectDb.Repository.Get(EntityId.From(command.Id), Version.From(command.Version));
-            // esse deveria ser o usuário do request
-            //var owner = _userDb.Repository.Get(command.ClientId);
+            var project = _projectDb.Repository.Get(EntityId.From(command.Id));
             
             var agg = ProjectAggregationRoot.ReconstructFrom(project);
             var isSucceed = false;
