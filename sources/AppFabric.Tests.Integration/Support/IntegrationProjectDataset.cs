@@ -49,6 +49,7 @@ namespace AppFabric.Tests.Integration.Support
         }
         public void InitializeDbForTests()
         {
+            DbContext.Projects.AddRange(GetSeedingProjectForDeleting());
             DbContext.Projects.AddRange(GetSeedingProjectForEditing());
             DbContext.Users.AddRange(GetSeedingUsersForProjectIsertion());
             
@@ -56,7 +57,9 @@ namespace AppFabric.Tests.Integration.Support
             DbContext.ProjectsProjection.AddRange(GetSeedingProjectProjectionForEditing());
             DbContext.ProjectsProjection.AddRange(GetSeedingProjectProjectionForListing());
             DbContext.ProjectsProjection.AddRange(GetSeedingProjectProjectionForFiltering());
+            DbContext.ProjectsProjection.AddRange(GetSeedingProjectProjectionForDeleting());
 
+            
             DbContext.SaveChanges();
         }
 
@@ -90,6 +93,7 @@ namespace AppFabric.Tests.Integration.Support
                     .Create()
             };
         }
+        
         
         public List<ProjectProjection> GetSeedingProjectProjectionForListing()
         {
@@ -146,6 +150,36 @@ namespace AppFabric.Tests.Integration.Support
                 DatabaseFixture.Build<ProjectProjection>()
               
                     .With(up => up.Id, Guid.Parse("7D74E1C4-3C35-47B9-B17B-7D5F9D9DFCF6"))
+                    .With(up => up.Status, 1)
+                    .With(up => up.Owner, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
+
+                    .Create()
+            };
+        }
+        
+        public List<ProjectState> GetSeedingProjectForDeleting()
+        {
+            return new List<ProjectState>()
+            {
+                //para filtragem por id
+                DatabaseFixture.Build<ProjectState>()
+                    .With(up=> up.Id, Guid.Parse("41557BC9-1809-4B0F-B8E7-4F61CC06D2C9"))
+                    .With(up=> up.RowVersion, BitConverter.GetBytes(1))
+                    .With(up=> up.Status, 1)
+                    .With(up=> up.Owner,string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
+
+                    .Create()
+            };
+        }
+        
+        public List<ProjectProjection> GetSeedingProjectProjectionForDeleting()
+        {
+            return new List<ProjectProjection>()
+            {
+                //para filtragem por id
+                DatabaseFixture.Build<ProjectProjection>()
+              
+                    .With(up => up.Id, Guid.Parse("41557BC9-1809-4B0F-B8E7-4F61CC06D2C9"))
                     .With(up => up.Status, 1)
                     .With(up => up.Owner, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
 
