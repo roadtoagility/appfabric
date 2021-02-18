@@ -58,7 +58,7 @@ export class ClientService implements Resolve<any>
             .get(`${this.baseAdddress}/clients/${projectId}`)
             .subscribe((response: any) => {
                 if(response.isSucceed){
-                    this.client = response.items;
+                    this.client = response.data;
                     this.onClientLoaded.next(this.client);
                 }
                 resolve(response);
@@ -84,7 +84,7 @@ export class ClientService implements Resolve<any>
             .get(`${this.baseAdddress}/clients/list?name=${filter}`)
             .subscribe((response: ResponseData) => {
                 if(response.isSucceed){
-                    this.clients = response.items;
+                    this.clients = response.data;
                     this.onClientsChanged.next(this.clients);
                 }
                 resolve(response);

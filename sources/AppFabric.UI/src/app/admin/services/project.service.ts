@@ -20,7 +20,7 @@ export class ProjectService implements Resolve<any>
 
     onProjectDeleted: BehaviorSubject<any>;
 
-    baseAdddress: string = "https://localhost:44353/api";
+    baseAdddress: string = "https://localhost:5001/api";
     
     constructor(
         private _httpClient: HttpClient
@@ -55,8 +55,8 @@ export class ProjectService implements Resolve<any>
             this._httpClient
             .get(`${this.baseAdddress}/projects/${projectId}`)
             .subscribe((response: ResponseData) => {
-                if(response.isSucceed && response.items !== null){
-                    this.project = response.items;
+                if(response.isSucceed && response.data !== null){
+                    this.project = response.data;
                     this.onProjectLoaded.next(this.project);
                 }
                 resolve(response);
@@ -67,9 +67,9 @@ export class ProjectService implements Resolve<any>
     loadAll(filter){
         return new Promise((resolve, reject) => {
             this._httpClient
-            .get(`${this.baseAdddress}/projects/list?nome=${filter}`)
+            .get(`${this.baseAdddress}/projects/list?name=${filter}`)
             .subscribe((response: ResponseData) => {
-                this.projects = response.items;
+                this.projects = response.data;
                 this.onProjectsChanged.next(this.projects);
                 resolve(response);
             });
@@ -92,7 +92,7 @@ export class ProjectService implements Resolve<any>
     save(entity){
         return new Promise((resolve, reject) => {
             this._httpClient
-            .put(`${this.baseAdddress}/projects/save`, entity)
+            .post(`${this.baseAdddress}/projects/save`, entity)
             .subscribe((response: ResponseData) => {
                 if(response.isSucceed){
                     this.project = entity;
@@ -111,7 +111,7 @@ export class ProjectService implements Resolve<any>
     update(entity){
         return new Promise((resolve, reject) => {
             this._httpClient
-            .post(`${this.baseAdddress}/projects/save/${entity.id}`, entity)
+            .put(`${this.baseAdddress}/projects/save/${entity.id}`, entity)
             .subscribe((response: ResponseData) => {
                 this.handle(response, entity);
                 resolve(response);
