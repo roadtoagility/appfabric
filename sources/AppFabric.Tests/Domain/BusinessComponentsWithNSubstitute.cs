@@ -122,7 +122,12 @@ namespace AppFabric.Tests.Domain
             fixture.Register<Project>(() => Project.NewRequest(fixture.Create<EntityId>(),
                 fixture.Create<ProjectName>(),fixture.Create<ProjectCode>(),
                 fixture.Create<DateAndTime>(), fixture.Create<Money>(), fixture.Create<EntityId>()));
+            fixture.Register<User>(() => User.From(fixture.Create<EntityId>(),
+                fixture.Create<Name>(),fixture.Create<SocialSecurityId>(),
+                fixture.Create<Email>(), fixture.Create<Version>()));
+            
             var finalProject = fixture.Create<Project>();
+            var finalClient = fixture.Create<User>();
 
             var command = fixture.Build<AddProjectCommand>()
                 .With(project => project.Name, finalProject.Name.Value)
@@ -139,8 +144,8 @@ namespace AppFabric.Tests.Domain
             var handler = new AddProjectCommandHandler(logger,mediator,projectDb,userDb);
 
             var result = handler.Execute(command);
-
-            userDb.Received().Repository.Get(finalProject.ClientId);
+            
+            userDb.Received().Repository.Get(finalProject.ClientId).Returns(finalClient);
             projectDb.Received().Repository.Add(finalProject);
             projectDb.Received().SaveChanges();
             mediator.Received(1).Publish(Arg.Any<ProjectAddedEvent>());

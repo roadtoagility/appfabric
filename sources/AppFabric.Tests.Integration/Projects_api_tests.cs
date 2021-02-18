@@ -126,8 +126,8 @@ namespace AppFabric.Tests.Integration
         }
         
         [Theory]
-        [InlineData("/api/projects/{0}","65CC91A2-267F-4FFE-8CE0-796AECD6AB4D",1)]
-        public async Task Delete_Project(string url, Guid id, int version)
+        [InlineData("/api/projects/{0}","41557BC9-1809-4B0F-B8E7-4F61CC06D2C9")]
+        public async Task Delete_Project(string url, Guid id)
         {
             // Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -137,7 +137,7 @@ namespace AppFabric.Tests.Integration
             });
 
             // Act
-            var response = await client.DeleteAsync(String.Format(url,id,version));
+            var response = await client.DeleteAsync(String.Format(url,id));
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
