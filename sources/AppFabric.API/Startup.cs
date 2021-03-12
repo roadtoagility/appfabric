@@ -73,6 +73,8 @@ namespace AppFabric.API
             
             services.AddScoped<GetClientsByQueryHandler>();
             services.AddScoped<GetClientByIdQueryHandler>();
+            services.AddScoped<GetProjectsByClientAndNameQueryHandler>();
+            
             
             services.AddScoped<IDomainEventHandler<UserAddedEvent>, AddedUserProjectionHandler>();
             services.AddScoped<IDomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
@@ -120,6 +122,10 @@ namespace AppFabric.API
                     .Return<GetProjectsResponse, GetProjectsByQueryHandler>(
                         (handler, request) => handler.Execute(request));
 
+                builder.On<GetProjectsByClientAndNameFilter>().Pipeline()
+                    .Return<GetProjectsResponse, GetProjectsByClientAndNameQueryHandler>(
+                        (handler, request) => handler.Execute(request));
+                
                 //readmodel sync
                 builder.On<ProjectAddedEvent>().Pipeline()
                     .Call<IDomainEventHandler<ProjectAddedEvent>>(

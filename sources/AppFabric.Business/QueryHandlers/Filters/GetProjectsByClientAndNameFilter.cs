@@ -16,15 +16,26 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using FluentValidation;
+using System;
+using AppFabric.Domain.BusinessObjects;
+using AppFabric.Domain.Framework.BusinessObjects;
 
-namespace AppFabric.Domain.BusinessObjects.Validations
+namespace AppFabric.Business.QueryHandlers.Filters
 {
-    public sealed class ProjectNameValidator: AbstractValidator<ProjectName>
+    public class GetProjectsByClientAndNameFilter
     {
-        public ProjectNameValidator()
+        private GetProjectsByClientAndNameFilter(string name, Guid clientId)
         {
-            RuleFor(name => name).NotNull();
+            Name = ProjectName.From(name);
+            ClientId = EntityId.From(clientId);
+        }
+
+        public EntityId ClientId { get; }
+        public ProjectName Name { get; }
+        
+        public static GetProjectsByClientAndNameFilter From(string name, Guid clientId)
+        {
+            return new GetProjectsByClientAndNameFilter(name, clientId);
         }
     }
 }

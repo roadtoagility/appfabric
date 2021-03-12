@@ -34,6 +34,8 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static ProjectName From(string name)
         {
+            name = string.IsNullOrEmpty(name) ? string.Empty : name;
+            
             var projectName = new ProjectName(name);
             var validator = new ProjectNameValidator();
 

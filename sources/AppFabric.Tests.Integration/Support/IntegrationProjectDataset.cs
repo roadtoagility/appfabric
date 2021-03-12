@@ -56,7 +56,8 @@ namespace AppFabric.Tests.Integration.Support
             DbContext.UsersProjection.AddRange(GetSeedingUsersProjectionForProjectIsertion());
             DbContext.ProjectsProjection.AddRange(GetSeedingProjectProjectionForEditing());
             DbContext.ProjectsProjection.AddRange(GetSeedingProjectProjectionForListing());
-            DbContext.ProjectsProjection.AddRange(GetSeedingProjectProjectionForFiltering());
+            DbContext.ProjectsProjection.AddRange(GetSeedingProjectProjectionForFilteringById());
+            DbContext.ProjectsProjection.AddRange(GetSeedingProjectProjectionForFilteringByClientAndName());
             DbContext.ProjectsProjection.AddRange(GetSeedingProjectProjectionForDeleting());
 
             
@@ -107,7 +108,7 @@ namespace AppFabric.Tests.Integration.Support
             };
         }
 
-        public List<ProjectProjection> GetSeedingProjectProjectionForFiltering()
+        public List<ProjectProjection> GetSeedingProjectProjectionForFilteringById()
         {
             return new List<ProjectProjection>()
             {
@@ -123,6 +124,24 @@ namespace AppFabric.Tests.Integration.Support
                     .With(up=> up.Status, 1)
                     .With(up=> up.Owner,string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
 
+                    .Create()
+            };
+        }
+        public List<ProjectProjection> GetSeedingProjectProjectionForFilteringByClientAndName()
+        {
+            return new List<ProjectProjection>()
+            {
+                //para filtragem por id
+                DatabaseFixture.Build<ProjectProjection>()
+                    .With(up=> up.ClientId, Guid.Parse("AA8CD061-B3C0-4931-9272-0D7A9014B616"))
+                    .With(up=> up.Status, 1)
+                    .With(up=> up.Owner,string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
+                    .Create(),
+                DatabaseFixture.Build<ProjectProjection>()
+                    .With(up=> up.ClientId, Guid.Parse("AA8CD061-B3C0-4931-9272-0D7A9014B616"))
+                    .With(up=> up.Status, 1)
+                    .With(up=> up.Owner,string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
+                    .With(up=> up.Name,string.Format($"{DatabaseFixture.Create<string>()}my-project"))
                     .Create()
             };
         }

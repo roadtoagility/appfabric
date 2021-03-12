@@ -80,11 +80,11 @@ namespace AppFabric.Tests.Integration
             Assert.True(result?.IsSucceed);
         }
         
-        [Fact]
-        public async Task Get_Projects()
+        [Theory]
+        [InlineData("/api/projects/list/{0}/","AA8CD061-B3C0-4931-9272-0D7A9014B616")]
+        public async Task Get_Projects_ByClient(string url, Guid id)
         {
             // Arrange
-            var url = "/api/projects/list";
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = true,
@@ -92,7 +92,7 @@ namespace AppFabric.Tests.Integration
             });
 
             // Act
-            var response = await client.GetAsync(url);
+            var response = await client.GetAsync(String.Format(url,id));
 
             // Assert
             
@@ -100,6 +100,29 @@ namespace AppFabric.Tests.Integration
             var data = await response.Content.ReadAsStringAsync();
             var projects = await Task.Factory.StartNew(()=> JsonConvert.DeserializeObject<GetProjectsResponse>(data));
             Assert.True(projects?.IsSucceed);
+            Assert.Equal(2,projects?.Data.Count);
+        }
+        [Theory]
+        [InlineData("/api/projects/list/{0}/{1}","AA8CD061-B3C0-4931-9272-0D7A9014B616", "my-project")]
+        public async Task Get_Projects_ByClient_Name(string url, Guid id, string name)
+        {
+            // Arrange
+            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = true,
+                BaseAddress = new Uri("https://localhost")
+            });
+
+            // Act
+            var response = await client.GetAsync(String.Format(url,id, name));
+
+            // Assert
+            
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            var data = await response.Content.ReadAsStringAsync();
+            var projects = await Task.Factory.StartNew(()=> JsonConvert.DeserializeObject<GetProjectsResponse>(data));
+            Assert.True(projects?.IsSucceed);
+            Assert.Equal(1,projects?.Data.Count);
         }
         
         [Theory]
@@ -115,7 +138,7 @@ namespace AppFabric.Tests.Integration
             });
 
             // Act
-            var response = await client.GetAsync(String.Concat(url,id));
+            var response = await client.GetAsync(string.Concat(url,id));
 
             // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
