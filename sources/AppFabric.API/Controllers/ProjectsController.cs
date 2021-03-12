@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using FluentMediator;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AppFabric.API.Mock;
 using AppFabric.Business.CommandHandlers.Commands;
@@ -32,13 +29,10 @@ namespace AppFabric.API.Controllers
         }
 
         [HttpGet("list/{clientId}/{name?}")]
-        public async Task<ActionResult<object>> List(int clientId, string name = "")
+        public IActionResult List(Guid clientId, string name)
         {
-            var projects = ProjectsMock.GetProjects();
-
-            projects = projects.Where(x => x.ClientId == clientId && x.Nome.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
-
-            return await Task.FromResult(projects);
+            var result = _mediator.Send<GetProjectsResponse>(GetProjectsByClientAndNameFilter.From(name,clientId));
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
