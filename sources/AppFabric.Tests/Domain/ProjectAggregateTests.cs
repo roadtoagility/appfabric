@@ -1,60 +1,61 @@
-﻿using System;
-using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.CommandHandlers.Factories;
-using AppFabric.Domain.AggregationProject.Events;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Tests.Domain.Data;
+﻿using AppFabric.Domain.AggregationProject;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace AppFabric.Tests.Domain
 {
     public class ProjectAggregateTests
     {
-        //Um projeto só pode ser cadastrado com uma Ordem de Serviço aprovada
-        [Theory]
-        [ClassData(typeof(GenerateValidProjectTestingData))]
-        public void ShouldCreateProjectWithServiceOrder(string name, string owner, string projectCode,
-            DateTime createAt, int budget, Guid clientId, string serviceOrder, bool serviceOrderStatus, 
-            string status)
+
+        [Fact]
+        public void ShouldCreateProjectWithServiceOrder()
         {
-            var factory = new ProjectAggregateFactory();
-            var projAgg = factory.Create(new AddProjectCommand(
-                name,
-                owner,
-                projectCode,
-                createAt,
-                budget,
-                clientId, 
-                serviceOrder,                                         
-                serviceOrderStatus,
-                status
-            ));
-        
-            Assert.True(projAgg.IsValid);
-            Assert.Contains(projAgg.GetEvents(), x => x is ProjectAddedEvent);
+            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
+           
+            Assert.True(projAgg.ValidationResults.IsValid);
         }
-        
-        [Theory]
-        [ClassData(typeof(GenerateInvalidProjectTestingData))]
-        public void ShouldNotCreateProjectWithServiceOrderNotApproved(string name, string owner, string projectCode,
-            DateTime createAt, int budget, Guid clientId, string serviceOrder, bool serviceOrderStatus, 
-            string status)
+
+        [Fact]
+        public void ShouldNotAllowEffortBiggerThan8minutes()
         {
-            var factory = new ProjectAggregateFactory();
-            var ex = Assert.Throws<ArgumentException>(() =>
-            {
-                var projAgg = factory.Create(new AddProjectCommand(
-                    name,
-                    owner,
-                    projectCode,
-                    createAt,
-                    budget,
-                    clientId, 
-                    serviceOrder,                                         
-                    serviceOrderStatus,
-                    status
-                ));
-            });
+            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
+
+            Assert.True(projAgg.ValidationResults.IsValid);
+        }
+
+        [Fact]
+        public void ShouldNotAllowCloseActivityWithPendingEffort()
+        {
+            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
+
+            Assert.True(projAgg.ValidationResults.IsValid);
+        }
+
+        [Fact]
+        public void ShouldAsignActivityToMember()
+        {
+            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
+
+            Assert.True(projAgg.ValidationResults.IsValid);
+        }
+
+        [Fact]
+        public void ShouldNotAsignActivity()
+        {
+            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
+
+            Assert.True(projAgg.ValidationResults.IsValid);
+        }
+
+        [Fact]
+        public void ShouldCreateReleaseWithActivities()
+        {
+            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
+
+            Assert.True(projAgg.ValidationResults.IsValid);
         }
     }
 }
