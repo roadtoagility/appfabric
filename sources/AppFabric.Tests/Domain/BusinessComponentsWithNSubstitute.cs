@@ -180,7 +180,7 @@ namespace AppFabric.Tests.Domain
             var result = handler.Execute(command);
 
             // then
-            Assert.True(!result.IsSucceed && result.Violations.Count == 4);
+            Assert.True(!result.IsSucceed && result.Violations.Count == 3);
         }
     }
 }
