@@ -1,0 +1,40 @@
+# https://hub.docker.com/_/microsoft-dotnet
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
+WORKDIR /source
+
+# copy csproj and restore as distinct layers
+COPY *.sln .
+COPY AppFabric.API/*.csproj ./AppFabric.API/
+COPY AppFabric.Domain/*.csproj ./AppFabric.Domain/
+COPY AppFabric.Business/*.csproj ./AppFabric.Business/
+COPY AppFabric.Persistence/*.csproj ./AppFabric.Persistence/
+COPY AppFabric.Tests/*.csproj ./AppFabric.Tests/
+COPY AppFabric.Tests.Integration/*.csproj ./AppFabric.Tests.Integration/
+
+RUN dotnet restore
+
+# copy everything else and build app
+COPY AppFabric.API/. ./AppFabric.API/
+COPY AppFabric.Domain/. ./AppFabric.Domain/
+COPY AppFabric.Business/. ./AppFabric.Business/
+COPY AppFabric.Persistence/. ./AppFabric.Persistence/
+COPY AppFabric.Tests/ ./AppFabric.Tests/
+COPY AppFabric.Tests.Integration/ ./AppFabric.Tests.Integration/
+
+WORKDIR /source/AppFabric.API
+RUN dotnet publish -c Release -o /app 
+
+# final stage/image
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
+WORKDIR /app
+COPY --from=build /app ./
+
+# See: https://github.com/dotnet/announcements/issues/20
+# Uncomment to enable globalization APIs (or delete)
+# ENV \
+#     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
+#     LC_ALL=en_US.UTF-8 \
+#     LANG=en_US.UTF-8
+# RUN apk add --no-cache icu-libs
+
+ENTRYPOINT ["dotnet","./AppFabric.API.dll"]
