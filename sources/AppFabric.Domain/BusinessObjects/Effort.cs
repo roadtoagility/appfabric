@@ -16,38 +16,32 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
 using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
+using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ServiceOrderNumber : ValidationStatus
+    public class Effort : ValidationStatus
     {
-        public string Value { get; }
-        
-        private ServiceOrderNumber(string name)
+        public int Value { get; }
+
+        private Effort(int hours)
         {
-            Value = name;
+            Value = hours;
         }
 
-        public static ServiceOrderNumber From(string name)
+        public static Effort From(int hours)
         {
-            var son = new ServiceOrderNumber(name);
-            var validator = new ServiceOrderNumberValidator();
+            var effort = new Effort(hours);
+            var validator = new EffortValidator();
 
-            son.SetValidationResult(validator.Validate(son));
-            
-            return son;
+            effort.SetValidationResult(validator.Validate(effort));
+
+            return effort;
         }
 
-        public static ServiceOrderNumber Empty()
-        {
-            var son = new ServiceOrderNumber(String.Empty);
-            return son;
-        }
-        
         public override string ToString()
         {
             return $"{Value}";

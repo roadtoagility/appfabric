@@ -16,49 +16,52 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
 using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
+using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ServiceOrderNumber : ValidationStatus
+    public class Billing : ValidationStatus
     {
-        public string Value { get; }
-        
-        private ServiceOrderNumber(string name)
-        {
-            Value = name;
-        }
+        public EntityId Id { get; }
 
-        public static ServiceOrderNumber From(string name)
-        {
-            var son = new ServiceOrderNumber(name);
-            var validator = new ServiceOrderNumberValidator();
+        public List<Release> Releases { get; }
 
-            son.SetValidationResult(validator.Validate(son));
-            
-            return son;
-        }
+        public Version Version { get; }
 
-        public static ServiceOrderNumber Empty()
-        {
-            var son = new ServiceOrderNumber(String.Empty);
-            return son;
-        }
-        
+        public bool IsNew() => Version.Value == 1;
+
         public override string ToString()
         {
-            return $"{Value}";
+            return $"[Billing]:[ID: {Id}]";
         }
 
-        #region IEquatable
+        private Billing(EntityId id, Version version)
+        {
+            this.Id = id;
+            this.Version = version;
+        }
+
+        public static Billing From(EntityId id, Version version)
+        {
+            var billing = new Billing(id, version);
+            var validator = new BillingValidator();
+            billing.SetValidationResult(validator.Validate(billing));
+            return billing;
+        }
+
+        public static Billing NewRequest(EntityId id)
+        {
+            return From(id, Version.New());
+        }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Value;
+            yield return Id;
         }
-        #endregion
     }
 }
+
+

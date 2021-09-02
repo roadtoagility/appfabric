@@ -65,7 +65,8 @@ namespace AppFabric.Domain.BusinessObjects
         {
             var project = new Project(id, name, code, startDate, budget, clientId, owner, status, orderNumber, version);
             var validator = new ProjectValidator();
-            project.SetValidationResult(validator.Validate(project));
+            var result = validator.Validate(project);
+            project.SetValidationResult(result);
             return project;        
         }
 

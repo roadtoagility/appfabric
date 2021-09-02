@@ -16,49 +16,56 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
 using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
+using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ServiceOrderNumber : ValidationStatus
+    public class Release : ValidationStatus
     {
-        public string Value { get; }
-        
-        private ServiceOrderNumber(string name)
-        {
-            Value = name;
-        }
+        public EntityId Id { get; }
 
-        public static ServiceOrderNumber From(string name)
-        {
-            var son = new ServiceOrderNumber(name);
-            var validator = new ServiceOrderNumberValidator();
+        public List<Activity> Activities { get; }
 
-            son.SetValidationResult(validator.Validate(son));
-            
-            return son;
-        }
+        public Version Version { get; }
 
-        public static ServiceOrderNumber Empty()
-        {
-            var son = new ServiceOrderNumber(String.Empty);
-            return son;
-        }
-        
+        public bool IsNew() => Version.Value == 1;
+
         public override string ToString()
         {
-            return $"{Value}";
+            return $"[Release]:[ID: {Id}]";
         }
 
-        #region IEquatable
+        private Release(EntityId id, Version version)
+        {
+            this.Id = id;
+            this.Version = version;
+        }
+
+        public static Release From(EntityId id, Version version)
+        {
+            var release = new Release(id, version);
+            var validator = new ReleaseValidator();
+            release.SetValidationResult(validator.Validate(release));
+            return release;
+        }
+
+        public static Release NewRequest(EntityId id)
+        {
+            return From(id, Version.New());
+        }
+
+        public Release AddActivity(Activity activity)
+        {
+            return this;
+        }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Value;
+            yield return Id;
         }
-        #endregion
     }
 }
+

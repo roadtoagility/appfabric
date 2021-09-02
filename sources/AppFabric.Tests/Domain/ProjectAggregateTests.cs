@@ -1,10 +1,16 @@
 ﻿using AppFabric.Domain.AggregationActivity;
+using AppFabric.Domain.AggregationActivity.Events;
 using AppFabric.Domain.AggregationBilling;
+using AppFabric.Domain.AggregationBilling.Events;
 using AppFabric.Domain.AggregationProject;
+using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.AggregationRelease;
+using AppFabric.Domain.AggregationRelease.Events;
 using AppFabric.Domain.BusinessObjects;
+using AppFabric.Domain.Framework.BusinessObjects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -18,99 +24,122 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldCreateProjectWithServiceOrder()
         {
-            var orderService = ServiceOrderNumber.From("", true);
-            var projAgg = ProjectAggregationRoot.CreateFrom(null, orderService, null, null, null);
+            var orderService = ServiceOrderNumber.From("S20210209O125478593");
+            var projectId = EntityId.From(Guid.NewGuid());
+            var status = ProjectStatus.From(1);
+            var projAgg = ProjectAggregationRoot.CreateFrom(null, orderService, status, null, null, null, projectId);
            
             Assert.True(projAgg.ValidationResults.IsValid);
+            Assert.Contains(projAgg.GetEvents(), x => x.GetType() == typeof(ProjectAddedEvent));
         }
 
         [Fact]
         public void ShouldNotCreateProjectWithServiceOrderNotApproved()
         {
-            var orderService = ServiceOrderNumber.From("", false);
-            var projAgg = ProjectAggregationRoot.CreateFrom(null, orderService, null, null, null);
+            var orderService = ServiceOrderNumber.From("");
+            var projectId = EntityId.From(Guid.NewGuid());
+            var status = ProjectStatus.From(1);
+            var projAgg = ProjectAggregationRoot.CreateFrom(null, orderService, status, null, null, null, projectId);
 
             Assert.True(projAgg.ValidationResults.IsValid);
+            Assert.DoesNotContain(projAgg.GetEvents(), x => x.GetType() == typeof(ProjectAddedEvent));
         }
 
         //O esforço não pode ser superior a 8 horas
         [Fact]
-        public void ShouldNotAllowEffortBiggerThan8minutes()
+        public void ShouldNotAllowEffortBiggerThan8hours()
         {
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId);
-            var effort = Effort.From(10000, ActivityUnit.Hours);
-            var activityId = Guid.NewGuid();
-            activityAgg.CreateActivity("", effort, activityId);
+            var activityId = EntityId.From(Guid.NewGuid());
+            var effort = Effort.From(9);
+            var activityAgg = ActivityAggregationRoot.CreateFrom(activityId, effort);
 
             Assert.False(activityAgg.ValidationResults.IsValid);
+            Assert.DoesNotContain(activityAgg.GetEvents(), x => x.GetType() == typeof(EffortUpdatedEvent));
         }
 
         //Não é possível concluir uma atividade com esforço pendente
         [Fact]
         public void ShouldNotAllowCloseActivityWithPendingEffort()
         {
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId);
-            var activityId = Guid.NewGuid();
-            var effort = Effort.From(9600, ActivityUnit.Hours);
-            activityAgg.CreateActivity("", effort, activityId);
-            activityAgg.UpdateRemaining(9000, activityId);
+            var activityId = EntityId.From(Guid.NewGuid());
+            var effort = Effort.From(8);
+            var activityAgg = ActivityAggregationRoot.CreateFrom(activityId, effort);
+            activityAgg.UpdateRemaining(7);
             activityAgg.Close();
 
             Assert.False(activityAgg.ValidationResults.IsValid);
+            Assert.DoesNotContain(activityAgg.GetEvents(), x => x.GetType() == typeof(EffortUpdatedEvent));
         }
 
         //Só é possível associar atividades a membros do projeto
         [Fact]
         public void ShouldAsignActivityToMember()
         {
-            var projectId = Guid.NewGuid();
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId);
-            var activityId = Guid.NewGuid();
-            var effort = Effort.From(9600, ActivityUnit.Hours);
-            activityAgg.CreateActivity("", effort, activityId);
-            
-            var member = Member.From("", memberId, projectId, userId);
+            var activityId = EntityId.From(Guid.NewGuid());
+            var effort = Effort.From(8);
+            var activityAgg = ActivityAggregationRoot.CreateFrom(activityId, effort);
+
+            var memberId = EntityId.From(Guid.NewGuid());
+            var projectId = EntityId.From(Guid.NewGuid());
+            var member = Member.From(memberId, projectId, "Douglas");
             activityAgg.Asign(member);
 
-            Assert.True(projAgg.ValidationResults.IsValid);
+            Assert.True(activityAgg.ValidationResults.IsValid);
+            Assert.Contains(activityAgg.GetEvents(), x => x.GetType() == typeof(MemberAsignedEvent));
         }
 
         [Fact]
         public void ShouldNotAsignActivity()
         {
-            var projectId = Guid.NewGuid();
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId);
-            var activityId = Guid.NewGuid();
-            var effort = Effort.From(9600, ActivityUnit.Hours);
-            activityAgg.CreateActivity("", effort, activityId);
+            var activityId = EntityId.From(Guid.NewGuid());
+            var effort = Effort.From(8);
+            var activityAgg = ActivityAggregationRoot.CreateFrom(activityId, effort);
 
-            var member = Member.From("", memberId, Guid.NewGuid(), userId);
+            var memberId = EntityId.From(Guid.NewGuid());
+            var projectId = EntityId.From(Guid.NewGuid());
+            var member = Member.From(memberId, projectId, "Douglas");
             activityAgg.Asign(member);
 
-            Assert.False(projAgg.ValidationResults.IsValid);
+            Assert.False(activityAgg.ValidationResults.IsValid);
+            Assert.DoesNotContain(activityAgg.GetEvents(), x => x.GetType() == typeof(MemberAsignedEvent));
         }
 
         //Só é possível adicionar atividades concluídas
         [Fact]
-        public void ShouldCreateRelease()
+        public void ShouldCreateReleaseWithActivity()
         {
-            var projectId = Guid.NewGuid();
-            var releaseAgg = ReleaseAggregationRoot.CreateFrom(projectId);
+            var releaseId = EntityId.From(Guid.NewGuid());
+            var releaseAgg = ReleaseAggregationRoot.CreateFrom(releaseId);
 
-            releaseAgg.AddActivity(activityId);
-            Assert.True(projAgg.ValidationResults.IsValid);
+            var activityId = EntityId.From(Guid.NewGuid());
+            var effort = Effort.From(8);
+            var activityAgg = ActivityAggregationRoot.CreateFrom(activityId, effort);
+
+            releaseAgg.AddActivity(activityAgg.GetChange());
+            Assert.True(releaseAgg.ValidationResults.IsValid);
+            Assert.Contains(releaseAgg.GetEvents(), x => x.GetType() == typeof(ActivityAddedEvent));
         }
-    }
 
-    //Todas as releases devem ser do mesmo cliente
-    [Fact]
-        public void ShouldCreateBilling()
+        //Todas as releases devem ser do mesmo cliente
+        [Fact]
+        public void ShouldCreateBillingWithRelease()
         {
-            var clientId = Guid.NewGuid();
-            var billingAgg = BillingAggregationRoot.CreateFrom(clientId);
+            var releaseId = EntityId.From(Guid.NewGuid());
+            var releaseAgg = ReleaseAggregationRoot.CreateFrom(releaseId);
 
-            billingAgg.AddRelease(releaseId);
-            Assert.True(projAgg.ValidationResults.IsValid);
+            var activityId = EntityId.From(Guid.NewGuid());
+            var effort = Effort.From(8);
+            var activityAgg = ActivityAggregationRoot.CreateFrom(activityId, effort);
+
+            releaseAgg.AddActivity(activityAgg.GetChange());
+
+            // Add client?
+            var billingId = EntityId.From(Guid.NewGuid());
+            var billingAgg = BillingAggregationRoot.CreateFrom(billingId);
+
+            billingAgg.AddRelease(releaseAgg.GetChange());
+            Assert.True(billingAgg.ValidationResults.IsValid);
+            Assert.Contains(releaseAgg.GetEvents(), x => x.GetType() == typeof(ReleaseAddedEvent));
         }
     }
 }

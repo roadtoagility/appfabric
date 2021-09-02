@@ -83,6 +83,11 @@ namespace AppFabric.Domain.AggregationProject
             return new ProjectAggregationRoot(EntityId.GetNext(), name,code,budget,startDate,clientId);
         }
 
+        public static ProjectAggregationRoot CreateFrom(ProjectName name, ServiceOrderNumber serviceOrder, ProjectStatus status, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
+        {
+            return new ProjectAggregationRoot(EntityId.GetNext(), name, code, budget, startDate, clientId);
+        }
+
         #endregion
 
         public void Remove()
