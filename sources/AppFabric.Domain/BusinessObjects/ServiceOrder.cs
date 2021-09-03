@@ -23,18 +23,21 @@ using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ServiceOrderNumber : ValidationStatus
+    public sealed class ServiceOrder : ValidationStatus
     {
-        public string Value { get; }
+        public string Number { get; }
+        public bool IsAproved { get; }
         
-        private ServiceOrderNumber(string name)
+        
+        private ServiceOrder(string name, bool isAproved)
         {
-            Value = name;
+            Number = name;
+            IsAproved = isAproved;
         }
 
-        public static ServiceOrderNumber From(string name)
+        public static ServiceOrder From(string name, bool isAproved)
         {
-            var son = new ServiceOrderNumber(name);
+            var son = new ServiceOrder(name, isAproved);
             var validator = new ServiceOrderNumberValidator();
 
             son.SetValidationResult(validator.Validate(son));
@@ -42,22 +45,22 @@ namespace AppFabric.Domain.BusinessObjects
             return son;
         }
 
-        public static ServiceOrderNumber Empty()
+        public static ServiceOrder Empty()
         {
-            var son = new ServiceOrderNumber(String.Empty);
+            var son = new ServiceOrder(String.Empty, false);
             return son;
         }
         
         public override string ToString()
         {
-            return $"{Value}";
+            return $"{Number}";
         }
 
         #region IEquatable
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Value;
+            yield return Number;
         }
         #endregion
     }

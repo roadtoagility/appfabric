@@ -26,11 +26,12 @@ namespace AppFabric.Domain.BusinessObjects
     public class Activity : ValidationStatus
     {
         public EntityId Id { get; }
+        public EntityId ProjectId { get; }
 
-        public Effort Effort { get; }
+        public Effort Effort { get; private set; }
 
-        public ActivityStatus ActivityStatus { get; }
-        public Member Responsible { get; }
+        public ActivityStatus ActivityStatus { get; private set; }
+        public Member Responsible { get; private set; }
 
         public Version Version { get; }
 
@@ -41,37 +42,60 @@ namespace AppFabric.Domain.BusinessObjects
             return $"[Activity]:[ID: {Id}]";
         }
 
-        private Activity(EntityId id, Version version)
+        private Activity(EntityId id, EntityId projectId, Version version)
         {
             this.Id = id;
             this.Version = version;
+            this.ProjectId = projectId;
+            this.Effort = Effort.From(0);
+            this.ActivityStatus = ActivityStatus.From(0);
+            this.Responsible = Member.Empty();
         }
 
-        public static Activity From(EntityId id, Effort effort, Version version)
+        public static Activity From(EntityId id, EntityId projectId, int hours, Version version)
         {
-            var activity = new Activity(id, version);
+            var activity = new Activity(id, projectId, version);
+            activity.UpdateEffort(hours);
             var validator = new ActivityValidator();
             activity.SetValidationResult(validator.Validate(activity));
             return activity;
         }
 
-        public static Activity NewRequest(EntityId id, Effort effort)
+        public static Activity NewRequest(EntityId id, EntityId projectId, int hours)
         {
-            return From(id, effort, Version.New());
+            return From(id, projectId, hours, Version.New());
         }
 
         public Activity AddMember(Member member)
         {
+            Responsible = member;
+
+            var validator = new ActivityValidator();
+            var result = validator.Validate(this);
+            this.ValidationResults = result;
+
             return this;
         }
 
-        public Activity DecreaseEffort(int hours)
+        public Activity UpdateEffort(int hours)
         {
+            Effort.Update(hours);
+
+            var validator = new ActivityValidator();
+            var result = validator.Validate(this);
+            this.ValidationResults = result;
+
             return this;
         }
 
         public Activity Close()
         {
+            ActivityStatus.Close();
+
+            var validator = new ActivityValidator();
+            var result = validator.Validate(this);
+            this.ValidationResults = result;
+
             return this;
         }
 

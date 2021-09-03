@@ -26,6 +26,7 @@ namespace AppFabric.Domain.BusinessObjects
     public class Release : ValidationStatus
     {
         public EntityId Id { get; }
+        public EntityId ClientId { get; }
 
         public List<Activity> Activities { get; }
 
@@ -38,23 +39,24 @@ namespace AppFabric.Domain.BusinessObjects
             return $"[Release]:[ID: {Id}]";
         }
 
-        private Release(EntityId id, Version version)
+        private Release(EntityId id, EntityId clientId, Version version)
         {
             this.Id = id;
+            this.ClientId = clientId;
             this.Version = version;
         }
 
-        public static Release From(EntityId id, Version version)
+        public static Release From(EntityId id, EntityId clientId, Version version)
         {
-            var release = new Release(id, version);
+            var release = new Release(id, clientId, version);
             var validator = new ReleaseValidator();
             release.SetValidationResult(validator.Validate(release));
             return release;
         }
 
-        public static Release NewRequest(EntityId id)
+        public static Release NewRequest(EntityId id, EntityId clientId)
         {
-            return From(id, Version.New());
+            return From(id, clientId, Version.New());
         }
 
         public Release AddActivity(Activity activity)

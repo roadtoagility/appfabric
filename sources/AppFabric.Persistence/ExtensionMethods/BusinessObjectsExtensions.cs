@@ -36,7 +36,7 @@ namespace AppFabric.Persistence.ExtensionMethods
                 project.StartDate.Value, 
                 project.ClientId.Value,
                 project.Owner.Value,
-                project.OrderNumber.Value,
+                project.OrderNumber.Number,
                 project.Status.Value,
                 BitConverter.GetBytes(project.Version.Value));
 
@@ -44,13 +44,13 @@ namespace AppFabric.Persistence.ExtensionMethods
             => Project.From(
                 EntityId.From(state.Id),
                 ProjectName.From(state.Name),
+                ServiceOrder.From(state.OrderNumber, true),
+                ProjectStatus.From(state.Status),
                 ProjectCode.From(state.Code),
                 DateAndTime.From(state.StartDate),
                 Money.From(state.Budget),
                 EntityId.From(state.ClientId),
                 Email.From(state.Owner),
-                ProjectStatus.From(state.Status),
-                ServiceOrderNumber.From(state.OrderNumber),
                 Version.From(BitConverter.ToInt32(state.RowVersion)));
         
         public static UserState ToUserState(this User user)

@@ -53,9 +53,18 @@ namespace AppFabric.Domain.BusinessObjects.Validations
             
             RuleFor(project => project.Owner).SetValidator(new EmailValidator())
                 .When(project => !project.Owner.Equals(Email.Empty()));
-            
+
             RuleFor(project => project.OrderNumber).SetValidator(new ServiceOrderNumberValidator())
-                .When(order => !order.OrderNumber.Equals(ServiceOrderNumber.Empty()));
+                .DependentRules(() =>
+                {
+                    RuleFor(current => current.OrderNumber).Custom((serviceOrder, context) =>
+                    {
+                        if (!serviceOrder.IsAproved)
+                        {
+                            context.AddFailure("A ordem de serviço precisa estar aprovada");
+                        }
+                    });
+                });
 
         }
     }

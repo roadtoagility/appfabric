@@ -16,6 +16,7 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System;
 using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
 using AppFabric.Domain.Framework.BusinessObjects;
@@ -43,6 +44,16 @@ namespace AppFabric.Domain.BusinessObjects
 
             member.SetValidationResult(validator.Validate(member));
 
+            return member;
+        }
+
+        public static Member Empty()
+        {
+            var member = new Member(EntityId.From(Guid.Empty), EntityId.From(Guid.Empty), string.Empty);
+
+            var validator = new MemberValidator();
+
+            member.SetValidationResult(validator.Validate(member));
             return member;
         }
 

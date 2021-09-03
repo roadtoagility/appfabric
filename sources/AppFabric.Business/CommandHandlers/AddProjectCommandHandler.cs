@@ -56,8 +56,11 @@ namespace AppFabric.Business.CommandHandlers
 
             var client = _dbUserSession.Repository.Get(EntityId.From(command.ClientId));
             
+            //TODO: update to get ServiceOrder and ProjectStatus from command
             var agg = ProjectAggregationRoot.CreateFrom(
                 ProjectName.From(command.Name),
+                ServiceOrder.From("AAAAAAAA", true),
+                ProjectStatus.From(1),
                 ProjectCode.From(command.Code),
                 Money.From(command.Budget),
                 DateAndTime.From(command.StartDate),

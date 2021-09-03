@@ -16,18 +16,28 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using FluentValidation;
+using System;
+using AppFabric.Domain.BusinessObjects;
+using AppFabric.Domain.Framework.BusinessObjects;
+using AppFabric.Domain.Framework.DomainEvents;
+using Version = AppFabric.Domain.BusinessObjects.Version;
 
-namespace AppFabric.Domain.BusinessObjects.Validations
+namespace AppFabric.Domain.AggregationActivity.Events
 {
-    public sealed class ServiceOrderNumberValidator: AbstractValidator<ServiceOrder>
+    public class EffortIncreasedEvent : DomainEvent
     {
-        public ServiceOrderNumberValidator()
+        private EffortIncreasedEvent(EntityId id, Version version)
+            : base(DateTime.Now, version)
         {
-            RuleFor(item => item.Number).NotNull()
-                .When(item=> !item.Equals(ServiceOrder.Empty()));
-            RuleFor(item => item.Number).NotEmpty()
-                .When(item=> !item.Equals(ServiceOrder.Empty()));;
+            Id = id;
+        }
+        public EntityId Id { get; }
+
+        public static EffortIncreasedEvent For(Activity activity)
+        {
+            return new EffortIncreasedEvent(activity.Id, activity.Version);
         }
     }
 }
+
+

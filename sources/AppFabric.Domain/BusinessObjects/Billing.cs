@@ -42,6 +42,7 @@ namespace AppFabric.Domain.BusinessObjects
         {
             this.Id = id;
             this.Version = version;
+            this.Releases = new List<Release>();
         }
 
         public static Billing From(EntityId id, Version version)
@@ -55,6 +56,17 @@ namespace AppFabric.Domain.BusinessObjects
         public static Billing NewRequest(EntityId id)
         {
             return From(id, Version.New());
+        }
+
+        public Billing AddRelease(Release release)
+        {
+            Releases.Add(release);
+
+            var validator = new BillingValidator();
+            var result = validator.Validate(this);
+            this.ValidationResults = result;
+
+            return this;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

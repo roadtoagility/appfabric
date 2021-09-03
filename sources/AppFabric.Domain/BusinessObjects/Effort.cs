@@ -25,7 +25,7 @@ namespace AppFabric.Domain.BusinessObjects
 {
     public class Effort : ValidationStatus
     {
-        public int Value { get; }
+        public int Value { get; private set; }
 
         private Effort(int hours)
         {
@@ -40,6 +40,11 @@ namespace AppFabric.Domain.BusinessObjects
             effort.SetValidationResult(validator.Validate(effort));
 
             return effort;
+        }
+
+        public void Update(int hours)
+        {
+            Value = hours;
         }
 
         public override string ToString()

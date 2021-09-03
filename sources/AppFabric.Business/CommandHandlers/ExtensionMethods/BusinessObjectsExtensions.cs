@@ -22,6 +22,7 @@ using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Business.CommandHandlers.ExtensionMethods
 {
+    //TODO: update serviceOrder.From to get the value from UpdateProjectCommand
     public static class CommandExtensions
     {
         public static Project.ProjectDetail ToProjectDetail(this UpdateProjectCommand command)
@@ -30,7 +31,7 @@ namespace AppFabric.Business.CommandHandlers.ExtensionMethods
                 Money.From(command.Budget),
                 Email.From(command.Owner),
                 ProjectStatus.From(command.Status),
-                ServiceOrderNumber.From(command.OrderNumber)
+                ServiceOrder.From(command.OrderNumber, true)
                 );
     }
 }

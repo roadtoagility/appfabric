@@ -30,6 +30,33 @@ namespace AppFabric.Domain.BusinessObjects.Validations
         public ActivityValidator()
         {
             RuleFor(project => project.Id).SetValidator(new EntityIdValidator());
+            RuleFor(activity => activity).Must(CloseOnlyWithoutEffort);
+            RuleFor(activity => activity.Effort).Custom((effort, context) =>
+            {
+                if (effort.Value > 8)
+                {
+                    context.AddFailure("Uma atividade não pode ter esforço maior do que 8 horas");
+                }
+            });
+            RuleFor(activity => activity).Custom((activity, context) =>
+            {
+                if (activity.ActivityStatus.Value == (int)ActivityStatus.Status.Closed && activity.Effort.Value > 0)
+                {
+                    context.AddFailure("Não é possível fechar uma atividade com esforço pendente");
+                }
+
+                if(activity.Responsible.ProjectId.Value != Guid.Empty && activity.ProjectId != activity.Responsible.ProjectId)
+                {
+                    context.AddFailure("Só é possível adicionar como responsável membros do projeto");
+                }
+            });
+        }
+
+        private bool CloseOnlyWithoutEffort(Activity activity)
+        {
+            if (activity.ActivityStatus == ActivityStatus.From(2) && activity.Effort.Value > 0)
+                return false;
+            return true;
         }
     }
 }

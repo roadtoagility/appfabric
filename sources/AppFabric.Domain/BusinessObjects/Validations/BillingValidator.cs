@@ -29,7 +29,15 @@ namespace AppFabric.Domain.BusinessObjects.Validations
     {
         public BillingValidator()
         {
-            RuleFor(project => project.Id).SetValidator(new EntityIdValidator());
+            RuleFor(billing => billing.Id).SetValidator(new EntityIdValidator());
+            RuleFor(billing => billing.Releases).Custom((releases, context) =>
+            {
+                var differentClients = releases.Select(x => x.ClientId.Value).Distinct().Count();
+                if (differentClients > 1)
+                {
+                    context.AddFailure("Só é possível faturar releases de um mesmo cliente");
+                }
+            });
         }
     }
 }

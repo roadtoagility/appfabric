@@ -37,7 +37,7 @@ namespace AppFabric.Domain.AggregationProject.Events
             ClientId = clientId;
             Owner = Email.Empty();
             Status = ProjectStatus.Default();
-            OrderNumber = ServiceOrderNumber.Empty();
+            OrderNumber = ServiceOrder.Empty();
         }
         public EntityId Id { get; }
         public ProjectName Name { get; }
@@ -50,7 +50,7 @@ namespace AppFabric.Domain.AggregationProject.Events
         public DateAndTime StartDate { get; }
         
         public Email Owner { get; }
-        public ServiceOrderNumber OrderNumber { get; }
+        public ServiceOrder OrderNumber { get; }
         public ProjectStatus Status { get; }
         
         public static ProjectAddedEvent For(Project project)

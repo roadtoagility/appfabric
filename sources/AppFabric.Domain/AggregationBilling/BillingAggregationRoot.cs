@@ -1,4 +1,5 @@
-﻿using AppFabric.Domain.BusinessObjects;
+﻿using AppFabric.Domain.AggregationBilling.Events;
+using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.Aggregates;
 using AppFabric.Domain.Framework.BusinessObjects;
 
@@ -14,7 +15,7 @@ namespace AppFabric.Domain.AggregationBilling
 
                 if (billing.IsNew())
                 {
-                    //Raise(ProjectAddedEvent.For(project));
+                    Raise(BillingCreatedEvent.For(billing));
                 }
             }
 
@@ -43,7 +44,15 @@ namespace AppFabric.Domain.AggregationBilling
 
         public void AddRelease(Release release)
         {
+            var current = GetChange();
+            var change = current.AddRelease(release);
+            if (change.ValidationResults.IsValid)
+            {
+                Apply(change);
+                Raise(ReleaseAddedEvent.For(change));
+            }
 
+            ValidationResults = change.ValidationResults;
         }
 
         #endregion
@@ -52,7 +61,7 @@ namespace AppFabric.Domain.AggregationBilling
         {
             if (ValidationResults.IsValid)
             {
-                //Raise(ProjectRemovedEvent.For(this.GetChange()));
+                Raise(BillingRemovedEvent.For(this.GetChange()));
             }
         }
     }

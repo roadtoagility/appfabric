@@ -117,10 +117,10 @@ namespace AppFabric.Tests.Domain
             fixture.Register<ProjectCode>(() => ProjectCode.From(fixture.Create<string>()));
             fixture.Register<DateAndTime>(() => DateAndTime.From(fixture.Create<DateTime>()));
             fixture.Register<ProjectStatus>(() => ProjectStatus.Default());
-            fixture.Register<ServiceOrderNumber>(() => ServiceOrderNumber.Empty());
+            fixture.Register<ServiceOrder>(() => ServiceOrder.Empty());
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
             fixture.Register<Project>(() => Project.NewRequest(fixture.Create<EntityId>(),
-                fixture.Create<ProjectName>(),fixture.Create<ProjectCode>(),
+                fixture.Create<ProjectName>(), fixture.Create<ServiceOrder>(), fixture.Create<ProjectStatus>(), fixture.Create<ProjectCode>(),
                 fixture.Create<DateAndTime>(), fixture.Create<Money>(), fixture.Create<EntityId>()));
             fixture.Register<User>(() => User.From(fixture.Create<EntityId>(),
                 fixture.Create<Name>(),fixture.Create<SocialSecurityId>(),

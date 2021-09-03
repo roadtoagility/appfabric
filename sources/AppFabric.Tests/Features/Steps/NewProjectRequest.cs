@@ -35,6 +35,8 @@ namespace AppFabric.Tests.Features.Steps
         private Project _project;
         private Money _budget;
         private EntityId _clientId;
+        private ProjectStatus _status;
+        private ServiceOrder _serviceOrder;
         
         public NewProjectRequest()
         {
@@ -51,10 +53,11 @@ namespace AppFabric.Tests.Features.Steps
             _clientId = EntityId.From(Guid.Parse(clientId));
         }
         
+        //TODO: Fix the feature, include serviceorder and projectstatus
         [When(@"The client request a project")]
         public void The_client_request_a_project()
         {
-            _project = Project.NewRequest(EntityId.GetNext(), _projectName, _projectCode, _startDate,_budget, _clientId);
+            _project = Project.NewRequest(EntityId.GetNext(), _projectName,ServiceOrder.Empty(), ProjectStatus.Default(),  _projectCode, _startDate,_budget, _clientId);
         }
 
         [Then(@"The client see a project request created equals (\w+)")]

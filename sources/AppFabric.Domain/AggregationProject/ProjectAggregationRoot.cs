@@ -42,9 +42,9 @@ namespace AppFabric.Domain.AggregationProject
             ValidationResults = project.ValidationResults;
         }
         
-        private ProjectAggregationRoot(EntityId id, ProjectName name, ProjectCode code, 
+        private ProjectAggregationRoot(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, 
             Money budget, DateAndTime startDate, EntityId clientId)
-            : this(Project.NewRequest(id, name,code,startDate,budget,clientId))
+            : this(Project.NewRequest(id, name, serviceOrder, status, code, startDate,budget,clientId))
         {
         }
 
@@ -67,25 +67,20 @@ namespace AppFabric.Domain.AggregationProject
         {
             return new ProjectAggregationRoot(Project.From(currentState.Id,
                             currentState.Name,
+                            currentState.OrderNumber,
+                            currentState.Status,
                             currentState.Code,
                             currentState.StartDate,
                             currentState.Budget,
                             currentState.ClientId,
                             currentState.Owner,
-                            currentState.Status,
-                            currentState.OrderNumber,
                             Version.Next(currentState.Version)));
         }
 
         
-        public static ProjectAggregationRoot CreateFrom(ProjectName name, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
+        public static ProjectAggregationRoot CreateFrom(ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
         {
-            return new ProjectAggregationRoot(EntityId.GetNext(), name,code,budget,startDate,clientId);
-        }
-
-        public static ProjectAggregationRoot CreateFrom(ProjectName name, ServiceOrderNumber serviceOrder, ProjectStatus status, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
-        {
-            return new ProjectAggregationRoot(EntityId.GetNext(), name, code, budget, startDate, clientId);
+            return new ProjectAggregationRoot(EntityId.GetNext(), name, serviceOrder, status, code, budget,startDate,clientId);
         }
 
         #endregion

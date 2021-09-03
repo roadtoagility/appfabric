@@ -25,9 +25,8 @@ namespace AppFabric.Domain.BusinessObjects
 {
     public sealed class Project : ValidationStatus
     {
-        private Project(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate
-            , Money budget, EntityId clientId, Email owner, ProjectStatus status
-            , ServiceOrderNumber orderNumber, Version currentVersion)
+        private Project(EntityId id, ProjectName name, ServiceOrder orderNumber, ProjectStatus status, ProjectCode code, DateAndTime startDate
+            , Money budget, EntityId clientId, Email owner, Version currentVersion)
         {
             Id = id;
             Name = name;
@@ -55,36 +54,36 @@ namespace AppFabric.Domain.BusinessObjects
                 
         public ProjectStatus Status { get; }
         
-        public ServiceOrderNumber OrderNumber { get; }
+        public ServiceOrder OrderNumber { get; }
         
         public Version Version { get; }
 
         public bool IsNew() => Version.Value == 1; 
         
-        public static Project From(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner, ProjectStatus status, ServiceOrderNumber orderNumber, Version version)
+        public static Project From(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner, Version version)
         {
-            var project = new Project(id, name, code, startDate, budget, clientId, owner, status, orderNumber, version);
+            var project = new Project(id, name, serviceOrder, status, code, startDate, budget, clientId, owner, version);
             var validator = new ProjectValidator();
             var result = validator.Validate(project);
             project.SetValidationResult(result);
             return project;        
         }
 
-        public static Project NewRequest(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        public static Project NewRequest(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
         {
-            return From(id, name, code, startDate, budget, clientId, Email.Empty(), ProjectStatus.Default(), ServiceOrderNumber.Empty(), Version.New());
+            return From(id, name, serviceOrder, status, code, startDate, budget, clientId, Email.Empty(), Version.New());
         }
         
         public static Project CombineWith(Project current, ProjectDetail detail)
         {
-            return From(current.Id, detail.Name, current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, detail.Status, detail.OrderNumber, current.Version);
+            return From(current.Id, detail.Name, current.OrderNumber, current.Status, current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, current.Version);
         }
         
         
         public static Project Empty()
         {
-            return From(EntityId.Empty(), ProjectName.Empty(), ProjectCode.Empty(), DateAndTime.Empty(), Money.Zero(),
-                EntityId.Empty(), Email.Empty(), ProjectStatus.Default(), ServiceOrderNumber.Empty(),
+            return From(EntityId.Empty(), ProjectName.Empty(), ServiceOrder.Empty(), ProjectStatus.Default(), ProjectCode.Empty(), DateAndTime.Empty(), Money.Zero(),
+                EntityId.Empty(), Email.Empty(),
                 Version.Empty());
         }
         
@@ -109,7 +108,7 @@ namespace AppFabric.Domain.BusinessObjects
         public class ProjectDetail
         {
             public ProjectDetail(ProjectName name, Money budget, Email owner, ProjectStatus status,
-                ServiceOrderNumber orderNumber)
+                ServiceOrder orderNumber)
             {
                 Name = name;
                 Budget = budget;
@@ -126,7 +125,7 @@ namespace AppFabric.Domain.BusinessObjects
                 
             public ProjectStatus Status { get; }
         
-            public ServiceOrderNumber OrderNumber { get; }
+            public ServiceOrder OrderNumber { get; }
         }
     }
 }

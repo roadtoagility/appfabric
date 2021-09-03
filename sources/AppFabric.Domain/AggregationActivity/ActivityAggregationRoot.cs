@@ -24,8 +24,8 @@ namespace AppFabric.Domain.AggregationActivity
             ValidationResults = activity.ValidationResults;
         }
 
-        private ActivityAggregationRoot(EntityId id, Effort effort)
-            : this(Activity.NewRequest(id, effort))
+        private ActivityAggregationRoot(EntityId id, EntityId projectId, int hours)
+            : this(Activity.NewRequest(id, projectId, hours))
         {
         }
 
@@ -34,14 +34,14 @@ namespace AppFabric.Domain.AggregationActivity
 
         public static ActivityAggregationRoot ReconstructFrom(Activity currentState)
         {
-            return new ActivityAggregationRoot(Activity.From(currentState.Id, currentState.Effort,
+            return new ActivityAggregationRoot(Activity.From(currentState.Id, currentState.ProjectId, currentState.Effort.Value,
                             BusinessObjects.Version.Next(currentState.Version)));
         }
 
 
-        public static ActivityAggregationRoot CreateFrom(EntityId clientId, Effort effort)
+        public static ActivityAggregationRoot CreateFrom(EntityId activityd, EntityId projectId, int hours)
         {
-            return new ActivityAggregationRoot(EntityId.GetNext(), effort);
+            return new ActivityAggregationRoot(activityd, projectId, hours);
         }
 
         public void Asign(Member member)
@@ -57,14 +57,24 @@ namespace AppFabric.Domain.AggregationActivity
             ValidationResults = change.ValidationResults;
         }
 
-        public void UpdateRemaining(int hoursDebt)
+        public void UpdateRemaining(int hours)
         {
             var current = GetChange();
-            var change = current.DecreaseEffort(hoursDebt);
+            var oldEffort = current.Effort.Value;
+            var change = current.UpdateEffort(hours);
             if (change.ValidationResults.IsValid)
             {
                 Apply(change);
-                Raise(EffortUpdatedEvent.For(change));
+
+                if(oldEffort > hours)
+                {
+                    Raise(EffortDecreasedEvent.For(change));
+                }
+                else
+                {
+                    Raise(EffortIncreasedEvent.For(change));
+                }
+                
             }
 
             ValidationResults = change.ValidationResults;
@@ -73,6 +83,7 @@ namespace AppFabric.Domain.AggregationActivity
         public void Close()
         {
             var current = GetChange();
+
             var change = current.Close();
             if (change.ValidationResults.IsValid)
             {

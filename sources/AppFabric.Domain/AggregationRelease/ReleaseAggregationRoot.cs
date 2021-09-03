@@ -22,8 +22,8 @@ namespace AppFabric.Domain.AggregationRelease
             ValidationResults = release.ValidationResults;
         }
 
-        private ReleaseAggregationRoot(EntityId id)
-            : this(Release.NewRequest(id))
+        private ReleaseAggregationRoot(EntityId id, EntityId clientId)
+            : this(Release.NewRequest(id, clientId))
         {
         }
 
@@ -32,14 +32,14 @@ namespace AppFabric.Domain.AggregationRelease
 
         public static ReleaseAggregationRoot ReconstructFrom(Release currentState)
         {
-            return new ReleaseAggregationRoot(Release.From(currentState.Id,
+            return new ReleaseAggregationRoot(Release.From(currentState.Id, currentState.ClientId,
                             BusinessObjects.Version.Next(currentState.Version)));
         }
 
 
-        public static ReleaseAggregationRoot CreateFrom(EntityId releaseId)
+        public static ReleaseAggregationRoot CreateFrom(EntityId releaseId, EntityId clientId)
         {
-            return new ReleaseAggregationRoot(releaseId);
+            return new ReleaseAggregationRoot(releaseId, clientId);
         }
 
         public void AddActivity(Activity activity)

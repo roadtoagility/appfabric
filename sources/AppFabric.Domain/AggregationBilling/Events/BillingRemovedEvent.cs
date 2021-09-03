@@ -22,22 +22,23 @@ using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.DomainEvents;
 using Version = AppFabric.Domain.BusinessObjects.Version;
 
-namespace AppFabric.Domain.AggregationActivity.Events
+namespace AppFabric.Domain.AggregationBilling.Events
 {
-    public class EffortUpdatedEvent : DomainEvent
+    public class BillingRemovedEvent : DomainEvent
     {
-        private EffortUpdatedEvent(EntityId id, Version version)
+        private BillingRemovedEvent(EntityId id, Version version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
         public EntityId Id { get; }
 
-        public static EffortUpdatedEvent For(Activity activity)
+        public static BillingRemovedEvent For(Billing billing)
         {
-            return new EffortUpdatedEvent(activity.Id, activity.Version);
+            return new BillingRemovedEvent(billing.Id, billing.Version);
         }
     }
 }
+
 
 
