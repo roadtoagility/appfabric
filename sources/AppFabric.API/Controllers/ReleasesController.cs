@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AppFabric.API.Mock;
 using AppFabric.API.Models;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Business.Framework;
 
 namespace AppFabric.API.Controllers
 {
@@ -58,6 +60,23 @@ namespace AppFabric.API.Controllers
             //var result = await _mediator.Send(query);
             //return result;
             return await Task.FromResult("");
+        }
+
+
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] CreateReleaseCommand entity)
+        {
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
+        }
+
+        [HttpPost("add")]
+        public IActionResult Create([FromBody] AddActivityCommand entity)
+        {
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
         }
     }
 }

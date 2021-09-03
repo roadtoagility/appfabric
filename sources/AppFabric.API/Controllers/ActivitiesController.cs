@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using FluentMediator;
 using Microsoft.AspNetCore.Mvc;
 using AppFabric.API.Mock;
+using AppFabric.Business.Framework;
+using AppFabric.Business.CommandHandlers.Commands;
 
 namespace AppFabric.API.Controllers
 {
@@ -54,6 +56,31 @@ namespace AppFabric.API.Controllers
             //var result = await _mediator.Send(query);
             //return result;
             return await Task.FromResult("");
+        }
+
+
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] CreateActivityCommand entity)
+        {
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
+        }
+
+        [HttpPost("close")]
+        public IActionResult Create([FromBody] CloseActivityCommand entity)
+        {
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
+        }
+
+        [HttpPost("asign")]
+        public IActionResult Create([FromBody] AsignResponsibleCommand entity)
+        {
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
         }
     }
 }

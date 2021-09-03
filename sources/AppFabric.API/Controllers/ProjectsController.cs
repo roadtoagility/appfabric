@@ -63,5 +63,13 @@ namespace AppFabric.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] CreateProjectCommand entity)
+        {
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
+        }
     }
 }
