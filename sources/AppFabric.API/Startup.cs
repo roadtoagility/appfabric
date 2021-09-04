@@ -19,7 +19,9 @@ using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using AppFabric.Persistence.ReadModel.Repositories;
 using AppFabric.Persistence.SyncModels.DomainEventHandlers;
-
+using AppFabric.Domain.AggregationActivity.Events;
+using AppFabric.Domain.AggregationBilling.Events;
+using AppFabric.Domain.AggregationRelease.Events;
 
 namespace AppFabric.API
 {
@@ -56,7 +58,19 @@ namespace AppFabric.API
             
             services.AddScoped<IDbSession<IUserRepository>, DbSession<IUserRepository>>();
             services.AddScoped<IDbSession<IUserProjectionRepository>, DbSession<IUserProjectionRepository>>();
-            
+
+            services.AddScoped<IDbSession<IActivityRepository>, DbSession<IActivityRepository>>();
+            services.AddScoped<IDbSession<IActivityProjectionRepository>, DbSession<IActivityProjectionRepository>>();
+
+            services.AddScoped<IDbSession<IBillingRepository>, DbSession<IBillingRepository>>();
+            services.AddScoped<IDbSession<IBillingProjectionRepository>, DbSession<IBillingProjectionRepository>>();
+
+            services.AddScoped<IDbSession<IReleaseRepository>, DbSession<IReleaseRepository>>();
+            services.AddScoped<IDbSession<IReleaseProjectionRepository>, DbSession<IReleaseProjectionRepository>>();
+
+            services.AddScoped<IDbSession<IMemberRepository>, DbSession<IMemberRepository>>();
+            services.AddScoped<IDbSession<IMemberProjectionRepository>, DbSession<IMemberProjectionRepository>>();
+
             services.AddScoped<AddProjectCommandHandler>();
             services.AddScoped<UpdateProjectCommandHandler>();
             services.AddScoped<RemoveProjectCommandHandler>();
@@ -74,12 +88,34 @@ namespace AppFabric.API
             services.AddScoped<GetClientsByQueryHandler>();
             services.AddScoped<GetClientByIdQueryHandler>();
             services.AddScoped<GetProjectsByClientAndNameQueryHandler>();
-            
-            
+
+            services.AddScoped<CreateActivityCommandHandler>();
+            services.AddScoped<CloseActivityCommandHandler>();
+            services.AddScoped<AsignResponsibleCommandHandler>();
+            services.AddScoped<CreateBillingCommandHandler>();
+            services.AddScoped<AddReleaseCommandHandler>();
+            services.AddScoped<CreateProjectCommandHandler>();
+            services.AddScoped<CreateReleaseCommandHandler>();
+            services.AddScoped<AddActivityCommandHandler>();
+
+
+            services.AddScoped<IDomainEventHandler<ActivityCreatedEvent>, CreatedActivityProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<MemberAsignedEvent>, AsignedMemberProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<EffortDecreasedEvent>, DecreasedEffortProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<EffortIncreasedEvent>, IncreasedEffortProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ActivityClosedEvent>, ClosedActivityProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ActivityRemovedEvent>, RemovedActivityProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<BillingCreatedEvent>, CreatedBillingProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<BillingRemovedEvent>, RemovedBillingProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ReleaseAddedEvent>, AddedReleaseProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ActivityAddedEvent>, AddedActivityProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ReleaseCreatedEvent>, CreatedReleaseProjectionHandler>();
+            services.AddScoped<IDomainEventHandler<ReleaseRemovedEvent>, RemovedReleaseProjectionHandler>();
+
+
             services.AddScoped<IDomainEventHandler<UserAddedEvent>, AddedUserProjectionHandler>();
             services.AddScoped<IDomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
-          
-            
+
 
             services.AddFluentMediator(builder =>
             {
@@ -112,7 +148,39 @@ namespace AppFabric.API
                 builder.On<RemoveProjectCommand>().Pipeline()
                     .Return<ExecutionResult, RemoveProjectCommandHandler>(
                         (handler, request) => handler.Execute(request));
-                
+
+                builder.On<CreateActivityCommand>().Pipeline()
+                    .Return<ExecutionResult, CreateActivityCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+
+                builder.On<CloseActivityCommand>().Pipeline()
+                    .Return<ExecutionResult, CloseActivityCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+
+                builder.On<AsignResponsibleCommand>().Pipeline()
+                    .Return<ExecutionResult, AsignResponsibleCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+
+                builder.On<CreateBillingCommand>().Pipeline()
+                    .Return<ExecutionResult, CreateBillingCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+
+                builder.On<AddReleaseCommand>().Pipeline()
+                    .Return<ExecutionResult, AddReleaseCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+
+                builder.On<CreateProjectCommand>().Pipeline()
+                    .Return<ExecutionResult, CreateProjectCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+
+                builder.On<CreateReleaseCommand>().Pipeline()
+                    .Return<ExecutionResult, CreateReleaseCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+
+                builder.On< AddActivityCommand>().Pipeline()
+                    .Return<ExecutionResult, AddActivityCommandHandler>(
+                        (handler, request) => handler.Execute(request));
+
                 //queries
                 builder.On<GetProjectByIdFilter>().Pipeline()
                     .Return<GetProjectResponse, GetProjectByIdQueryHandler>(
