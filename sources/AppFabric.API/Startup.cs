@@ -149,6 +149,8 @@ namespace AppFabric.API
                     .Return<ExecutionResult, RemoveProjectCommandHandler>(
                         (handler, request) => handler.Execute(request));
 
+
+
                 builder.On<CreateActivityCommand>().Pipeline()
                     .Return<ExecutionResult, CreateActivityCommandHandler>(
                         (handler, request) => handler.Execute(request));

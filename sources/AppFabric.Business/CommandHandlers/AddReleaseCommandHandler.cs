@@ -28,24 +28,42 @@ using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
+using AppFabric.Domain.AggregationBilling;
 
 namespace AppFabric.Business.CommandHandlers
 {
-    public class AddReleaseCommandHandler : CommandHandler<AddReleaseCommand, CommandResult<Guid>>
+    public class AddReleaseCommandHandler : CommandHandler<AddReleaseCommand, ExecutionResult>
     {
         private readonly IDbSession<IBillingRepository> _dbSession;
+        private readonly IDbSession<IReleaseRepository> _dbReleaseSession;
         private readonly ILogger<AddReleaseCommandHandler> _logger;
 
-        public AddReleaseCommandHandler(ILogger<AddReleaseCommandHandler> logger, IMediator publisher, IDbSession<IBillingRepository> dbSession)
+        public AddReleaseCommandHandler(ILogger<AddReleaseCommandHandler> logger, IMediator publisher, IDbSession<IBillingRepository> dbSession, IDbSession<IReleaseRepository> dbReleaseSession)
             : base(logger, publisher)
         {
             _dbSession = dbSession;
+            _dbReleaseSession = dbReleaseSession;
             _logger = logger;
         }
 
-        protected override CommandResult<Guid> ExecuteCommand(AddReleaseCommand command)
+        protected override ExecutionResult ExecuteCommand(AddReleaseCommand command)
         {
-            throw new NotImplementedException();
+            var billing = _dbSession.Repository.Get(EntityId.From(command.Id));
+            var agg = BillingAggregationRoot.ReconstructFrom(billing);
+            var isSucceed = false;
+
+            if (agg.ValidationResults.IsValid)
+            {
+                var release = _dbReleaseSession.Repository.Get(EntityId.From(command.ReleaseId));
+                agg.AddRelease(release);
+
+                _dbSession.Repository.Add(agg.GetChange());
+                _dbSession.SaveChanges();
+                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
+                isSucceed = true;
+            }
+
+            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
         }
     }
 }

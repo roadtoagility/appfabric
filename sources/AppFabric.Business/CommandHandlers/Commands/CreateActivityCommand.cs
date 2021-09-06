@@ -8,6 +8,8 @@ namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class CreateActivityCommand
     {
-
+        public Guid Id { get; set; } 
+        public Guid ProjectId { get; set; }
+        public int Hours { get; set; }
     }
 }

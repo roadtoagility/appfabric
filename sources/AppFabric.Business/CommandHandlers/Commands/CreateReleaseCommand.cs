@@ -8,5 +8,7 @@ namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class CreateReleaseCommand
     {
+        public Guid Id { get; set; }
+        public Guid ClientId { get; set; }
     }
 }

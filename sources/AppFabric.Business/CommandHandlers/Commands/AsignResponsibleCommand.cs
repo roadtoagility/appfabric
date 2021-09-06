@@ -8,6 +8,7 @@ namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class AsignResponsibleCommand
     {
-
+        public Guid Id { get; set; }
+        public Guid MemberId { get; set; }
     }
 }

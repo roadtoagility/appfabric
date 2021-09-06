@@ -28,10 +28,11 @@ using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
+using AppFabric.Domain.AggregationActivity;
 
 namespace AppFabric.Business.CommandHandlers
 {
-    public class CloseActivityCommandHandler : CommandHandler<CloseActivityCommand, CommandResult<Guid>>
+    public class CloseActivityCommandHandler : CommandHandler<CloseActivityCommand, ExecutionResult>
     {
         private readonly IDbSession<IActivityRepository> _dbSession;
         private readonly ILogger<CloseActivityCommandHandler> _logger;
@@ -43,9 +44,23 @@ namespace AppFabric.Business.CommandHandlers
             _logger = logger;
         }
 
-        protected override CommandResult<Guid> ExecuteCommand(CloseActivityCommand command)
+        protected override ExecutionResult ExecuteCommand(CloseActivityCommand command)
         {
-            throw new NotImplementedException();
+            var activity = _dbSession.Repository.Get(EntityId.From(command.Id));
+            var agg = ActivityAggregationRoot.ReconstructFrom(activity);
+            var isSucceed = false;
+
+            if (agg.ValidationResults.IsValid)
+            {
+                agg.Close();
+
+                _dbSession.Repository.Add(agg.GetChange());
+                _dbSession.SaveChanges();
+                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
+                isSucceed = true;
+            }
+
+            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
         }
     }
 }

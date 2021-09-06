@@ -37,9 +37,9 @@ namespace AppFabric.Domain.AggregationBilling
         }
 
 
-        public static BillingAggregationRoot CreateFrom(EntityId releaseId)
+        public static BillingAggregationRoot CreateFrom(EntityId billingId)
         {
-            return new BillingAggregationRoot(releaseId);
+            return new BillingAggregationRoot(billingId);
         }
 
         public void AddRelease(Release release)

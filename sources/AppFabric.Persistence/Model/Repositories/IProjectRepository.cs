@@ -22,7 +22,7 @@ using AppFabric.Persistence.Framework.Repositories;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
-    public interface IProjectRepository: IRepository<ProjectState, Project>
+    public interface IProjectRepository : IRepository<ProjectState, Project>
     {
 
     }

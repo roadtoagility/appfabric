@@ -28,6 +28,7 @@ using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
+using AppFabric.Domain.AggregationActivity;
 
 namespace AppFabric.Business.CommandHandlers
 {
@@ -45,7 +46,32 @@ namespace AppFabric.Business.CommandHandlers
 
         protected override CommandResult<Guid> ExecuteCommand(CreateActivityCommand command)
         {
-            throw new NotImplementedException();
+            var isSucceed = false;
+            var aggregationId = Guid.Empty;
+
+            _logger.LogDebug("Criada agregação a partir do comando {CommandName} com valores {Valores}",
+                nameof(command), command);
+
+            var agg = ActivityAggregationRoot.CreateFrom(EntityId.From(command.Id), EntityId.From(command.ProjectId), command.Hours);
+
+            if (agg.ValidationResults.IsValid)
+            {
+                using (_logger.BeginScope("Persistencia"))
+                {
+                    _dbSession.Repository.Add(agg.GetChange());
+                    _dbSession.SaveChanges();
+                }
+
+                using (_logger.BeginScope("Publicacão de Eventos"))
+                {
+                    agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
+                }
+
+                isSucceed = true;
+                aggregationId = agg.GetChange().Id.Value;
+            }
+
+            return new CommandResult<Guid>(isSucceed, aggregationId, agg.ValidationResults.Errors.ToImmutableList());
         }
     }
 }

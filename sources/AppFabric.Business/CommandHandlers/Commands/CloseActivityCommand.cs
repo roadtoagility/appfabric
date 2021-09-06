@@ -8,5 +8,6 @@ namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class CloseActivityCommand
     {
+        public Guid Id { get; set; }
     }
 }

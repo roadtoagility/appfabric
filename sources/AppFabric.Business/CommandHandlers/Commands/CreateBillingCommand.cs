@@ -8,5 +8,6 @@ namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class CreateBillingCommand
     {
+        public Guid Id { get; set; }
     }
 }
