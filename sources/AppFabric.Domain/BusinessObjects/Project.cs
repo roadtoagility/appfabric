@@ -69,6 +69,7 @@ namespace AppFabric.Domain.BusinessObjects
             return project;        
         }
 
+
         public static Project NewRequest(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
         {
             return From(id, name, serviceOrder, status, code, startDate, budget, clientId, Email.Empty(), Version.New());

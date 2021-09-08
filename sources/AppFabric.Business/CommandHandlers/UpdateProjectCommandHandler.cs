@@ -50,7 +50,7 @@ namespace AppFabric.Business.CommandHandlers
       
             if (agg.ValidationResults.IsValid)
             {
-                agg.UpdateDetail(command.ToProjectDetail());
+                agg.UpdateDetail(command.ToProjectDetail()); // dado inválido
                 
                 _dbSession.Repository.Add(agg.GetChange());
                 _dbSession.SaveChanges();

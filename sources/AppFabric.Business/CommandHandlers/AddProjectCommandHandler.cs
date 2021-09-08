@@ -66,6 +66,8 @@ namespace AppFabric.Business.CommandHandlers
                 DateAndTime.From(command.StartDate),
                 client.Id);
 
+
+
             if (agg.ValidationResults.IsValid)
             {
                 // _logger.LogInformation($"Agregação Project valida id gerado", agg.GetChange().Id);
