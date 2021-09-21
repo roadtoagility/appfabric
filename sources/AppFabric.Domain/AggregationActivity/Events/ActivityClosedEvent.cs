@@ -19,23 +19,23 @@
 using System;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Domain.Framework.DomainEvents;
-using Version = AppFabric.Domain.BusinessObjects.Version;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.DomainEvents;
 
 namespace AppFabric.Domain.AggregationActivity.Events
 {
     public class ActivityClosedEvent : DomainEvent
     {
-        private ActivityClosedEvent(EntityId id, Version version)
+        private ActivityClosedEvent(EntityId2 id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
-        public EntityId Id { get; }
+        public EntityId2 Id { get; }
 
         public static ActivityClosedEvent For(Activity activity)
         {
-            return new ActivityClosedEvent(activity.Id, activity.Version);
+            return new ActivityClosedEvent(activity.Identity, activity.Version);
         }
     }
 }

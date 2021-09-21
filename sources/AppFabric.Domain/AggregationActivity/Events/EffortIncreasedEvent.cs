@@ -19,23 +19,24 @@
 using System;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Domain.Framework.DomainEvents;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.DomainEvents;
 using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Domain.AggregationActivity.Events
 {
     public class EffortIncreasedEvent : DomainEvent
     {
-        private EffortIncreasedEvent(EntityId id, Version version)
+        private EffortIncreasedEvent(EntityId2 id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
-        public EntityId Id { get; }
+        public EntityId2 Id { get; }
 
         public static EffortIncreasedEvent For(Activity activity)
         {
-            return new EffortIncreasedEvent(activity.Id, activity.Version);
+            return new EffortIncreasedEvent(activity.Identity, activity.Version);
         }
     }
 }

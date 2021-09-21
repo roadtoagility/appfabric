@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="DFlow.Domain" Version="0.3.0-pre263" />
       <PackageReference Include="FluentValidation" Version="9.3.0" />
     </ItemGroup>
     <PropertyGroup>

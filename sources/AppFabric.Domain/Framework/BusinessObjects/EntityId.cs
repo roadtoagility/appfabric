@@ -21,6 +21,9 @@ using System.Collections.Generic;
 using AppFabric.Agile.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
+using FluentValidation;
+using FluentValidation.Results;
 
 namespace AppFabric.Domain.Framework.BusinessObjects
 {

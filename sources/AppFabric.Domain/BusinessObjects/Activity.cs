@@ -17,91 +17,98 @@
 //
 
 using System.Collections.Generic;
-using AppFabric.Domain.BusinessObjects.Validations;
+using DFlow.Domain.BusinessObjects;
+using System.Collections.Immutable;
 using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public class Activity : ValidationStatus
+    public interface IValidateEntity<T>
     {
-        public EntityId Id { get; }
-        public EntityId ProjectId { get; }
 
-        public Effort Effort { get; private set; }
+    }
 
-        public ActivityStatus ActivityStatus { get; private set; }
-        public Member Responsible { get; private set; }
+    public class PlacaValidator : IValidateEntity<Veiculo>
+    {
 
-        public Version Version { get; }
+    }
 
-        public bool IsNew() => Version.Value == 1;
+    public class MotorValidator : IValidateEntity<Veiculo>
+    {
+
+    }
+
+    public class EntityBaseAlgumaCoisa<T>
+    {
+        private IList<IValidateEntity<T>> _validacoes;
+        public EntityBaseAlgumaCoisa(IList<IValidateEntity<T>> validacoes)
+        {
+            _validacoes = validacoes;
+        }
+    }
+
+    public class Veiculo : EntityBaseAlgumaCoisa<Veiculo>
+    {
+        public Veiculo(params IValidateEntity<Veiculo>[] validators)
+            :base(validators)
+        {
+
+        }
+
+        public string Placa { get; set; }
+    }
+
+    public sealed class Activity : BaseEntity<EntityId2>
+    {
+        public EntityId2 ProjectId { get; }
+
+        public Effort Effort { get; }
+
+        public ActivityStatus ActivityStatus { get; }
+        public Member Responsible { get; }
 
         public override string ToString()
         {
-            return $"[Activity]:[ID: {Id}]";
+            return $"[Activity]:[ID: {Identity}]";
         }
 
-        private Activity(EntityId id, EntityId projectId, Version version)
+        private Activity(EntityId2 id, EntityId2 projectId, VersionId version)
+            : base(id, version)
         {
-            this.Id = id;
-            this.Version = version;
             this.ProjectId = projectId;
             this.Effort = Effort.From(0);
             this.ActivityStatus = ActivityStatus.From(0);
             this.Responsible = Member.Empty();
+
+            AppendValidationResult(Identity.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(projectId.ValidationStatus.Errors.ToImmutableList());
         }
 
-        public static Activity From(EntityId id, EntityId projectId, int hours, Version version)
+        public static Activity From(EntityId2 id, EntityId2 projectId, int hours, VersionId version)
         {
             var activity = new Activity(id, projectId, version);
             activity.UpdateEffort(hours);
-            var validator = new ActivityValidator();
-            activity.SetValidationResult(validator.Validate(activity));
             return activity;
         }
 
-        public static Activity NewRequest(EntityId id, EntityId projectId, int hours)
+        public void AddMember(Member member)
         {
-            return From(id, projectId, hours, Version.New());
+            Responsible.Update(member);
         }
 
-        public Activity AddMember(Member member)
-        {
-            Responsible = member;
-
-            var validator = new ActivityValidator();
-            var result = validator.Validate(this);
-            this.ValidationResults = result;
-
-            return this;
-        }
-
-        public Activity UpdateEffort(int hours)
+        public void UpdateEffort(int hours)
         {
             Effort.Update(hours);
-
-            var validator = new ActivityValidator();
-            var result = validator.Validate(this);
-            this.ValidationResults = result;
-
-            return this;
         }
 
-        public Activity Close()
+        public void Close()
         {
             ActivityStatus.Close();
-
-            var validator = new ActivityValidator();
-            var result = validator.Validate(this);
-            this.ValidationResults = result;
-
-            return this;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Id;
+            yield return Identity;
         }
     }
 }

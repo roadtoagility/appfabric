@@ -3,15 +3,19 @@ using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.Aggregates;
 using AppFabric.Domain.Framework.BusinessObjects;
-
+using System;
+using DFlow.Domain.Aggregates;
+using DFlow.Domain.BusinessObjects;
+using System.Linq;
 
 namespace AppFabric.Domain.AggregationActivity
 {
-    public class ActivityAggregationRoot : AggregationRoot<Activity>
+    public class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId2>
     {
+
         private ActivityAggregationRoot(Activity activity)
         {
-            if (activity.ValidationResults.IsValid)
+            if (activity.IsValid)
             {
                 Apply(activity);
 
@@ -21,84 +25,68 @@ namespace AppFabric.Domain.AggregationActivity
                 }
             }
 
-            ValidationResults = activity.ValidationResults;
-        }
-
-        private ActivityAggregationRoot(EntityId id, EntityId projectId, int hours)
-            : this(Activity.NewRequest(id, projectId, hours))
-        {
+            AppendValidationResult(activity.Failures);
         }
 
         #region Aggregation contruction
 
-
-        public static ActivityAggregationRoot ReconstructFrom(Activity currentState)
+        public static ActivityAggregationRoot CreateFrom(EntityId2 projectId, int hours)
         {
-            return new ActivityAggregationRoot(Activity.From(currentState.Id, currentState.ProjectId, currentState.Effort.Value,
-                            BusinessObjects.Version.Next(currentState.Version)));
-        }
-
-
-        public static ActivityAggregationRoot CreateFrom(EntityId activityd, EntityId projectId, int hours)
-        {
-            return new ActivityAggregationRoot(activityd, projectId, hours);
+            var activity = Activity.From(EntityId2.GetNext(), projectId, hours, VersionId.New());
+            return new ActivityAggregationRoot(activity);
         }
 
         public void Asign(Member member)
         {
             var current = GetChange();
-            var change = current.AddMember(member);
-            if (change.ValidationResults.IsValid)
+            current.AddMember(member);
+            if (current.IsValid)
             {
-                Apply(change);
-                Raise(MemberAsignedEvent.For(change));
+                Apply(current);
+                Raise(MemberAsignedEvent.For(current));
             }
-
-            ValidationResults = change.ValidationResults;
         }
 
         public void UpdateRemaining(int hours)
         {
             var current = GetChange();
             var oldEffort = current.Effort.Value;
-            var change = current.UpdateEffort(hours);
-            if (change.ValidationResults.IsValid)
+            current.UpdateEffort(hours);
+            if (current.IsValid)
             {
-                Apply(change);
+                Apply(current);
 
                 if(oldEffort > hours)
                 {
-                    Raise(EffortDecreasedEvent.For(change));
+                    Raise(EffortDecreasedEvent.For(current));
                 }
                 else
                 {
-                    Raise(EffortIncreasedEvent.For(change));
+                    Raise(EffortIncreasedEvent.For(current));
                 }
-                
             }
-
-            ValidationResults = change.ValidationResults;
+            AppendValidationResult(current.Failures);
         }
 
         public void Close()
         {
             var current = GetChange();
 
-            var change = current.Close();
-            if (change.ValidationResults.IsValid)
+            current.Close();
+            if (current.IsValid)
             {
-                Apply(change);
-                Raise(ActivityClosedEvent.For(change));
+                Apply(current);
+                Raise(ActivityClosedEvent.For(current));
             }
 
-            ValidationResults = change.ValidationResults;
+            AppendValidationResult(current.Failures);
         }
 
         #endregion
 
         public void Remove()
         {
-            if (ValidationResults.IsValid)
+            if (GetChange().IsValid)
             {
                 Raise(ActivityRemovedEvent.For(this.GetChange()));
             }

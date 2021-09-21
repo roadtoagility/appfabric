@@ -26,18 +26,18 @@ namespace AppFabric.Domain.BusinessObjects
 {
     public class Member : ValidationStatus
     {
-        public EntityId Id { get; }
-        public EntityId ProjectId { get; }
+        public EntityId2 Id { get; }
+        public EntityId2 ProjectId { get; }
         public string Name { get; }
 
-        private Member(EntityId id, EntityId projectId, string name)
+        private Member(EntityId2 id, EntityId2 projectId, string name)
         {
             Id = id;
             ProjectId = projectId;
             Name = name;
         }
 
-        public static Member From(EntityId id, EntityId projectId, string name)
+        public static Member From(EntityId2 id, EntityId2 projectId, string name)
         {
             var member = new Member(id, projectId, name);
             var validator = new MemberValidator();
@@ -49,12 +49,17 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static Member Empty()
         {
-            var member = new Member(EntityId.From(Guid.Empty), EntityId.From(Guid.Empty), string.Empty);
+            var member = new Member(EntityId2.From(Guid.Empty), EntityId2.From(Guid.Empty), string.Empty);
 
             var validator = new MemberValidator();
 
             member.SetValidationResult(validator.Validate(member));
             return member;
+        }
+
+        public void Update(Member member)
+        {
+            this = member;
         }
 
         public override string ToString()

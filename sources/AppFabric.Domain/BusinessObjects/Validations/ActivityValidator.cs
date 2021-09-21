@@ -29,7 +29,6 @@ namespace AppFabric.Domain.BusinessObjects.Validations
     {
         public ActivityValidator()
         {
-            RuleFor(project => project.Id).SetValidator(new EntityIdValidator());
             RuleFor(activity => activity).Must(CloseOnlyWithoutEffort);
             RuleFor(activity => activity.Effort).Custom((effort, context) =>
             {

@@ -17,26 +17,21 @@
 //
 
 using System;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
+using AppFabric.Domain.Framework.Validation;
 using DFlow.Domain.BusinessObjects;
-using DFlow.Domain.DomainEvents;
-using Version = AppFabric.Domain.BusinessObjects.Version;
 
-namespace AppFabric.Domain.AggregationActivity.Events
+namespace AppFabric.Domain.Framework.BusinessObjects
 {
-    public class EffortDecreasedEvent : DomainEvent
+    public sealed class EntityId2 : ValueOf<Guid, EntityId2, EntityIdValidator>
     {
-        private EffortDecreasedEvent(EntityId2 id, VersionId version)
-            : base(DateTime.Now, version)
+        public static EntityId2 Empty()
         {
-            Id = id;
+            return From(Guid.Empty);
         }
-        public EntityId2 Id { get; }
 
-        public static EffortDecreasedEvent For(Activity activity)
+        public static EntityId2 GetNext()
         {
-            return new EffortDecreasedEvent(activity.Identity, activity.Version);
+            return From(Guid.NewGuid());
         }
     }
 }
