@@ -20,43 +20,38 @@ using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public class Release : ValidationStatus
+    public class Release : BaseEntity<EntityId2>
     {
-        public EntityId Id { get; }
-        public EntityId ClientId { get; }
+        public EntityId2 ClientId { get; }
 
         public List<Activity> Activities { get; }
 
-        public Version Version { get; }
-
-        public bool IsNew() => Version.Value == 1;
-
         public override string ToString()
         {
-            return $"[Release]:[ID: {Id}]";
+            return $"[Release]:[ID: {Identity}]";
         }
 
-        private Release(EntityId id, EntityId clientId, Version version)
+        private Release(EntityId2 id, EntityId2 clientId, VersionId version)
+            : base(id, version)
         {
-            this.Id = id;
             this.ClientId = clientId;
-            this.Version = version;
         }
 
-        public static Release From(EntityId id, EntityId clientId, Version version)
+        public static Release From(EntityId2 id, EntityId2 clientId, VersionId version)
         {
             var release = new Release(id, clientId, version);
-            var validator = new ReleaseValidator();
-            release.SetValidationResult(validator.Validate(release));
+            //var validator = new ReleaseValidator();
+            //release.SetValidationResult(validator.Validate(release));
             return release;
         }
 
-        public static Release NewRequest(EntityId id, EntityId clientId)
+        public static Release NewRequest(EntityId2 id, EntityId2 clientId)
         {
-            return From(id, clientId, Version.New());
+            return From(id, clientId, VersionId.New());
         }
 
         public Release AddActivity(Activity activity)
@@ -66,7 +61,7 @@ namespace AppFabric.Domain.BusinessObjects
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Id;
+            yield return Identity;
         }
     }
 }

@@ -20,58 +20,52 @@ using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public class Billing : ValidationStatus
+    public class Billing : BaseEntity<EntityId2>
     {
-        public EntityId Id { get; }
-
-        public List<Release> Releases { get; }
-
-        public Version Version { get; }
-
-        public bool IsNew() => Version.Value == 1;
+        public List<Release> Releases { get; private set; }
 
         public override string ToString()
         {
-            return $"[Billing]:[ID: {Id}]";
+            return $"[Billing]:[ID: {Identity}]";
         }
 
-        private Billing(EntityId id, Version version)
+        private Billing(EntityId2 id, VersionId version)
+            : base(id, version)
         {
-            this.Id = id;
-            this.Version = version;
             this.Releases = new List<Release>();
         }
 
-        public static Billing From(EntityId id, Version version)
+        public static Billing From(EntityId2 id, VersionId version)
         {
             var billing = new Billing(id, version);
-            var validator = new BillingValidator();
-            billing.SetValidationResult(validator.Validate(billing));
+            //var validator = new BillingValidator();
+            //billing.SetValidationResult(validator.Validate(billing));
             return billing;
         }
 
-        public static Billing NewRequest(EntityId id)
+        public static Billing NewRequest(EntityId2 id)
         {
-            return From(id, Version.New());
+            return From(id, VersionId.New());
         }
 
         public Billing AddRelease(Release release)
         {
             Releases.Add(release);
 
-            var validator = new BillingValidator();
-            var result = validator.Validate(this);
-            this.ValidationResults = result;
+            //var validator = new BillingValidator();
+            //var result = validator.Validate(this);
+            //this.ValidationResults = result;
 
             return this;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Id;
+            yield return Identity;
         }
     }
 }

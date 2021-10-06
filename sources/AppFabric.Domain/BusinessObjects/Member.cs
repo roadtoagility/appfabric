@@ -21,45 +21,45 @@ using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public class Member : ValidationStatus
+    public class Member : BaseEntity<EntityId2>
     {
-        public EntityId2 Id { get; }
-        public EntityId2 ProjectId { get; }
-        public string Name { get; }
+        public EntityId2 ProjectId { get; private set; }
+        public string Name { get; private set; }
 
-        private Member(EntityId2 id, EntityId2 projectId, string name)
+        private Member(EntityId2 id, EntityId2 projectId, string name, VersionId version)
+            : base(id, version)
         {
-            Id = id;
             ProjectId = projectId;
             Name = name;
         }
 
-        public static Member From(EntityId2 id, EntityId2 projectId, string name)
+        public static Member From(EntityId2 id, EntityId2 projectId, string name, VersionId version)
         {
-            var member = new Member(id, projectId, name);
+            var member = new Member(id, projectId, name, version);
             var validator = new MemberValidator();
 
-            member.SetValidationResult(validator.Validate(member));
+            //member.SetValidationResult(validator.Validate(member));
 
             return member;
         }
 
         public static Member Empty()
         {
-            var member = new Member(EntityId2.From(Guid.Empty), EntityId2.From(Guid.Empty), string.Empty);
+            var member = new Member(EntityId2.From(Guid.Empty), EntityId2.From(Guid.Empty), string.Empty, VersionId.Empty());
 
             var validator = new MemberValidator();
 
-            member.SetValidationResult(validator.Validate(member));
+            //member.SetValidationResult(validator.Validate(member));
             return member;
         }
 
         public void Update(Member member)
         {
-            this = member;
+            //this.Identity = member.Id;
         }
 
         public override string ToString()
@@ -71,7 +71,7 @@ namespace AppFabric.Domain.BusinessObjects
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
-            yield return Id;
+            yield return Identity;
         }
         #endregion
     }

@@ -23,41 +23,6 @@ using AppFabric.Domain.Framework.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public interface IValidateEntity<T>
-    {
-
-    }
-
-    public class PlacaValidator : IValidateEntity<Veiculo>
-    {
-
-    }
-
-    public class MotorValidator : IValidateEntity<Veiculo>
-    {
-
-    }
-
-    public class EntityBaseAlgumaCoisa<T>
-    {
-        private IList<IValidateEntity<T>> _validacoes;
-        public EntityBaseAlgumaCoisa(IList<IValidateEntity<T>> validacoes)
-        {
-            _validacoes = validacoes;
-        }
-    }
-
-    public class Veiculo : EntityBaseAlgumaCoisa<Veiculo>
-    {
-        public Veiculo(params IValidateEntity<Veiculo>[] validators)
-            :base(validators)
-        {
-
-        }
-
-        public string Placa { get; set; }
-    }
-
     public sealed class Activity : BaseEntity<EntityId2>
     {
         public EntityId2 ProjectId { get; }

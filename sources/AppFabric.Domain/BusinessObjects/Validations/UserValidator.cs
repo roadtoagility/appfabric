@@ -25,7 +25,7 @@ namespace AppFabric.Domain.BusinessObjects.Validations
     {
         public UserValidator()
         {
-            RuleFor(user => user.Id).SetValidator(new EntityIdValidator());
+            //RuleFor(user => user.Id).SetValidator(new EntityIdValidator());
             RuleFor(user => user.Name).SetValidator(new NameValidator());
             RuleFor(user => user.Cnpj).SetValidator(new SocialSecurityIdValidator());
             RuleFor(user => user.CommercialEmail).SetValidator(new EmailValidator());

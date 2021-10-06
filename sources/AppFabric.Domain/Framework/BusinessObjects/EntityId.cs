@@ -41,7 +41,7 @@ namespace AppFabric.Domain.Framework.BusinessObjects
             var entityId = new EntityId(id);
             var validator = new EntityIdValidator();
 
-            entityId.SetValidationResult(validator.Validate(entityId));
+            //entityId.SetValidationResult(validator.Validate(entityId));
             
             return entityId;
         }

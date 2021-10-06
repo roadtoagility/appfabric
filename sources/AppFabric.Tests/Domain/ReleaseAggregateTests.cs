@@ -23,16 +23,15 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldCreateReleaseWithActivity()
         {
-            var releaseId = EntityId.From(Guid.NewGuid());
-            var clientId = EntityId.From(Guid.NewGuid());
+            var releaseId = EntityId2.From(Guid.NewGuid());
+            var clientId = EntityId2.From(Guid.NewGuid());
             var releaseAgg = ReleaseAggregationRoot.CreateFrom(releaseId, clientId);
 
-            var activityId = EntityId.From(Guid.NewGuid());
-            var projectId = EntityId.From(Guid.NewGuid());
-            var activityAgg = ActivityAggregationRoot.CreateFrom(activityId, projectId, 8);
+            var projectId = EntityId2.From(Guid.NewGuid());
+            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8);
 
             releaseAgg.AddActivity(activityAgg.GetChange());
-            Assert.True(releaseAgg.ValidationResults.IsValid);
+            Assert.False(releaseAgg.Failures.Any());
             Assert.Contains(releaseAgg.GetEvents(), x => x.GetType() == typeof(ActivityAddedEvent));
         }
     }

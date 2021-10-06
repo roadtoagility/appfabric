@@ -1,15 +1,21 @@
 ﻿using AppFabric.Domain.AggregationBilling.Events;
+using AppFabric.Domain.AggregationBilling.Specifications;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.Aggregates;
 using AppFabric.Domain.Framework.BusinessObjects;
+using DFlow.Domain.Aggregates;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationBilling
 {
-    public class BillingAggregationRoot : AggregationRoot<Billing>
+    public class BillingAggregationRoot : ObjectBasedAggregationRoot<Billing, EntityId2>
     {
-        private BillingAggregationRoot(Billing billing)
+        private CompositeSpecification<Billing> _spec;
+        private BillingAggregationRoot(CompositeSpecification<Billing> specification, Billing billing)
         {
-            if (billing.ValidationResults.IsValid)
+            _spec = specification;
+            if (_spec.IsSatisfiedBy(billing))
             {
                 Apply(billing);
 
@@ -19,12 +25,13 @@ namespace AppFabric.Domain.AggregationBilling
                 }
             }
 
-            ValidationResults = billing.ValidationResults;
+            AppendValidationResult(billing.Failures);
         }
 
-        private BillingAggregationRoot(EntityId id)
-            : this(Billing.NewRequest(id))
+        private BillingAggregationRoot(CompositeSpecification<Billing> specification, EntityId2 id)
+            : this(specification, Billing.NewRequest(id))
         {
+
         }
 
         #region Aggregation contruction
@@ -32,36 +39,40 @@ namespace AppFabric.Domain.AggregationBilling
 
         public static BillingAggregationRoot ReconstructFrom(Billing currentState)
         {
-            return new BillingAggregationRoot(Billing.From(currentState.Id,
-                            BusinessObjects.Version.Next(currentState.Version)));
+            var spec = new BillingSpecification();
+            return new BillingAggregationRoot(spec, Billing.From(currentState.Identity,
+                            VersionId.Next(currentState.Version)));
         }
 
 
-        public static BillingAggregationRoot CreateFrom(EntityId billingId)
+        public static BillingAggregationRoot CreateFrom(EntityId2 billingId)
         {
-            return new BillingAggregationRoot(billingId);
+            var spec = new BillingSpecification();
+            return new BillingAggregationRoot(spec, billingId);
         }
 
         public void AddRelease(Release release)
         {
             var current = GetChange();
-            var change = current.AddRelease(release);
-            if (change.ValidationResults.IsValid)
+            current.AddRelease(release);
+
+            if (_spec.IsSatisfiedBy(current))
             {
-                Apply(change);
-                Raise(ReleaseAddedEvent.For(change));
+                Apply(current);
+                Raise(ReleaseAddedEvent.For(current));
             }
 
-            ValidationResults = change.ValidationResults;
+            AppendValidationResult(current.Failures);
         }
 
         #endregion
 
         public void Remove()
         {
-            if (ValidationResults.IsValid)
+            //TODO: definir deleção
+            if (_spec.IsSatisfiedBy(GetChange()))
             {
-                Raise(BillingRemovedEvent.For(this.GetChange()));
+                Raise(BillingRemovedEvent.For(GetChange()));
             }
         }
     }

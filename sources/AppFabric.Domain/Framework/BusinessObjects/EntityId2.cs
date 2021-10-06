@@ -24,9 +24,11 @@ namespace AppFabric.Domain.Framework.BusinessObjects
 {
     public sealed class EntityId2 : ValueOf<Guid, EntityId2, EntityIdValidator>
     {
+        private static readonly Guid EmptyId = Guid.Empty;
+
         public static EntityId2 Empty()
         {
-            return From(Guid.Empty);
+            return From(EmptyId);
         }
 
         public static EntityId2 GetNext()

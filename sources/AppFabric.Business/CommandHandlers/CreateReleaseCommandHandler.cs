@@ -29,6 +29,7 @@ using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
 using AppFabric.Domain.AggregationRelease;
+using System.Linq;
 
 namespace AppFabric.Business.CommandHandlers
 {
@@ -52,9 +53,9 @@ namespace AppFabric.Business.CommandHandlers
             _logger.LogDebug("Criada agregação a partir do comando {CommandName} com valores {Valores}",
                 nameof(command), command);
 
-            var agg = ReleaseAggregationRoot.CreateFrom(EntityId.From(command.Id), EntityId.From(command.ClientId));
+            var agg = ReleaseAggregationRoot.CreateFrom(EntityId2.From(command.Id), EntityId2.From(command.ClientId));
 
-            if (agg.ValidationResults.IsValid)
+            if (!agg.Failures.Any())
             {
                 using (_logger.BeginScope("Persistencia"))
                 {
@@ -68,10 +69,10 @@ namespace AppFabric.Business.CommandHandlers
                 }
 
                 isSucceed = true;
-                aggregationId = agg.GetChange().Id.Value;
+                aggregationId = agg.GetChange().Identity.Value;
             }
 
-            return new CommandResult<Guid>(isSucceed, aggregationId, agg.ValidationResults.Errors.ToImmutableList());
+            return new CommandResult<Guid>(isSucceed, aggregationId, agg.Failures.ToImmutableList());
         }
     }
 }

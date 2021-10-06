@@ -29,11 +29,11 @@ namespace AppFabric.Business.QueryHandlers.Sanitizers
     {
         public ProjectSanitizer()
         {
-            RuleFor(input => EntityId.From(input.ProjectId)).SetValidator(new EntityIdValidator())
-                .DependentRules(() =>
-            {
+            //RuleFor(input => EntityId.From(input.ProjectId)).SetValidator(new EntityIdValidator())
+            //    .DependentRules(() =>
+            //{
                 
-            });
+            //});
             
         }
     }

@@ -1,15 +1,22 @@
 ﻿using AppFabric.Domain.AggregationRelease.Events;
+using AppFabric.Domain.AggregationRelease.Specifications;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.Aggregates;
 using AppFabric.Domain.Framework.BusinessObjects;
+using DFlow.Domain.Aggregates;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationRelease
 {
-    public class ReleaseAggregationRoot : AggregationRoot<Release>
+    public class ReleaseAggregationRoot : ObjectBasedAggregationRoot<Release, EntityId2>
     {
-        private ReleaseAggregationRoot(Release release)
+        private CompositeSpecification<Release> _spec;
+        private ReleaseAggregationRoot(CompositeSpecification<Release> specification, Release release)
         {
-            if (release.ValidationResults.IsValid)
+            _spec = specification;
+
+            if (_spec.IsSatisfiedBy(release))
             {
                 Apply(release);
 
@@ -19,11 +26,11 @@ namespace AppFabric.Domain.AggregationRelease
                 }
             }
 
-            ValidationResults = release.ValidationResults;
+            AppendValidationResult(release.Failures);
         }
 
-        private ReleaseAggregationRoot(EntityId id, EntityId clientId)
-            : this(Release.NewRequest(id, clientId))
+        private ReleaseAggregationRoot(CompositeSpecification<Release> specification, EntityId2 id, EntityId2 clientId)
+            : this(specification, Release.NewRequest(id, clientId))
         {
         }
 
@@ -32,36 +39,40 @@ namespace AppFabric.Domain.AggregationRelease
 
         public static ReleaseAggregationRoot ReconstructFrom(Release currentState)
         {
-            return new ReleaseAggregationRoot(Release.From(currentState.Id, currentState.ClientId,
-                            BusinessObjects.Version.Next(currentState.Version)));
+            var spec = new ReleaseSpecification();
+            return new ReleaseAggregationRoot(spec, Release.From(currentState.Identity, currentState.ClientId,
+                            VersionId.Next(currentState.Version)));
         }
 
 
-        public static ReleaseAggregationRoot CreateFrom(EntityId releaseId, EntityId clientId)
+        public static ReleaseAggregationRoot CreateFrom(EntityId2 releaseId, EntityId2 clientId)
         {
-            return new ReleaseAggregationRoot(releaseId, clientId);
+            var spec = new ReleaseSpecification();
+            return new ReleaseAggregationRoot(spec, releaseId, clientId);
         }
 
         public void AddActivity(Activity activity)
         {
             var current = GetChange();
-            var change = current.AddActivity(activity);
-            if (change.ValidationResults.IsValid)
+            current.AddActivity(activity);
+
+            if (_spec.IsSatisfiedBy(current))
             {
-                Apply(change);
-                Raise(ActivityAddedEvent.For(change));
+                Apply(current);
+                Raise(ActivityAddedEvent.For(current));
             }
 
-            ValidationResults = change.ValidationResults;
+            AppendValidationResult(current.Failures);
         }
 
         #endregion
 
         public void Remove()
         {
-            if (ValidationResults.IsValid)
+            //TODO: definir deleção
+            if (_spec.IsSatisfiedBy(GetChange()))
             {
-                Raise(ReleaseRemovedEvent.For(this.GetChange()));
+                Raise(ReleaseRemovedEvent.For(GetChange()));
             }
         }
     }

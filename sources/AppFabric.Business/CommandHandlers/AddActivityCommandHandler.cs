@@ -29,6 +29,7 @@ using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
 using System;
 using AppFabric.Domain.AggregationRelease;
+using System.Linq;
 
 namespace AppFabric.Business.CommandHandlers
 {
@@ -52,7 +53,7 @@ namespace AppFabric.Business.CommandHandlers
             var agg = ReleaseAggregationRoot.ReconstructFrom(release);
             var isSucceed = false;
 
-            if (agg.ValidationResults.IsValid)
+            if (!agg.Failures.Any())
             {
                 var activity = _dbActivitySession.Repository.Get(EntityId.From(command.ActivityId));
                 agg.AddActivity(activity);
@@ -63,7 +64,7 @@ namespace AppFabric.Business.CommandHandlers
                 isSucceed = true;
             }
 
-            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
+            return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
         }
     }
 }

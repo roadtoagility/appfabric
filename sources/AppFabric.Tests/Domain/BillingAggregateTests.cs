@@ -23,71 +23,67 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldCreateBillingWithRelease()
         {
-            var clientId = EntityId.From(Guid.NewGuid());
+            var clientId = EntityId2.From(Guid.NewGuid());
             
             //release 1
-            var releaseId = EntityId.From(Guid.NewGuid());
+            var releaseId = EntityId2.From(Guid.NewGuid());
             var releaseAgg = ReleaseAggregationRoot.CreateFrom(releaseId, clientId);
 
-            var activityId = EntityId.From(Guid.NewGuid());
-            var projectId = EntityId.From(Guid.NewGuid());
-            var activityAgg = ActivityAggregationRoot.CreateFrom(activityId, projectId, 8);
+            var projectId = EntityId2.From(Guid.NewGuid());
+            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8);
 
             releaseAgg.AddActivity(activityAgg.GetChange());
 
             //release 2
-            var release2Id = EntityId.From(Guid.NewGuid());
+            var release2Id = EntityId2.From(Guid.NewGuid());
             var release2Agg = ReleaseAggregationRoot.CreateFrom(release2Id, clientId);
 
-            var activity2Id = EntityId.From(Guid.NewGuid());
-            var project2Id = EntityId.From(Guid.NewGuid());
-            var activity2Agg = ActivityAggregationRoot.CreateFrom(activity2Id, project2Id, 8);
+            var project2Id = EntityId2.From(Guid.NewGuid());
+            var activity2Agg = ActivityAggregationRoot.CreateFrom(project2Id, 8);
 
             release2Agg.AddActivity(activity2Agg.GetChange());
 
             // Add client?
-            var billingId = EntityId.From(Guid.NewGuid());
+            var billingId = EntityId2.From(Guid.NewGuid());
             var billingAgg = BillingAggregationRoot.CreateFrom(billingId);
 
             billingAgg.AddRelease(releaseAgg.GetChange());
             billingAgg.AddRelease(release2Agg.GetChange());
-            Assert.True(billingAgg.ValidationResults.IsValid);
+            Assert.False(billingAgg.Failures.Any());
             Assert.Contains(billingAgg.GetEvents(), x => x.GetType() == typeof(ReleaseAddedEvent));
         }
 
         [Fact]
         public void ShouldNotCreateBillingWithReleaseFromDifferentClient()
         {
-            var clientId = EntityId.From(Guid.NewGuid());
+            var clientId = EntityId2.From(Guid.NewGuid());
 
             //release 1
-            var releaseId = EntityId.From(Guid.NewGuid());
+            var releaseId = EntityId2.From(Guid.NewGuid());
             var releaseAgg = ReleaseAggregationRoot.CreateFrom(releaseId, clientId);
 
-            var activityId = EntityId.From(Guid.NewGuid());
-            var projectId = EntityId.From(Guid.NewGuid());
-            var activityAgg = ActivityAggregationRoot.CreateFrom(activityId, projectId, 8);
+            var projectId = EntityId2.From(Guid.NewGuid());
+            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8);
 
             releaseAgg.AddActivity(activityAgg.GetChange());
 
             //release 2
-            clientId = EntityId.From(Guid.NewGuid());
-            var release2Id = EntityId.From(Guid.NewGuid());
+            clientId = EntityId2.From(Guid.NewGuid());
+            var release2Id = EntityId2.From(Guid.NewGuid());
             var release2Agg = ReleaseAggregationRoot.CreateFrom(release2Id, clientId);
 
-            var activity2Id = EntityId.From(Guid.NewGuid());
-            var project2Id = EntityId.From(Guid.NewGuid());
-            var activity2Agg = ActivityAggregationRoot.CreateFrom(activity2Id, project2Id, 8);
+            var project2Id = EntityId2.From(Guid.NewGuid());
+            var activity2Agg = ActivityAggregationRoot.CreateFrom(project2Id, 8);
 
             release2Agg.AddActivity(activity2Agg.GetChange());
 
             // Add client?
-            var billingId = EntityId.From(Guid.NewGuid());
+            var billingId = EntityId2.From(Guid.NewGuid());
             var billingAgg = BillingAggregationRoot.CreateFrom(billingId);
 
             billingAgg.AddRelease(releaseAgg.GetChange());
             billingAgg.AddRelease(release2Agg.GetChange());
-            Assert.False(billingAgg.ValidationResults.IsValid);
+            Assert.True(billingAgg.Failures.Any());
         }
     }
 }

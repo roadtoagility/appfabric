@@ -5,8 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DFlow.Domain" Version="0.3.0-pre263" />
+      <PackageReference Include="DFlow.Domain" Version="0.4.0-pre273" />
       <PackageReference Include="FluentValidation" Version="9.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="AggregationProject\Specifications\" />
     </ItemGroup>
     <PropertyGroup>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>

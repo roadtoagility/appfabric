@@ -19,23 +19,23 @@
 using System;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Domain.Framework.DomainEvents;
-using Version = AppFabric.Domain.BusinessObjects.Version;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.DomainEvents;
 
 namespace AppFabric.Domain.AggregationRelease.Events
 {
     public class ReleaseRemovedEvent : DomainEvent
     {
-        private ReleaseRemovedEvent(EntityId id, Version version)
+        private ReleaseRemovedEvent(EntityId2 id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
-        public EntityId Id { get; }
+        public EntityId2 Id { get; }
 
         public static ReleaseRemovedEvent For(Release release)
         {
-            return new ReleaseRemovedEvent(release.Id, release.Version);
+            return new ReleaseRemovedEvent(release.Identity, release.Version);
         }
     }
 }

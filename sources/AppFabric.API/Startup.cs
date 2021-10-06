@@ -13,7 +13,6 @@ using AppFabric.Business.QueryHandlers;
 using AppFabric.Business.QueryHandlers.Filters;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.AggregationUser.Events;
-using AppFabric.Domain.Framework.DomainEvents;
 using AppFabric.Persistence;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
@@ -22,6 +21,7 @@ using AppFabric.Persistence.SyncModels.DomainEventHandlers;
 using AppFabric.Domain.AggregationActivity.Events;
 using AppFabric.Domain.AggregationBilling.Events;
 using AppFabric.Domain.AggregationRelease.Events;
+using DFlow.Domain.Events;
 
 namespace AppFabric.API
 {
@@ -78,9 +78,9 @@ namespace AppFabric.API
             services.AddScoped<GetProjectsByQueryHandler>();
             services.AddScoped<GetProjectByIdQueryHandler>();
             
-            services.AddScoped<IDomainEventHandler<ProjectAddedEvent>, AddedProjectProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<ProjectDetailUpdatedEvent>, UpdateProjectDetailsProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<ProjectRemovedEvent>,RemoveProjectProjectionHandler>();
+            services.AddScoped<AppFabric.Domain.Framework.DomainEvents.DomainEventHandler<ProjectAddedEvent>, AddedProjectProjectionHandler>();
+            services.AddScoped<AppFabric.Domain.Framework.DomainEvents.DomainEventHandler<ProjectDetailUpdatedEvent>, UpdateProjectDetailsProjectionHandler>();
+            services.AddScoped<AppFabric.Domain.Framework.DomainEvents.DomainEventHandler<ProjectRemovedEvent>,RemoveProjectProjectionHandler>();
 
             services.AddScoped<AddUserCommandHandler>();
             services.AddScoped<RemoveUserCommandHandler>();
@@ -99,22 +99,22 @@ namespace AppFabric.API
             services.AddScoped<AddActivityCommandHandler>();
 
 
-            services.AddScoped<IDomainEventHandler<ActivityCreatedEvent>, CreatedActivityProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<MemberAsignedEvent>, AsignedMemberProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<EffortDecreasedEvent>, DecreasedEffortProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<EffortIncreasedEvent>, IncreasedEffortProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<ActivityClosedEvent>, ClosedActivityProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<ActivityRemovedEvent>, RemovedActivityProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<BillingCreatedEvent>, CreatedBillingProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<BillingRemovedEvent>, RemovedBillingProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<ReleaseAddedEvent>, AddedReleaseProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<ActivityAddedEvent>, AddedActivityProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<ReleaseCreatedEvent>, CreatedReleaseProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<ReleaseRemovedEvent>, RemovedReleaseProjectionHandler>();
+            services.AddScoped<DomainEventHandler<ActivityCreatedEvent>, CreatedActivityProjectionHandler>();
+            services.AddScoped<DomainEventHandler<MemberAsignedEvent>, AsignedMemberProjectionHandler>();
+            services.AddScoped<DomainEventHandler<EffortDecreasedEvent>, DecreasedEffortProjectionHandler>();
+            services.AddScoped<DomainEventHandler<EffortIncreasedEvent>, IncreasedEffortProjectionHandler>();
+            services.AddScoped<DomainEventHandler<ActivityClosedEvent>, ClosedActivityProjectionHandler>();
+            services.AddScoped<DomainEventHandler<ActivityRemovedEvent>, RemovedActivityProjectionHandler>();
+            services.AddScoped<DomainEventHandler<BillingCreatedEvent>, CreatedBillingProjectionHandler>();
+            services.AddScoped<DomainEventHandler<BillingRemovedEvent>, RemovedBillingProjectionHandler>();
+            services.AddScoped<DomainEventHandler<ReleaseAddedEvent>, AddedReleaseProjectionHandler>();
+            services.AddScoped<DomainEventHandler<ActivityAddedEvent>, AddedActivityProjectionHandler>();
+            services.AddScoped<DomainEventHandler<ReleaseCreatedEvent>, CreatedReleaseProjectionHandler>();
+            services.AddScoped<DomainEventHandler<ReleaseRemovedEvent>, RemovedReleaseProjectionHandler>();
 
 
-            services.AddScoped<IDomainEventHandler<UserAddedEvent>, AddedUserProjectionHandler>();
-            services.AddScoped<IDomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
+            services.AddScoped<AppFabric.Domain.Framework.DomainEvents.DomainEventHandler<UserAddedEvent>, AddedUserProjectionHandler>();
+            services.AddScoped<AppFabric.Domain.Framework.DomainEvents.DomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
 
 
             services.AddFluentMediator(builder =>

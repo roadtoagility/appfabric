@@ -1,18 +1,15 @@
 ﻿using AppFabric.Domain.AggregationBilling.Events;
-using AppFabric.Domain.Framework.DomainEvents;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using DFlow.Domain.Events;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {
     public class AddedReleaseProjectionHandler : DomainEventHandler<ReleaseAddedEvent>
     {
-        protected override void ExecuteHandle(ReleaseAddedEvent @event)
+        protected override Task ExecuteHandle(ReleaseAddedEvent @event, CancellationToken cancellationToken)
         {
-            
+            throw new System.NotImplementedException();
         }
     }
 }

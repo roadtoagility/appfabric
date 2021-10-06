@@ -7,15 +7,18 @@ using System;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.BusinessObjects;
 using System.Linq;
+using DFlow.Domain.Specifications;
+using AppFabric.Domain.AggregationActivity.Specifications;
 
 namespace AppFabric.Domain.AggregationActivity
 {
     public class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId2>
     {
-
-        private ActivityAggregationRoot(Activity activity)
+        private CompositeSpecification<Activity> _spec;
+        private ActivityAggregationRoot(CompositeSpecification<Activity> specification, Activity activity)
         {
-            if (activity.IsValid)
+            _spec = specification;
+            if(_spec.IsSatisfiedBy(activity))
             {
                 Apply(activity);
 
@@ -33,18 +36,28 @@ namespace AppFabric.Domain.AggregationActivity
         public static ActivityAggregationRoot CreateFrom(EntityId2 projectId, int hours)
         {
             var activity = Activity.From(EntityId2.GetNext(), projectId, hours, VersionId.New());
-            return new ActivityAggregationRoot(activity);
+            var spec = new ActivitySpecification();
+            return new ActivityAggregationRoot(spec, activity);
+        }
+
+        public static ActivityAggregationRoot ReconstructFrom(Activity activity)
+        {
+            var spec = new ActivitySpecification();
+            return new ActivityAggregationRoot(spec, activity);
         }
 
         public void Asign(Member member)
         {
             var current = GetChange();
             current.AddMember(member);
-            if (current.IsValid)
+
+            if (_spec.IsSatisfiedBy(current))
             {
                 Apply(current);
                 Raise(MemberAsignedEvent.For(current));
             }
+
+            AppendValidationResult(current.Failures);
         }
 
         public void UpdateRemaining(int hours)
@@ -52,7 +65,7 @@ namespace AppFabric.Domain.AggregationActivity
             var current = GetChange();
             var oldEffort = current.Effort.Value;
             current.UpdateEffort(hours);
-            if (current.IsValid)
+            if (_spec.IsSatisfiedBy(current))
             {
                 Apply(current);
 
@@ -73,7 +86,7 @@ namespace AppFabric.Domain.AggregationActivity
             var current = GetChange();
 
             current.Close();
-            if (current.IsValid)
+            if (_spec.IsSatisfiedBy(current))
             {
                 Apply(current);
                 Raise(ActivityClosedEvent.For(current));
