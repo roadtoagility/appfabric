@@ -1,4 +1,7 @@
-﻿using AppFabric.Domain.AggregationActivity;
+﻿using AppFabric.Business;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Domain;
+using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Events;
 using AppFabric.Domain.AggregationBilling;
 using AppFabric.Domain.AggregationBilling.Events;
@@ -24,9 +27,9 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldNotAllowEffortBiggerThan8hours()
         {
-            var activityId = EntityId2.From(Guid.NewGuid());
             var projectId = EntityId2.From(Guid.NewGuid());
-            var activityAgg = ActivityAggregationRoot.CreateFrom(activityId, 9);
+            var aggFactory = new AggregateFactory();
+            var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
 
             Assert.False(activityAgg.Failures.Any());
             Assert.DoesNotContain(activityAgg.GetEvents(), x => x.GetType() == typeof(EffortIncreasedEvent));
@@ -37,7 +40,8 @@ namespace AppFabric.Tests.Domain
         public void ShouldNotAllowCloseActivityWithPendingEffort()
         {
             var projectId = EntityId2.From(Guid.NewGuid());
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8);
+            var aggFactory = new AggregateFactory();
+            var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
             activityAgg.UpdateRemaining(7);
             activityAgg.Close();
 
@@ -49,8 +53,10 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldAsignActivityToMember()
         {
+            var estimatedHours = 8;
             var projectId = EntityId2.From(Guid.NewGuid());
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8);
+            var aggFactory = new AggregateFactory();
+            var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, estimatedHours));
 
             var memberId = EntityId2.From(Guid.NewGuid());
             var member = Member.From(memberId, projectId, "Douglas", VersionId.Empty());
@@ -65,7 +71,8 @@ namespace AppFabric.Tests.Domain
         {
             var activityId = EntityId2.From(Guid.NewGuid());
             var projectId = EntityId2.From(Guid.NewGuid());
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8);
+            var aggFactory = new AggregateFactory();
+            var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
 
             var memberId = EntityId2.From(Guid.NewGuid());
 

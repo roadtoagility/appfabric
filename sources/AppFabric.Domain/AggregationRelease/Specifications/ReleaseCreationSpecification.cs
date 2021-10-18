@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace AppFabric.Domain.AggregationRelease.Specifications
 {
-    public class ReleaseSpecification : CompositeSpecification<Release>
+    public class ReleaseCreationSpecification : CompositeSpecification<Release>
     {
         public override bool IsSatisfiedBy(Release candidate)
         {
-            //TODO: Criar Validação Release
-            //RuleFor(project => project.Id).SetValidator(new EntityIdValidator());
+            //TODO: criar uma validação
             return true;
         }
     }

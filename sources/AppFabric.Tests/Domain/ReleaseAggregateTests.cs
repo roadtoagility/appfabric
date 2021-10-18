@@ -1,4 +1,6 @@
-﻿using AppFabric.Domain.AggregationActivity;
+﻿using AppFabric.Business;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Events;
 using AppFabric.Domain.AggregationBilling;
 using AppFabric.Domain.AggregationBilling.Events;
@@ -23,12 +25,12 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldCreateReleaseWithActivity()
         {
-            var releaseId = EntityId2.From(Guid.NewGuid());
-            var clientId = EntityId2.From(Guid.NewGuid());
-            var releaseAgg = ReleaseAggregationRoot.CreateFrom(releaseId, clientId);
+            var factory = new AggregateFactory();
+            var releaseAgg = factory.Create(new CreateReleaseCommand(Guid.NewGuid()));
 
             var projectId = EntityId2.From(Guid.NewGuid());
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8);
+            //TODO: update
+            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8, null);
 
             releaseAgg.AddActivity(activityAgg.GetChange());
             Assert.False(releaseAgg.Failures.Any());

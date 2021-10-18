@@ -38,19 +38,24 @@ namespace AppFabric.Business.CommandHandlers
         private readonly IDbSession<IBillingRepository> _dbSession;
         private readonly IDbSession<IReleaseRepository> _dbReleaseSession;
         private readonly ILogger<AddReleaseCommandHandler> _logger;
+        private readonly AggregateFactory _factory;
 
-        public AddReleaseCommandHandler(ILogger<AddReleaseCommandHandler> logger, IMediator publisher, IDbSession<IBillingRepository> dbSession, IDbSession<IReleaseRepository> dbReleaseSession)
+        public AddReleaseCommandHandler(ILogger<AddReleaseCommandHandler> logger, 
+            IMediator publisher, IDbSession<IBillingRepository> dbSession, 
+            IDbSession<IReleaseRepository> dbReleaseSession,
+            AggregateFactory factory)
             : base(logger, publisher)
         {
             _dbSession = dbSession;
             _dbReleaseSession = dbReleaseSession;
             _logger = logger;
+            _factory = factory;
         }
 
         protected override ExecutionResult ExecuteCommand(AddReleaseCommand command)
         {
             var billing = _dbSession.Repository.Get(EntityId.From(command.Id));
-            var agg = BillingAggregationRoot.ReconstructFrom(billing);
+            var agg = _factory.Create(new LoadBillingCommand(billing));
             var isSucceed = false;
 
             if (!agg.Failures.Any())

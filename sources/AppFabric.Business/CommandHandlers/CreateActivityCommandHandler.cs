@@ -53,7 +53,8 @@ namespace AppFabric.Business.CommandHandlers
             _logger.LogDebug("Criada agregação a partir do comando {CommandName} com valores {Valores}",
                 nameof(command), command);
 
-            var agg = ActivityAggregationRoot.CreateFrom(EntityId2.From(command.ProjectId), command.Hours);
+            //TODO: update
+            var agg = ActivityAggregationRoot.CreateFrom(EntityId2.From(command.ProjectId.Value), command.EstimatedHours, null);
 
             if (!agg.Failures.Any())
             {

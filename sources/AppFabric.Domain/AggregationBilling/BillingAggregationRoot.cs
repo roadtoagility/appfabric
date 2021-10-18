@@ -28,27 +28,12 @@ namespace AppFabric.Domain.AggregationBilling
             AppendValidationResult(billing.Failures);
         }
 
-        private BillingAggregationRoot(CompositeSpecification<Billing> specification, EntityId2 id)
-            : this(specification, Billing.NewRequest(id))
-        {
-
-        }
-
         #region Aggregation contruction
 
 
-        public static BillingAggregationRoot ReconstructFrom(Billing currentState)
+        public static BillingAggregationRoot ReconstructFrom(Billing currentState, CompositeSpecification<Billing> spec)
         {
-            var spec = new BillingSpecification();
-            return new BillingAggregationRoot(spec, Billing.From(currentState.Identity,
-                            VersionId.Next(currentState.Version)));
-        }
-
-
-        public static BillingAggregationRoot CreateFrom(EntityId2 billingId)
-        {
-            var spec = new BillingSpecification();
-            return new BillingAggregationRoot(spec, billingId);
+            return new BillingAggregationRoot(spec, currentState);
         }
 
         public void AddRelease(Release release)

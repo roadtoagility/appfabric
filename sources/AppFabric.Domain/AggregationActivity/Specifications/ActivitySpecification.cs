@@ -9,37 +9,47 @@ using System.Threading.Tasks;
 
 namespace AppFabric.Domain.AggregationActivity.Specifications
 {
+    public class ActivityCreationSpecification : CompositeSpecification<Activity>
+    {
+        public override bool IsSatisfiedBy(Activity candidate)
+        {
+            //TODO: fiz e sai correndo :) Arrumar essa meleca o quanto antes
+            var isValid = true;
+            if (candidate.Identity == null || candidate.Identity.Value == Guid.Empty)
+            {
+                candidate.AppendValidationResult(new ValidationFailure("InvalidIdentity",
+                    "Invalid identity"));
+                isValid = false;
+            }
+            return isValid;
+        }
+    }
+
     public class ActivitySpecification : CompositeSpecification<Activity>
     {
         public override bool IsSatisfiedBy(Activity candidate)
         {
             //TODO: fiz e sai correndo :) Arrumar essa meleca o quanto antes
             var isValid = true;
-            if (IsClosedOnlyWithoutEffort(candidate))
+            if (!IsClosedOnlyWithoutEffort(candidate))
             {
                 candidate.AppendValidationResult(new ValidationFailure("IsClosedOnlyWithoutEffort",
                     "The candidate already exists."));
                 isValid = false;
             }
-            if (IsEffortLessOrEqualEightHours(candidate))
+            if (!IsEffortLessOrEqualEightHours(candidate))
             {
                 candidate.AppendValidationResult(new ValidationFailure("IsEffortLessOrEqualEightHours",
                     "Uma atividade não pode ter esforço maior do que 8 horas"));
                 isValid = false;
             }
-            if (CanHaveResponsible(candidate))
+            if (!CanHaveResponsible(candidate))
             {
                 candidate.AppendValidationResult(new ValidationFailure("CanHaveResponsible",
                     "Só é possível adicionar como responsável membros do projeto"));
                 isValid = false;
             }
-            if (CanHaveResponsible(candidate))
-            {
-                candidate.AppendValidationResult(new ValidationFailure("CanHaveResponsible",
-                    "Só é possível adicionar como responsável membros do projeto"));
-                isValid = false;
-            }
-            if (CanBeClosed(candidate))
+            if (!CanBeClosed(candidate))
             {
                 candidate.AppendValidationResult(new ValidationFailure("CanHaveResponsible",
                     "Não é possível fechar uma atividade com esforço pendente"));

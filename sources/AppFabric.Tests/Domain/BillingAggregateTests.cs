@@ -1,4 +1,6 @@
-﻿using AppFabric.Domain.AggregationActivity;
+﻿using AppFabric.Business;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Events;
 using AppFabric.Domain.AggregationBilling;
 using AppFabric.Domain.AggregationBilling.Events;
@@ -23,29 +25,29 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldCreateBillingWithRelease()
         {
-            var clientId = EntityId2.From(Guid.NewGuid());
+            var aggFactory = new AggregateFactory();
+            var clientId = Guid.NewGuid();
             
             //release 1
-            var releaseId = EntityId2.From(Guid.NewGuid());
-            var releaseAgg = ReleaseAggregationRoot.CreateFrom(releaseId, clientId);
+            var releaseAgg = aggFactory.Create(new CreateReleaseCommand(clientId));
 
             var projectId = EntityId2.From(Guid.NewGuid());
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8);
+            //TODO: update
+            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8, null);
 
             releaseAgg.AddActivity(activityAgg.GetChange());
 
             //release 2
-            var release2Id = EntityId2.From(Guid.NewGuid());
-            var release2Agg = ReleaseAggregationRoot.CreateFrom(release2Id, clientId);
+            var release2Agg = aggFactory.Create(new CreateReleaseCommand(clientId));
 
             var project2Id = EntityId2.From(Guid.NewGuid());
-            var activity2Agg = ActivityAggregationRoot.CreateFrom(project2Id, 8);
+            //TODO: update
+            var activity2Agg = ActivityAggregationRoot.CreateFrom(project2Id, 8, null);
 
             release2Agg.AddActivity(activity2Agg.GetChange());
 
             // Add client?
-            var billingId = EntityId2.From(Guid.NewGuid());
-            var billingAgg = BillingAggregationRoot.CreateFrom(billingId);
+            var billingAgg = aggFactory.Create(new CreateBillingCommand(Guid.NewGuid()));
 
             billingAgg.AddRelease(releaseAgg.GetChange());
             billingAgg.AddRelease(release2Agg.GetChange());
@@ -56,30 +58,30 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldNotCreateBillingWithReleaseFromDifferentClient()
         {
-            var clientId = EntityId2.From(Guid.NewGuid());
+            var aggFactory = new AggregateFactory();
+            var clientId = Guid.NewGuid();
 
             //release 1
-            var releaseId = EntityId2.From(Guid.NewGuid());
-            var releaseAgg = ReleaseAggregationRoot.CreateFrom(releaseId, clientId);
+            var releaseAgg = aggFactory.Create(new CreateReleaseCommand(clientId));
 
             var projectId = EntityId2.From(Guid.NewGuid());
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8);
+            //TODO: update
+            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8, null);
 
             releaseAgg.AddActivity(activityAgg.GetChange());
 
             //release 2
-            clientId = EntityId2.From(Guid.NewGuid());
-            var release2Id = EntityId2.From(Guid.NewGuid());
-            var release2Agg = ReleaseAggregationRoot.CreateFrom(release2Id, clientId);
+            clientId = Guid.NewGuid();
+            var release2Agg = aggFactory.Create(new CreateReleaseCommand(clientId));
 
             var project2Id = EntityId2.From(Guid.NewGuid());
-            var activity2Agg = ActivityAggregationRoot.CreateFrom(project2Id, 8);
+            //TODO: update
+            var activity2Agg = ActivityAggregationRoot.CreateFrom(project2Id, 8, null);
 
             release2Agg.AddActivity(activity2Agg.GetChange());
 
             // Add client?
-            var billingId = EntityId2.From(Guid.NewGuid());
-            var billingAgg = BillingAggregationRoot.CreateFrom(billingId);
+            var billingAgg = aggFactory.Create(new CreateBillingCommand(Guid.NewGuid()));
 
             billingAgg.AddRelease(releaseAgg.GetChange());
             billingAgg.AddRelease(release2Agg.GetChange());

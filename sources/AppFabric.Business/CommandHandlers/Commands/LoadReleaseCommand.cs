@@ -1,4 +1,4 @@
-﻿using AppFabric.Domain.Framework.BusinessObjects;
+﻿using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Command;
 using System;
 using System.Collections.Generic;
@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
-    public class CreateBillingCommand : BaseCommand
+    public class LoadReleaseCommand : BaseCommand
     {
-        public EntityId2 Id { get; set; }
+        public Release Release { get; }
 
-        public CreateBillingCommand(Guid id)
+        public LoadReleaseCommand(Release release)
         {
-            Id = EntityId2.From(id);
+            Release = release;
         }
     }
 }

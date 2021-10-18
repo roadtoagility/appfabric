@@ -38,19 +38,25 @@ namespace AppFabric.Business.CommandHandlers
         private readonly IDbSession<IReleaseRepository> _dbSession;
         private readonly IDbSession<IActivityRepository> _dbActivitySession;
         private readonly ILogger<AddActivityCommandHandler> _logger;
+        private readonly AggregateFactory _factory;
 
-        public AddActivityCommandHandler(ILogger<AddActivityCommandHandler> logger, IMediator publisher, IDbSession<IReleaseRepository> dbSession, IDbSession<IActivityRepository> dbActivitySession)
+        public AddActivityCommandHandler(ILogger<AddActivityCommandHandler> logger, 
+            IMediator publisher, 
+            IDbSession<IReleaseRepository> dbSession, 
+            IDbSession<IActivityRepository> dbActivitySession,
+            AggregateFactory factory)
             : base(logger, publisher)
         {
             _dbSession = dbSession;
             _dbActivitySession = dbActivitySession;
             _logger = logger;
+            _factory = factory;
         }
 
         protected override ExecutionResult ExecuteCommand(AddActivityCommand command)
         {
             var release = _dbSession.Repository.Get(EntityId.From(command.Id));
-            var agg = ReleaseAggregationRoot.ReconstructFrom(release);
+            var agg = _factory.Create(new LoadReleaseCommand(release));
             var isSucceed = false;
 
             if (!agg.Failures.Any())

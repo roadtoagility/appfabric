@@ -50,7 +50,7 @@ namespace AppFabric.Business.CommandHandlers
         protected override ExecutionResult ExecuteCommand(AsignResponsibleCommand command)
         {
             var activity = _dbSession.Repository.Get(EntityId.From(command.Id));
-            var agg = ActivityAggregationRoot.ReconstructFrom(activity);
+            var agg = ActivityAggregationRoot.ReconstructFrom(activity, null);
             var isSucceed = false;
 
             if (!agg.Failures.Any())

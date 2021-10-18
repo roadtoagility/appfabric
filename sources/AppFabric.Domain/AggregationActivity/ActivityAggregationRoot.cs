@@ -11,38 +11,30 @@ using DFlow.Domain.Specifications;
 using AppFabric.Domain.AggregationActivity.Specifications;
 
 namespace AppFabric.Domain.AggregationActivity
-{
-    public class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId2>
+{    public class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId2>
     {
         private CompositeSpecification<Activity> _spec;
         private ActivityAggregationRoot(CompositeSpecification<Activity> specification, Activity activity)
         {
             _spec = specification;
-            if(_spec.IsSatisfiedBy(activity))
+            Apply(activity);
+
+            if (activity.IsNew())
             {
-                Apply(activity);
-
-                if (activity.IsNew())
-                {
-                    Raise(ActivityCreatedEvent.For(activity));
-                }
+                Raise(ActivityCreatedEvent.For(activity));
             }
-
-            AppendValidationResult(activity.Failures);
         }
 
         #region Aggregation contruction
 
-        public static ActivityAggregationRoot CreateFrom(EntityId2 projectId, int hours)
+        public static ActivityAggregationRoot CreateFrom(EntityId2 projectId, int hours, CompositeSpecification<Activity> spec)
         {
             var activity = Activity.From(EntityId2.GetNext(), projectId, hours, VersionId.New());
-            var spec = new ActivitySpecification();
             return new ActivityAggregationRoot(spec, activity);
         }
 
-        public static ActivityAggregationRoot ReconstructFrom(Activity activity)
+        public static ActivityAggregationRoot ReconstructFrom(Activity activity, CompositeSpecification<Activity> spec)
         {
-            var spec = new ActivitySpecification();
             return new ActivityAggregationRoot(spec, activity);
         }
 

@@ -37,12 +37,17 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IReleaseRepository> _dbSession;
         private readonly ILogger<CreateReleaseCommandHandler> _logger;
+        private readonly AggregateFactory _factory;
 
-        public CreateReleaseCommandHandler(ILogger<CreateReleaseCommandHandler> logger, IMediator publisher, IDbSession<IReleaseRepository> dbSession)
+        public CreateReleaseCommandHandler(ILogger<CreateReleaseCommandHandler> logger, 
+            IMediator publisher, 
+            IDbSession<IReleaseRepository> dbSession,
+            AggregateFactory factory)
             : base(logger, publisher)
         {
             _dbSession = dbSession;
             _logger = logger;
+            _factory = factory;
         }
 
         protected override CommandResult<Guid> ExecuteCommand(CreateReleaseCommand command)
@@ -53,7 +58,7 @@ namespace AppFabric.Business.CommandHandlers
             _logger.LogDebug("Criada agregação a partir do comando {CommandName} com valores {Valores}",
                 nameof(command), command);
 
-            var agg = ReleaseAggregationRoot.CreateFrom(EntityId2.From(command.Id), EntityId2.From(command.ClientId));
+            var agg = _factory.Create(command);
 
             if (!agg.Failures.Any())
             {

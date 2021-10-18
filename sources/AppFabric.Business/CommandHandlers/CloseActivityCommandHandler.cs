@@ -47,8 +47,10 @@ namespace AppFabric.Business.CommandHandlers
 
         protected override ExecutionResult ExecuteCommand(CloseActivityCommand command)
         {
-            var activity = _dbSession.Repository.Get(EntityId.From(command.Id));
-            var agg = ActivityAggregationRoot.ReconstructFrom(activity);
+            //TODO: errado o ProjectId, deveria ser o ID da atividade
+            var activity = _dbSession.Repository.Get(EntityId.From(command.ProjectId.Value));
+            //TODO: update
+            var agg = ActivityAggregationRoot.ReconstructFrom(activity, null);
             var isSucceed = false;
 
             if (!agg.Failures.Any())

@@ -37,12 +37,18 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IBillingRepository> _dbSession;
         private readonly ILogger<CreateBillingCommandHandler> _logger;
+        private readonly AggregateFactory _factory;
 
-        public CreateBillingCommandHandler(ILogger<CreateBillingCommandHandler> logger, IMediator publisher, IDbSession<IBillingRepository> dbSession)
+
+        public CreateBillingCommandHandler(ILogger<CreateBillingCommandHandler> logger, 
+            IMediator publisher, 
+            IDbSession<IBillingRepository> dbSession,
+            AggregateFactory factory)
             : base(logger, publisher)
         {
             _dbSession = dbSession;
             _logger = logger;
+            _factory = factory;
         }
 
         protected override CommandResult<Guid> ExecuteCommand(CreateBillingCommand command)
@@ -53,7 +59,7 @@ namespace AppFabric.Business.CommandHandlers
             _logger.LogDebug("Criada agregação a partir do comando {CommandName} com valores {Valores}",
                 nameof(command), command);
 
-            var agg = BillingAggregationRoot.CreateFrom(EntityId2.From(command.Id));
+            var agg = _factory.Create(command);
 
             if (!agg.Failures.Any())
             {

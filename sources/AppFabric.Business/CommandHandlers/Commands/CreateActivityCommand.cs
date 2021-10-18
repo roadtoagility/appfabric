@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AppFabric.Domain.Framework.BusinessObjects;
+using DFlow.Domain.Command;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +8,15 @@ using System.Threading.Tasks;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
-    public class CreateActivityCommand
+    public class CreateActivityCommand : BaseCommand
     {
-        public Guid Id { get; set; } 
-        public Guid ProjectId { get; set; }
-        public int Hours { get; set; }
+        public EntityId2 ProjectId { get; }
+        public int EstimatedHours { get; }
+
+        public CreateActivityCommand(EntityId2 projectId, int estimatedHours)
+        {
+            ProjectId = projectId;
+            EstimatedHours = estimatedHours;
+        }
     }
 }

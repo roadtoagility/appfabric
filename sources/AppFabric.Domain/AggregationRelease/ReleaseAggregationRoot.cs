@@ -29,26 +29,12 @@ namespace AppFabric.Domain.AggregationRelease
             AppendValidationResult(release.Failures);
         }
 
-        private ReleaseAggregationRoot(CompositeSpecification<Release> specification, EntityId2 id, EntityId2 clientId)
-            : this(specification, Release.NewRequest(id, clientId))
-        {
-        }
-
         #region Aggregation contruction
 
 
-        public static ReleaseAggregationRoot ReconstructFrom(Release currentState)
+        public static ReleaseAggregationRoot ReconstructFrom(Release currentState, CompositeSpecification<Release> spec)
         {
-            var spec = new ReleaseSpecification();
-            return new ReleaseAggregationRoot(spec, Release.From(currentState.Identity, currentState.ClientId,
-                            VersionId.Next(currentState.Version)));
-        }
-
-
-        public static ReleaseAggregationRoot CreateFrom(EntityId2 releaseId, EntityId2 clientId)
-        {
-            var spec = new ReleaseSpecification();
-            return new ReleaseAggregationRoot(spec, releaseId, clientId);
+            return new ReleaseAggregationRoot(spec, currentState);
         }
 
         public void AddActivity(Activity activity)
