@@ -26,12 +26,12 @@ namespace AppFabric.Domain.AggregationProject.Events
 {
     public class ProjectRemovedEvent : DomainEvent
     {
-        private ProjectRemovedEvent(EntityId2 id, VersionId version)
+        private ProjectRemovedEvent(EntityId id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
         
         public static ProjectRemovedEvent For(Project project)
         {

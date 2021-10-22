@@ -26,7 +26,7 @@ namespace AppFabric.Domain.AggregationUser.Events
 {
     public class UserAddedEvent : DomainEvent
     {
-        private UserAddedEvent(EntityId2 clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
+        private UserAddedEvent(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = clientId;
@@ -34,7 +34,7 @@ namespace AppFabric.Domain.AggregationUser.Events
             Cnpj = cnpj;
             CommercialEmail = commercialEmail;
         }
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
         
         public Name Name { get; }
         public SocialSecurityId Cnpj { get; }

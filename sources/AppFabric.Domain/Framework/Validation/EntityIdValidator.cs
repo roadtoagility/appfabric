@@ -22,7 +22,7 @@ using AppFabric.Domain.Framework.BusinessObjects;
 
 namespace AppFabric.Domain.Framework.Validation
 {
-    public sealed class EntityIdValidator: AbstractValidator<EntityId2>
+    public sealed class EntityIdValidator: AbstractValidator<EntityId>
     {
         public EntityIdValidator()
         {

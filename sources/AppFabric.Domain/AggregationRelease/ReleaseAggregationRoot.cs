@@ -9,7 +9,7 @@ using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationRelease
 {
-    public class ReleaseAggregationRoot : ObjectBasedAggregationRoot<Release, EntityId2>
+    public class ReleaseAggregationRoot : ObjectBasedAggregationRoot<Release, EntityId>
     {
         private CompositeSpecification<Release> _spec;
         private ReleaseAggregationRoot(CompositeSpecification<Release> specification, Release release)

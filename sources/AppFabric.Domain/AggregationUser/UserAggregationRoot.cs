@@ -28,7 +28,7 @@ using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationUser
 {
-    public sealed class UserAggregationRoot : ObjectBasedAggregationRoot<User, EntityId2>
+    public sealed class UserAggregationRoot : ObjectBasedAggregationRoot<User, EntityId>
     {
         private CompositeSpecification<User> _spec;
 
@@ -61,7 +61,7 @@ namespace AppFabric.Domain.AggregationUser
         
         public static UserAggregationRoot CreateFrom(Name name, SocialSecurityId cnpj, Email commercialEmail, CompositeSpecification<User> spec)
         {
-            var user = User.NewRequest(EntityId2.GetNext(), name, cnpj, commercialEmail, VersionId.New());
+            var user = User.NewRequest(EntityId.GetNext(), name, cnpj, commercialEmail, VersionId.New());
             return new UserAggregationRoot(spec, user);
         }
 

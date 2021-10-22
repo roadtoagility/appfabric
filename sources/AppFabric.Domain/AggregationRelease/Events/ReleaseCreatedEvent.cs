@@ -26,12 +26,12 @@ namespace AppFabric.Domain.AggregationRelease.Events
 {
     public class ReleaseCreatedEvent : DomainEvent
     {
-        private ReleaseCreatedEvent(EntityId2 id, VersionId version)
+        private ReleaseCreatedEvent(EntityId id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
 
         public static ReleaseCreatedEvent For(Release release)
         {

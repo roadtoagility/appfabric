@@ -28,17 +28,12 @@ namespace AppFabric.Persistence.Model.Repositories
             throw new NotImplementedException();
         }
 
-        public Release Get(EntityId id)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Remove(Release entity)
         {
             throw new NotImplementedException(); 
         }
 
-        public Release Get(EntityId2 id)
+        public Release Get(EntityId id)
         {
             throw new NotImplementedException();
         }

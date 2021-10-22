@@ -101,10 +101,5 @@ namespace AppFabric.Persistence.Model.Repositories
                 .Select(t =>  t.ToProject());
             ;
         }
-
-        public Project Get(EntityId2 id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

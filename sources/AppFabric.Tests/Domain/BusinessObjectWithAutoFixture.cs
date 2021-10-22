@@ -61,7 +61,7 @@ namespace AppFabric.Tests.Domain
             fixture.Register<Name>(() => Name.From(fixture.Create<string>()));
             fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
-            fixture.Register<User>(() => User.NewRequest(fixture.Create<EntityId2>(),
+            fixture.Register<User>(() => User.NewRequest(fixture.Create<EntityId>(),
                 fixture.Create<Name>(),fixture.Create<SocialSecurityId>(),
                 fixture.Create<Email>(), fixture.Create<VersionId>()));
 
@@ -80,7 +80,7 @@ namespace AppFabric.Tests.Domain
 
             var entityId = fixture.Create<EntityId>();
             
-            Assert.True(entityId.ValidationResults.IsValid);
+            Assert.True(entityId.ValidationStatus.IsValid);
         }
         
         [Fact]
@@ -91,7 +91,7 @@ namespace AppFabric.Tests.Domain
 
             var entityId = fixture.Create<EntityId>();
             
-            Assert.False(entityId.ValidationResults.IsValid);
+            Assert.False(entityId.ValidationStatus.IsValid);
         }
         
         [Fact]

@@ -24,9 +24,9 @@ using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class User : BaseEntity<EntityId2>
+    public sealed class User : BaseEntity<EntityId>
     {
-        private User(EntityId2 id, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
+        private User(EntityId id, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
              : base(id, version)
         {
             Name = name;
@@ -34,7 +34,7 @@ namespace AppFabric.Domain.BusinessObjects
             CommercialEmail = commercialEmail;
         }
 
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
         
         public Name Name { get; }
         public SocialSecurityId Cnpj { get; }
@@ -42,7 +42,7 @@ namespace AppFabric.Domain.BusinessObjects
         public Email CommercialEmail { get; }
 
                 
-        public static User NewRequest(EntityId2 clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
+        public static User NewRequest(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
         {
             var user = new User(clientId,name,cnpj,commercialEmail, version);
             return user;        
@@ -50,7 +50,7 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static User Empty()
         {
-            return NewRequest(EntityId2.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty(), VersionId.Empty());
+            return NewRequest(EntityId.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty(), VersionId.Empty());
         }
         
         public override string ToString()

@@ -10,11 +10,11 @@ namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class CreateBillingCommand : BaseCommand
     {
-        public EntityId2 Id { get; set; }
+        public EntityId Id { get; set; }
 
         public CreateBillingCommand(Guid id)
         {
-            Id = EntityId2.From(id);
+            Id = EntityId.From(id);
         }
     }
 }

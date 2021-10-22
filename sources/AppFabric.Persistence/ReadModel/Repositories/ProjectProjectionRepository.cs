@@ -72,10 +72,5 @@ namespace AppFabric.Persistence.ReadModel.Repositories
         {
             return _context.ProjectsProjection.Where(predicate).ToList();
         }
-
-        public ProjectProjection Get(EntityId2 id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

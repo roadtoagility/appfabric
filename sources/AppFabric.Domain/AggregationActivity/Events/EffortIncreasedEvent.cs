@@ -27,12 +27,12 @@ namespace AppFabric.Domain.AggregationActivity.Events
 {
     public class EffortIncreasedEvent : DomainEvent
     {
-        private EffortIncreasedEvent(EntityId2 id, VersionId version)
+        private EffortIncreasedEvent(EntityId id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
 
         public static EffortIncreasedEvent For(Activity activity)
         {

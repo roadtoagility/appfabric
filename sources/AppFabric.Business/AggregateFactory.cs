@@ -45,7 +45,7 @@ namespace AppFabric.Business
 
         public ActivityAggregationRoot Create(CreateActivityCommand source)
         {
-            var activity = Activity.From(EntityId2.GetNext(), source.ProjectId, source.EstimatedHours, VersionId.New());
+            var activity = Activity.From(EntityId.GetNext(), source.ProjectId, source.EstimatedHours, VersionId.New());
             var newActivitySpec = new ActivityCreationSpecification();
             var activitySpec = new ActivitySpecification();
 
@@ -58,7 +58,7 @@ namespace AppFabric.Business
 
         public BillingAggregationRoot Create(CreateBillingCommand source)
         {
-            var billing = Billing.From(EntityId2.GetNext(), VersionId.New());
+            var billing = Billing.From(EntityId.GetNext(), VersionId.New());
 
             var newBillingSpec = new BillingCreationSpecification();
             var billingSpec = new BillingSpecification();
@@ -83,7 +83,7 @@ namespace AppFabric.Business
 
         public ReleaseAggregationRoot Create(CreateReleaseCommand source)
         {
-            var release = Release.From(EntityId2.GetNext(), EntityId2.From(source.ClientId), VersionId.New());
+            var release = Release.From(EntityId.GetNext(), EntityId.From(source.ClientId), VersionId.New());
             var newReleaseSpec = new ReleaseCreationSpecification();
             var releaseSpec = new ReleaseSpecification();
 
@@ -113,7 +113,7 @@ namespace AppFabric.Business
             var name = Name.From(source.Name);
             var cnpj = SocialSecurityId.From(source.Cnpj);
             var email = Email.From(source.CommercialEmail);
-            var user = User.NewRequest(EntityId2.GetNext(), name, cnpj, email, VersionId.New());
+            var user = User.NewRequest(EntityId.GetNext(), name, cnpj, email, VersionId.New());
 
             if (newUserSpec.IsSatisfiedBy(user))
             {
@@ -139,14 +139,14 @@ namespace AppFabric.Business
             var projectSpec = new ProjectSpecification();
 
             //TODO: update to get ServiceOrder and ProjectStatus from command
-            var project = Project.NewRequest(EntityId2.GetNext(), 
+            var project = Project.NewRequest(EntityId.GetNext(), 
                 ProjectName.From(command.Name),
                 ServiceOrder.From(command.ServiceOrder, true),
                 ProjectStatus.From(command.Status),
                 ProjectCode.From(command.Code),
                 DateAndTime.From(command.StartDate),
                 Money.From(command.Budget),
-                EntityId2.From(command.ClientId));
+                EntityId.From(command.ClientId));
 
             if (newProjectSpec.IsSatisfiedBy(project))
             {

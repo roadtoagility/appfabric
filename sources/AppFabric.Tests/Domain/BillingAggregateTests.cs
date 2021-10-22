@@ -31,7 +31,7 @@ namespace AppFabric.Tests.Domain
             //release 1
             var releaseAgg = aggFactory.Create(new CreateReleaseCommand(clientId));
 
-            var projectId = EntityId2.From(Guid.NewGuid());
+            var projectId = EntityId.From(Guid.NewGuid());
             //TODO: update
             var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8, null);
 
@@ -40,7 +40,7 @@ namespace AppFabric.Tests.Domain
             //release 2
             var release2Agg = aggFactory.Create(new CreateReleaseCommand(clientId));
 
-            var project2Id = EntityId2.From(Guid.NewGuid());
+            var project2Id = EntityId.From(Guid.NewGuid());
             //TODO: update
             var activity2Agg = ActivityAggregationRoot.CreateFrom(project2Id, 8, null);
 
@@ -64,7 +64,7 @@ namespace AppFabric.Tests.Domain
             //release 1
             var releaseAgg = aggFactory.Create(new CreateReleaseCommand(clientId));
 
-            var projectId = EntityId2.From(Guid.NewGuid());
+            var projectId = EntityId.From(Guid.NewGuid());
             //TODO: update
             var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8, null);
 
@@ -74,7 +74,7 @@ namespace AppFabric.Tests.Domain
             clientId = Guid.NewGuid();
             var release2Agg = aggFactory.Create(new CreateReleaseCommand(clientId));
 
-            var project2Id = EntityId2.From(Guid.NewGuid());
+            var project2Id = EntityId.From(Guid.NewGuid());
             //TODO: update
             var activity2Agg = ActivityAggregationRoot.CreateFrom(project2Id, 8, null);
 

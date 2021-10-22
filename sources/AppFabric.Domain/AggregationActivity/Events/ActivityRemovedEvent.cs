@@ -26,12 +26,12 @@ namespace AppFabric.Domain.AggregationActivity.Events
 {
     public class ActivityRemovedEvent : DomainEvent
     {
-        private ActivityRemovedEvent(EntityId2 id, VersionId version)
+        private ActivityRemovedEvent(EntityId id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
 
         public static ActivityRemovedEvent For(Activity activity)
         {

@@ -27,7 +27,7 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldNotAllowEffortBiggerThan8hours()
         {
-            var projectId = EntityId2.From(Guid.NewGuid());
+            var projectId = EntityId.From(Guid.NewGuid());
             var aggFactory = new AggregateFactory();
             var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
 
@@ -39,7 +39,7 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldNotAllowCloseActivityWithPendingEffort()
         {
-            var projectId = EntityId2.From(Guid.NewGuid());
+            var projectId = EntityId.From(Guid.NewGuid());
             var aggFactory = new AggregateFactory();
             var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
             activityAgg.UpdateRemaining(7);
@@ -54,11 +54,11 @@ namespace AppFabric.Tests.Domain
         public void ShouldAsignActivityToMember()
         {
             var estimatedHours = 8;
-            var projectId = EntityId2.From(Guid.NewGuid());
+            var projectId = EntityId.From(Guid.NewGuid());
             var aggFactory = new AggregateFactory();
             var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, estimatedHours));
 
-            var memberId = EntityId2.From(Guid.NewGuid());
+            var memberId = EntityId.From(Guid.NewGuid());
             var member = Member.From(memberId, projectId, "Douglas", VersionId.Empty());
             activityAgg.Asign(member);
 
@@ -69,14 +69,14 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldNotAsignActivity()
         {
-            var activityId = EntityId2.From(Guid.NewGuid());
-            var projectId = EntityId2.From(Guid.NewGuid());
+            var activityId = EntityId.From(Guid.NewGuid());
+            var projectId = EntityId.From(Guid.NewGuid());
             var aggFactory = new AggregateFactory();
             var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
 
-            var memberId = EntityId2.From(Guid.NewGuid());
+            var memberId = EntityId.From(Guid.NewGuid());
 
-            projectId = EntityId2.From(Guid.NewGuid());
+            projectId = EntityId.From(Guid.NewGuid());
             var member = Member.From(memberId, projectId, "Douglas", VersionId.Empty());
             activityAgg.Asign(member);
 

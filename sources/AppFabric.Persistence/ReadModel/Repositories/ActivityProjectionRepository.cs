@@ -35,11 +35,6 @@ namespace AppFabric.Persistence.ReadModel.Repositories
             Context = context;
         }
 
-        public ActivityProjection Get(EntityId id)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Add(ActivityProjection entity)
         {
             throw new NotImplementedException();
@@ -55,7 +50,7 @@ namespace AppFabric.Persistence.ReadModel.Repositories
             throw new NotImplementedException();
         }
 
-        public ActivityProjection Get(EntityId2 id)
+        public ActivityProjection Get(EntityId id)
         {
             throw new NotImplementedException();
         }

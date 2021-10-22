@@ -17,75 +17,23 @@
 //
 
 using System;
-using System.Collections.Generic;
-using AppFabric.Agile.Domain.Framework.BusinessObjects;
-using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.Validation;
 using DFlow.Domain.BusinessObjects;
-using FluentValidation;
-using FluentValidation.Results;
 
 namespace AppFabric.Domain.Framework.BusinessObjects
 {
-    public sealed class EntityId : ValidationStatus
+    public sealed class EntityId : ValueOf<Guid, EntityId, EntityIdValidator>
     {
-        public Guid Value { get; }
-        
-        private EntityId(Guid id)
-        {
-            Value = id;
-        }
+        private static readonly Guid EmptyId = Guid.Empty;
 
-        public static EntityId From(Guid id)
-        {
-            var entityId = new EntityId(id);
-            var validator = new EntityIdValidator();
-
-            //entityId.SetValidationResult(validator.Validate(entityId));
-            
-            return entityId;
-        }
-        
         public static EntityId Empty()
         {
-            return EntityId.From(Guid.Empty);
+            return From(EmptyId);
         }
-        
+
         public static EntityId GetNext()
         {
             return From(Guid.NewGuid());
         }
-        public override string ToString()
-        {
-            return Value.ToString("N");
-        }
-
-        #region IEquatable
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
-
-        #endregion
-
-        #region IComparable
-
-        public int CompareTo(EntityId other)
-        {
-            if (ReferenceEquals(this, other))
-            {
-                return 0;
-            }
-
-            if (ReferenceEquals(null, other))
-            {
-                return 1;
-            }
-
-            return Value.CompareTo(other.Value);
-        }
-
-        #endregion
     }
 }

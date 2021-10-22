@@ -24,10 +24,10 @@ using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class Project : BaseEntity<EntityId2>
+    public sealed class Project : BaseEntity<EntityId>
     {
-        private Project(EntityId2 id, ProjectName name, ServiceOrder orderNumber, ProjectStatus status, ProjectCode code, DateAndTime startDate
-            , Money budget, EntityId2 clientId, Email owner, VersionId version)
+        private Project(EntityId id, ProjectName name, ServiceOrder orderNumber, ProjectStatus status, ProjectCode code, DateAndTime startDate
+            , Money budget, EntityId clientId, Email owner, VersionId version)
             : base(id, version)
         {
             Name = name;
@@ -39,12 +39,12 @@ namespace AppFabric.Domain.BusinessObjects
             OrderNumber = orderNumber;
             Owner = owner;
         }
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
         
         public ProjectName Name { get; }
         public ProjectCode Code { get; }
         
-        public EntityId2 ClientId { get; }
+        public EntityId ClientId { get; }
 
         public DateAndTime StartDate { get; }
                 
@@ -56,14 +56,14 @@ namespace AppFabric.Domain.BusinessObjects
         
         public ServiceOrder OrderNumber { get; }
         
-        public static Project From(EntityId2 id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId2 clientId, Email owner, VersionId version)
+        public static Project From(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner, VersionId version)
         {
             var project = new Project(id, name, serviceOrder, status, code, startDate, budget, clientId, owner, version);
             return project;        
         }
 
 
-        public static Project NewRequest(EntityId2 id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId2 clientId)
+        public static Project NewRequest(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
         {
             return From(id, name, serviceOrder, status, code, startDate, budget, clientId, Email.Empty(), VersionId.New());
         }
@@ -76,8 +76,8 @@ namespace AppFabric.Domain.BusinessObjects
         
         public static Project Empty()
         {
-            return From(EntityId2.Empty(), ProjectName.Empty(), ServiceOrder.Empty(), ProjectStatus.Default(), ProjectCode.Empty(), DateAndTime.Empty(), Money.Zero(),
-                EntityId2.Empty(), Email.Empty(),
+            return From(EntityId.Empty(), ProjectName.Empty(), ServiceOrder.Empty(), ProjectStatus.Default(), ProjectCode.Empty(), DateAndTime.Empty(), Money.Zero(),
+                EntityId.Empty(), Email.Empty(),
                 VersionId.Empty());
         }
         

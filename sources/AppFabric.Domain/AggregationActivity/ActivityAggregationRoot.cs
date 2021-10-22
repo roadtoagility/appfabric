@@ -11,7 +11,7 @@ using DFlow.Domain.Specifications;
 using AppFabric.Domain.AggregationActivity.Specifications;
 
 namespace AppFabric.Domain.AggregationActivity
-{    public class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId2>
+{    public class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId>
     {
         private CompositeSpecification<Activity> _spec;
         private ActivityAggregationRoot(CompositeSpecification<Activity> specification, Activity activity)
@@ -27,9 +27,9 @@ namespace AppFabric.Domain.AggregationActivity
 
         #region Aggregation contruction
 
-        public static ActivityAggregationRoot CreateFrom(EntityId2 projectId, int hours, CompositeSpecification<Activity> spec)
+        public static ActivityAggregationRoot CreateFrom(EntityId projectId, int hours, CompositeSpecification<Activity> spec)
         {
-            var activity = Activity.From(EntityId2.GetNext(), projectId, hours, VersionId.New());
+            var activity = Activity.From(EntityId.GetNext(), projectId, hours, VersionId.New());
             return new ActivityAggregationRoot(spec, activity);
         }
 

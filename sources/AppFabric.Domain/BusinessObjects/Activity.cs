@@ -23,9 +23,9 @@ using AppFabric.Domain.Framework.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class Activity : BaseEntity<EntityId2>
+    public sealed class Activity : BaseEntity<EntityId>
     {
-        public EntityId2 ProjectId { get; }
+        public EntityId ProjectId { get; }
 
         public Effort Effort { get; }
 
@@ -37,7 +37,7 @@ namespace AppFabric.Domain.BusinessObjects
             return $"[Activity]:[ID: {Identity}]";
         }
 
-        private Activity(EntityId2 id, EntityId2 projectId, VersionId version)
+        private Activity(EntityId id, EntityId projectId, VersionId version)
             : base(id, version)
         {
             this.ProjectId = projectId;
@@ -49,7 +49,7 @@ namespace AppFabric.Domain.BusinessObjects
             AppendValidationResult(projectId.ValidationStatus.Errors.ToImmutableList());
         }
 
-        public static Activity From(EntityId2 id, EntityId2 projectId, int hours, VersionId version)
+        public static Activity From(EntityId id, EntityId projectId, int hours, VersionId version)
         {
             var activity = new Activity(id, projectId, version);
             activity.UpdateEffort(hours);

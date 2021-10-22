@@ -18,11 +18,6 @@ namespace AppFabric.Persistence.Model.Repositories
             DbContext = context;
         }
 
-        public Member Get(EntityId id)
-        {
-            throw new NotImplementedException();
-        }
-
         public void Add(Member entity)
         {
             throw new NotImplementedException();
@@ -38,7 +33,7 @@ namespace AppFabric.Persistence.Model.Repositories
             throw new NotImplementedException();
         }
 
-        public Member Get(EntityId2 id)
+        public Member Get(EntityId id)
         {
             throw new NotImplementedException();
         }

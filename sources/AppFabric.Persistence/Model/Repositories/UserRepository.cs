@@ -97,10 +97,5 @@ namespace AppFabric.Persistence.Model.Repositories
                 .Select(t =>  t.ToUser());
             ;
         }
-
-        public User Get(EntityId2 id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

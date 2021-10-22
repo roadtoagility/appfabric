@@ -26,12 +26,12 @@ namespace AppFabric.Domain.AggregationActivity.Events
 {
     public class ActivityClosedEvent : DomainEvent
     {
-        private ActivityClosedEvent(EntityId2 id, VersionId version)
+        private ActivityClosedEvent(EntityId id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
 
         public static ActivityClosedEvent For(Activity activity)
         {

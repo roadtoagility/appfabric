@@ -10,10 +10,10 @@ namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class CreateActivityCommand : BaseCommand
     {
-        public EntityId2 ProjectId { get; }
+        public EntityId ProjectId { get; }
         public int EstimatedHours { get; }
 
-        public CreateActivityCommand(EntityId2 projectId, int estimatedHours)
+        public CreateActivityCommand(EntityId projectId, int estimatedHours)
         {
             ProjectId = projectId;
             EstimatedHours = estimatedHours;

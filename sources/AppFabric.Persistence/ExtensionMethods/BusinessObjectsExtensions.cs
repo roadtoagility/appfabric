@@ -43,14 +43,14 @@ namespace AppFabric.Persistence.ExtensionMethods
 
         public static Project ToProject(this ProjectState state)
             => Project.From(
-                EntityId2.From(state.Id),
+                EntityId.From(state.Id),
                 ProjectName.From(state.Name),
                 ServiceOrder.From(state.OrderNumber, true),
                 ProjectStatus.From(state.Status),
                 ProjectCode.From(state.Code),
                 DateAndTime.From(state.StartDate),
                 Money.From(state.Budget),
-                EntityId2.From(state.ClientId),
+                EntityId.From(state.ClientId),
                 Email.From(state.Owner),
                 VersionId.From(BitConverter.ToInt32(state.RowVersion)));
         
@@ -63,7 +63,7 @@ namespace AppFabric.Persistence.ExtensionMethods
 
         public static User ToUser(this UserState state)
             => User.NewRequest(
-                    EntityId2.From(state.Id),
+                    EntityId.From(state.Id),
                     Name.From(state.Name),
                     SocialSecurityId.From(state.Cnpj),
                     Email.From(state.CommercialEmail),

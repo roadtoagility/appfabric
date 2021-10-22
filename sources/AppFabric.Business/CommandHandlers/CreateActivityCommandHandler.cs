@@ -54,7 +54,7 @@ namespace AppFabric.Business.CommandHandlers
                 nameof(command), command);
 
             //TODO: update
-            var agg = ActivityAggregationRoot.CreateFrom(EntityId2.From(command.ProjectId.Value), command.EstimatedHours, null);
+            var agg = ActivityAggregationRoot.CreateFrom(EntityId.From(command.ProjectId.Value), command.EstimatedHours, null);
 
             if (!agg.Failures.Any())
             {

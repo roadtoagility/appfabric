@@ -10,10 +10,10 @@ namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class CloseActivityCommand : BaseCommand
     {
-        public EntityId2 ProjectId { get; }
+        public EntityId ProjectId { get; }
         public int EstimatedHours { get; }
 
-        public CloseActivityCommand(EntityId2 projectId, int estimatedHours)
+        public CloseActivityCommand(EntityId projectId, int estimatedHours)
         {
             this.ProjectId = projectId;
             EstimatedHours = estimatedHours;

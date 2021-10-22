@@ -26,12 +26,12 @@ namespace AppFabric.Domain.AggregationBilling.Events
 {
     public class BillingRemovedEvent : DomainEvent
     {
-        private BillingRemovedEvent(EntityId2 id, VersionId version)
+        private BillingRemovedEvent(EntityId id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
 
         public static BillingRemovedEvent For(Billing billing)
         {

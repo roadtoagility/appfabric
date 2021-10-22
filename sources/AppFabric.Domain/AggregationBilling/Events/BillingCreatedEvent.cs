@@ -26,12 +26,12 @@ namespace AppFabric.Domain.AggregationBilling.Events
 {
     public class BillingCreatedEvent : DomainEvent
     {
-        private BillingCreatedEvent(EntityId2 id, VersionId version)
+        private BillingCreatedEvent(EntityId id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
 
         public static BillingCreatedEvent For(Billing billing)
         {

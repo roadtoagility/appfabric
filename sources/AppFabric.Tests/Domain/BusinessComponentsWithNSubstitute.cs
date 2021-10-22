@@ -58,7 +58,7 @@ namespace AppFabric.Tests.Domain
             fixture.Register<Version>(() => Version.From(fixture.Create<int>()));
             fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
-            fixture.Register<User>(() => User.NewRequest(fixture.Create<EntityId2>(),
+            fixture.Register<User>(() => User.NewRequest(fixture.Create<EntityId>(),
                 fixture.Create<Name>(),fixture.Create<SocialSecurityId>(),
                 fixture.Create<Email>(), fixture.Create<VersionId>()));
 
@@ -121,10 +121,10 @@ namespace AppFabric.Tests.Domain
             fixture.Register<ProjectStatus>(() => ProjectStatus.Default());
             fixture.Register<ServiceOrder>(() => ServiceOrder.Empty());
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
-            fixture.Register<Project>(() => Project.NewRequest(fixture.Create<EntityId2>(),
+            fixture.Register<Project>(() => Project.NewRequest(fixture.Create<EntityId>(),
                 fixture.Create<ProjectName>(), fixture.Create<ServiceOrder>(), fixture.Create<ProjectStatus>(), fixture.Create<ProjectCode>(),
-                fixture.Create<DateAndTime>(), fixture.Create<Money>(), fixture.Create<EntityId2>()));
-            fixture.Register<User>(() => User.NewRequest(fixture.Create<EntityId2>(),
+                fixture.Create<DateAndTime>(), fixture.Create<Money>(), fixture.Create<EntityId>()));
+            fixture.Register<User>(() => User.NewRequest(fixture.Create<EntityId>(),
                 fixture.Create<Name>(),fixture.Create<SocialSecurityId>(),
                 fixture.Create<Email>(), fixture.Create<VersionId>()));
             

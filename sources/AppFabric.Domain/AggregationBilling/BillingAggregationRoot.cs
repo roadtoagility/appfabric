@@ -9,7 +9,7 @@ using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationBilling
 {
-    public class BillingAggregationRoot : ObjectBasedAggregationRoot<Billing, EntityId2>
+    public class BillingAggregationRoot : ObjectBasedAggregationRoot<Billing, EntityId>
     {
         private CompositeSpecification<Billing> _spec;
         private BillingAggregationRoot(CompositeSpecification<Billing> specification, Billing billing)

@@ -24,9 +24,9 @@ using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public class Release : BaseEntity<EntityId2>
+    public class Release : BaseEntity<EntityId>
     {
-        public EntityId2 ClientId { get; }
+        public EntityId ClientId { get; }
 
         public List<Activity> Activities { get; }
 
@@ -35,13 +35,13 @@ namespace AppFabric.Domain.BusinessObjects
             return $"[Release]:[ID: {Identity}]";
         }
 
-        private Release(EntityId2 id, EntityId2 clientId, VersionId version)
+        private Release(EntityId id, EntityId clientId, VersionId version)
             : base(id, version)
         {
             this.ClientId = clientId;
         }
 
-        public static Release From(EntityId2 id, EntityId2 clientId, VersionId version)
+        public static Release From(EntityId id, EntityId clientId, VersionId version)
         {
             var release = new Release(id, clientId, version);
             //var validator = new ReleaseValidator();
@@ -49,7 +49,7 @@ namespace AppFabric.Domain.BusinessObjects
             return release;
         }
 
-        public static Release NewRequest(EntityId2 id, EntityId2 clientId)
+        public static Release NewRequest(EntityId id, EntityId clientId)
         {
             return From(id, clientId, VersionId.New());
         }

@@ -26,7 +26,7 @@ namespace AppFabric.Domain.AggregationProject.Events
 {
     public class ProjectDetailUpdatedEvent : DomainEvent
     {
-        private ProjectDetailUpdatedEvent(EntityId2 id, ProjectName name, Email owner, ProjectStatus status, Money budget, ServiceOrder orderNumber, VersionId version)
+        private ProjectDetailUpdatedEvent(EntityId id, ProjectName name, Email owner, ProjectStatus status, Money budget, ServiceOrder orderNumber, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
@@ -37,7 +37,7 @@ namespace AppFabric.Domain.AggregationProject.Events
             Budget = budget;
         }
         
-        public EntityId2 Id { get; }
+        public EntityId Id { get; }
         public ProjectName Name { get; }
         public ProjectStatus Status { get; }
         

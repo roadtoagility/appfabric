@@ -25,19 +25,19 @@ using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public class Member : BaseEntity<EntityId2>
+    public class Member : BaseEntity<EntityId>
     {
-        public EntityId2 ProjectId { get; private set; }
+        public EntityId ProjectId { get; private set; }
         public string Name { get; private set; }
 
-        private Member(EntityId2 id, EntityId2 projectId, string name, VersionId version)
+        private Member(EntityId id, EntityId projectId, string name, VersionId version)
             : base(id, version)
         {
             ProjectId = projectId;
             Name = name;
         }
 
-        public static Member From(EntityId2 id, EntityId2 projectId, string name, VersionId version)
+        public static Member From(EntityId id, EntityId projectId, string name, VersionId version)
         {
             var member = new Member(id, projectId, name, version);
             var validator = new MemberValidator();
@@ -49,7 +49,7 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static Member Empty()
         {
-            var member = new Member(EntityId2.From(Guid.Empty), EntityId2.From(Guid.Empty), string.Empty, VersionId.Empty());
+            var member = new Member(EntityId.From(Guid.Empty), EntityId.From(Guid.Empty), string.Empty, VersionId.Empty());
 
             var validator = new MemberValidator();
 

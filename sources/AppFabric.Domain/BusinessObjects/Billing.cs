@@ -24,7 +24,7 @@ using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public class Billing : BaseEntity<EntityId2>
+    public class Billing : BaseEntity<EntityId>
     {
         public List<Release> Releases { get; private set; }
 
@@ -33,13 +33,13 @@ namespace AppFabric.Domain.BusinessObjects
             return $"[Billing]:[ID: {Identity}]";
         }
 
-        private Billing(EntityId2 id, VersionId version)
+        private Billing(EntityId id, VersionId version)
             : base(id, version)
         {
             this.Releases = new List<Release>();
         }
 
-        public static Billing From(EntityId2 id, VersionId version)
+        public static Billing From(EntityId id, VersionId version)
         {
             var billing = new Billing(id, version);
             //var validator = new BillingValidator();
@@ -47,7 +47,7 @@ namespace AppFabric.Domain.BusinessObjects
             return billing;
         }
 
-        public static Billing NewRequest(EntityId2 id)
+        public static Billing NewRequest(EntityId id)
         {
             return From(id, VersionId.New());
         }
