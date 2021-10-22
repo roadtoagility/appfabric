@@ -25,7 +25,6 @@ using Microsoft.EntityFrameworkCore;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.ExtensionMethods;
-using Version = AppFabric.Domain.BusinessObjects.Version;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Persistence.Model.Repositories

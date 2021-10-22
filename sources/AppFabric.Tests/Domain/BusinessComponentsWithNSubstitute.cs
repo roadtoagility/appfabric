@@ -42,7 +42,6 @@ using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using Xunit;
 using Xunit.Gherkin.Quick;
-using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Tests.Domain
 {
@@ -55,7 +54,7 @@ namespace AppFabric.Tests.Domain
             
             fixture.Register<EntityId>(() => EntityId.From(fixture.Create<Guid>()));
             fixture.Register<Name>(() => Name.From(fixture.Create<string>()));
-            fixture.Register<Version>(() => Version.From(fixture.Create<int>()));
+            fixture.Register<VersionId>(() => VersionId.From(fixture.Create<int>()));
             fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
             fixture.Register<User>(() => User.NewRequest(fixture.Create<EntityId>(),

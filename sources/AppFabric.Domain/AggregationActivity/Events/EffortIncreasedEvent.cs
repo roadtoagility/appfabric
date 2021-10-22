@@ -21,7 +21,6 @@ using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using DFlow.Domain.BusinessObjects;
 using DFlow.Domain.DomainEvents;
-using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Domain.AggregationActivity.Events
 {

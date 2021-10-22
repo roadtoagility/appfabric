@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using AppFabric.Domain.Framework.BusinessObjects;
-using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
 {

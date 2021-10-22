@@ -23,7 +23,6 @@ using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Model;
 using DFlow.Domain.BusinessObjects;
-using Version = AppFabric.Domain.BusinessObjects.Version;
 
 namespace AppFabric.Persistence.ExtensionMethods
 {

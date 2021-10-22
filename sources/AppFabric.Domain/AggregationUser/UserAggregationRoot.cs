@@ -20,7 +20,6 @@ using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.AggregationUser.Events;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.Aggregates;
 using AppFabric.Domain.Framework.BusinessObjects;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.BusinessObjects;

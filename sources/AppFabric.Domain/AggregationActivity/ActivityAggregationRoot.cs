@@ -1,7 +1,6 @@
 ﻿using AppFabric.Domain.AggregationActivity.Events;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.Aggregates;
 using AppFabric.Domain.Framework.BusinessObjects;
 using System;
 using DFlow.Domain.Aggregates;
