@@ -78,9 +78,9 @@ namespace AppFabric.API
             services.AddScoped<GetProjectsByQueryHandler>();
             services.AddScoped<GetProjectByIdQueryHandler>();
             
-            services.AddScoped<AppFabric.Domain.Framework.DomainEvents.DomainEventHandler<ProjectAddedEvent>, AddedProjectProjectionHandler>();
-            services.AddScoped<AppFabric.Domain.Framework.DomainEvents.DomainEventHandler<ProjectDetailUpdatedEvent>, UpdateProjectDetailsProjectionHandler>();
-            services.AddScoped<AppFabric.Domain.Framework.DomainEvents.DomainEventHandler<ProjectRemovedEvent>,RemoveProjectProjectionHandler>();
+            services.AddScoped<DomainEventHandler<ProjectAddedEvent>, AddedProjectProjectionHandler>();
+            services.AddScoped<DomainEventHandler<ProjectDetailUpdatedEvent>, UpdateProjectDetailsProjectionHandler>();
+            services.AddScoped<DomainEventHandler<ProjectRemovedEvent>,RemoveProjectProjectionHandler>();
 
             services.AddScoped<AddUserCommandHandler>();
             services.AddScoped<RemoveUserCommandHandler>();
@@ -113,8 +113,8 @@ namespace AppFabric.API
             services.AddScoped<DomainEventHandler<ReleaseRemovedEvent>, RemovedReleaseProjectionHandler>();
 
 
-            services.AddScoped<AppFabric.Domain.Framework.DomainEvents.DomainEventHandler<UserAddedEvent>, AddedUserProjectionHandler>();
-            services.AddScoped<AppFabric.Domain.Framework.DomainEvents.DomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
+            services.AddScoped<DomainEventHandler<UserAddedEvent>, AddedUserProjectionHandler>();
+            services.AddScoped<DomainEventHandler<UserRemovedEvent>,RemoveUserProjectionHandler>();
 
 
             services.AddFluentMediator(builder =>

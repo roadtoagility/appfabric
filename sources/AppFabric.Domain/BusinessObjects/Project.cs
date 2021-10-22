@@ -20,15 +20,16 @@ using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class Project : ValidationStatus
+    public sealed class Project : BaseEntity<EntityId2>
     {
-        private Project(EntityId id, ProjectName name, ServiceOrder orderNumber, ProjectStatus status, ProjectCode code, DateAndTime startDate
-            , Money budget, EntityId clientId, Email owner, Version currentVersion)
+        private Project(EntityId2 id, ProjectName name, ServiceOrder orderNumber, ProjectStatus status, ProjectCode code, DateAndTime startDate
+            , Money budget, EntityId2 clientId, Email owner, VersionId version)
+            : base(id, version)
         {
-            Id = id;
             Name = name;
             Code = code;
             StartDate = startDate;
@@ -37,14 +38,13 @@ namespace AppFabric.Domain.BusinessObjects
             Status = status;
             OrderNumber = orderNumber;
             Owner = owner;
-            Version = currentVersion;
         }
-        public EntityId Id { get; }
+        public EntityId2 Id { get; }
         
         public ProjectName Name { get; }
         public ProjectCode Code { get; }
         
-        public EntityId ClientId { get; }
+        public EntityId2 ClientId { get; }
 
         public DateAndTime StartDate { get; }
                 
@@ -56,23 +56,16 @@ namespace AppFabric.Domain.BusinessObjects
         
         public ServiceOrder OrderNumber { get; }
         
-        public Version Version { get; }
-
-        public bool IsNew() => Version.Value == 1; 
-        
-        public static Project From(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner, Version version)
+        public static Project From(EntityId2 id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId2 clientId, Email owner, VersionId version)
         {
             var project = new Project(id, name, serviceOrder, status, code, startDate, budget, clientId, owner, version);
-            var validator = new ProjectValidator();
-            var result = validator.Validate(project);
-            project.SetValidationResult(result);
             return project;        
         }
 
 
-        public static Project NewRequest(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        public static Project NewRequest(EntityId2 id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId2 clientId)
         {
-            return From(id, name, serviceOrder, status, code, startDate, budget, clientId, Email.Empty(), Version.New());
+            return From(id, name, serviceOrder, status, code, startDate, budget, clientId, Email.Empty(), VersionId.New());
         }
         
         public static Project CombineWith(Project current, ProjectDetail detail)
@@ -83,9 +76,9 @@ namespace AppFabric.Domain.BusinessObjects
         
         public static Project Empty()
         {
-            return From(EntityId.Empty(), ProjectName.Empty(), ServiceOrder.Empty(), ProjectStatus.Default(), ProjectCode.Empty(), DateAndTime.Empty(), Money.Zero(),
-                EntityId.Empty(), Email.Empty(),
-                Version.Empty());
+            return From(EntityId2.Empty(), ProjectName.Empty(), ServiceOrder.Empty(), ProjectStatus.Default(), ProjectCode.Empty(), DateAndTime.Empty(), Money.Zero(),
+                EntityId2.Empty(), Email.Empty(),
+                VersionId.Empty());
         }
         
         public override string ToString()

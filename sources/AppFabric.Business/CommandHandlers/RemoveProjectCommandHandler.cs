@@ -34,24 +34,26 @@ namespace AppFabric.Business.CommandHandlers
         private readonly IDbSession<IProjectRepository> _projectDb;
         private readonly IDbSession<IUserRepository> _userDb;
         private readonly ILogger<RemoveProjectCommandHandler> _logger;
+        private readonly AggregateFactory _factory;
         
         public RemoveProjectCommandHandler(ILogger<RemoveProjectCommandHandler> logger, IMediator publisher, IDbSession<IProjectRepository> projectDb,
-            IDbSession<IUserRepository> userDb)
+            IDbSession<IUserRepository> userDb, AggregateFactory factory)
             :base(logger, publisher)
         {
             _projectDb = projectDb;
             _userDb = userDb;
             _logger = logger;
+            _factory = factory;
         }
         
         protected override ExecutionResult ExecuteCommand(RemoveProjectCommand command)
         {
             var project = _projectDb.Repository.Get(EntityId.From(command.Id));
             
-            var agg = ProjectAggregationRoot.ReconstructFrom(project);
+            var agg = _factory.Create(new LoadProjectCommand(project));
             var isSucceed = false;
       
-            if (agg.ValidationResults.IsValid)
+            if (agg.IsValid)
             {
                 agg.Remove();
                 
@@ -61,7 +63,7 @@ namespace AppFabric.Business.CommandHandlers
                 isSucceed = true;
             }
             
-            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
+            return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
         }
     }
 }

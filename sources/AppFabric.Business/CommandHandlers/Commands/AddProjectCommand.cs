@@ -16,16 +16,20 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using DFlow.Domain.Command;
 using System;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
-    public class AddProjectCommand
+    public class AddProjectCommand : BaseCommand
     {
         public string Name { get; set; }
         public string Code { get; set; }
         public DateTime StartDate { get; set; }
         public decimal Budget { get; set; }
         public Guid ClientId { get; set; }
+        public string ServiceOrder { get; set; }
+        //TODO: Muito ruim a forma atual desse status
+        public int Status { get; set; }
     }
 }

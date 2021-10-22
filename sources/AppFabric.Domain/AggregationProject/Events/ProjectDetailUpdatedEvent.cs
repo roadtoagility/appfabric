@@ -19,14 +19,14 @@
 using System;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Domain.Framework.DomainEvents;
-using Version = AppFabric.Domain.BusinessObjects.Version;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.DomainEvents;
 
 namespace AppFabric.Domain.AggregationProject.Events
 {
     public class ProjectDetailUpdatedEvent : DomainEvent
     {
-        private ProjectDetailUpdatedEvent(EntityId id, ProjectName name, Email owner, ProjectStatus status, Money budget, ServiceOrder orderNumber, Version version)
+        private ProjectDetailUpdatedEvent(EntityId2 id, ProjectName name, Email owner, ProjectStatus status, Money budget, ServiceOrder orderNumber, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
@@ -37,7 +37,7 @@ namespace AppFabric.Domain.AggregationProject.Events
             Budget = budget;
         }
         
-        public EntityId Id { get; }
+        public EntityId2 Id { get; }
         public ProjectName Name { get; }
         public ProjectStatus Status { get; }
         

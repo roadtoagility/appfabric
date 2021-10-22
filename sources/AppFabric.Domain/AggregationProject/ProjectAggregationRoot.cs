@@ -21,73 +21,70 @@ using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.Aggregates;
 using AppFabric.Domain.Framework.BusinessObjects;
+using DFlow.Domain.Aggregates;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationProject
 {
-    public sealed class ProjectAggregationRoot : AggregationRoot<Project>
+    public sealed class ProjectAggregationRoot : ObjectBasedAggregationRoot<Project, EntityId2>
     {
+        private CompositeSpecification<Project> _spec;
 
-        private ProjectAggregationRoot(Project project)
+        private ProjectAggregationRoot(CompositeSpecification<Project> specification, Project project)
         {
-            if (project.ValidationResults.IsValid)
+            _spec = specification;
+            if (_spec.IsSatisfiedBy(project))
             {
                 Apply(project);
-                
+
                 if (project.IsNew())
                 {
                     Raise(ProjectAddedEvent.For(project));
                 }
             }
 
-            ValidationResults = project.ValidationResults;
+            AppendValidationResult(project.Failures);
         }
         
-        private ProjectAggregationRoot(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, 
-            Money budget, DateAndTime startDate, EntityId clientId)
-            : this(Project.NewRequest(id, name, serviceOrder, status, code, startDate,budget,clientId))
+        private ProjectAggregationRoot(CompositeSpecification<Project> specification, EntityId2 id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, 
+            Money budget, DateAndTime startDate, EntityId2 clientId)
+            : this(specification, Project.NewRequest(id, name, serviceOrder, status, code, startDate,budget,clientId))
         {
         }
 
         public void UpdateDetail(Project.ProjectDetail detail)
         {
-            var change = Project.CombineWith(GetChange(), detail);
-            if (change.ValidationResults.IsValid)
+            var projUpdated = Project.CombineWith(GetChange(), detail);
+
+            if (_spec.IsSatisfiedBy(projUpdated))
             {
-                Apply(change);
-                Raise(ProjectDetailUpdatedEvent.For(change));
+                Apply(projUpdated);
+                Raise(ProjectDetailUpdatedEvent.For(projUpdated));
             }
 
-            ValidationResults = change.ValidationResults;
+            AppendValidationResult(projUpdated.Failures);
         }
 
         #region Aggregation contruction
 
         
-        public static ProjectAggregationRoot ReconstructFrom(Project currentState)
+        public static ProjectAggregationRoot ReconstructFrom(Project currentState, CompositeSpecification<Project> spec)
         {
-            return new ProjectAggregationRoot(Project.From(currentState.Id,
-                            currentState.Name,
-                            currentState.OrderNumber,
-                            currentState.Status,
-                            currentState.Code,
-                            currentState.StartDate,
-                            currentState.Budget,
-                            currentState.ClientId,
-                            currentState.Owner,
-                            Version.Next(currentState.Version)));
+            return new ProjectAggregationRoot(spec, currentState);
         }
 
         
-        public static ProjectAggregationRoot CreateFrom(ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
+        public static ProjectAggregationRoot CreateFrom(ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, Money budget, DateAndTime startDate, EntityId2 clientId, CompositeSpecification<Project> spec)
         {
-            return new ProjectAggregationRoot(EntityId.GetNext(), name, serviceOrder, status, code, budget,startDate,clientId);
+            return new ProjectAggregationRoot(spec, EntityId2.GetNext(), name, serviceOrder, status, code, budget,startDate,clientId);
         }
 
         #endregion
 
         public void Remove()
         {
-            if (ValidationResults.IsValid)
+            if (IsValid)
             {
                 Raise(ProjectRemovedEvent.For(this.GetChange()));
             }

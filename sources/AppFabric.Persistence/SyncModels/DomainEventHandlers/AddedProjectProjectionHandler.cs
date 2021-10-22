@@ -16,12 +16,13 @@
 // Boston, MA  02110-1301, USA.
 //
 
-
 using AppFabric.Domain.AggregationProject.Events;
-using AppFabric.Domain.Framework.DomainEvents;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.ReadModel;
 using AppFabric.Persistence.ReadModel.Repositories;
+using DFlow.Domain.Events;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {
@@ -37,10 +38,10 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
             _userSession = userSession;
         }
 
-        protected override void ExecuteHandle(ProjectAddedEvent @event)
+        protected override Task ExecuteHandle(ProjectAddedEvent @event, CancellationToken cancellationToken)
         {
             var client = _userSession.Repository.Get(@event.ClientId);
-                
+
             var projection = new ProjectProjection(
                 @event.Id.Value,
                 @event.Name.Value,
@@ -54,9 +55,11 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
                 @event.Status.Value,
                 @event.Status.ToString(),
                 @event.Version.Value);
-            
+
             _projectSession.Repository.Add(projection);
             _projectSession.SaveChanges();
+
+            return Task.CompletedTask;
         }
     }
 }

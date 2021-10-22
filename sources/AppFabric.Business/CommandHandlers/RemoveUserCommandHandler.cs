@@ -34,21 +34,26 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IUserRepository> _userDb;
         private readonly ILogger<RemoveUserCommandHandler> _logger;
-        
-        public RemoveUserCommandHandler(ILogger<RemoveUserCommandHandler> logger, IMediator publisher, IDbSession<IUserRepository> userDb)
+        private readonly AggregateFactory _factory;
+
+        public RemoveUserCommandHandler(ILogger<RemoveUserCommandHandler> logger, 
+            IMediator publisher, 
+            IDbSession<IUserRepository> userDb,
+            AggregateFactory factory)
             :base(logger,publisher)
         {
             _userDb = userDb;
             _logger = logger;
+            _factory = factory;
         }
         
         protected override ExecutionResult ExecuteCommand(RemoveUserCommand command)
         {
             var user = _userDb.Repository.Get(EntityId.From(command.Id));
-            var agg = UserAggregationRoot.ReconstructFrom(user);
+            var agg = _factory.Create(new LoadUserCommand(user));//UserAggregationRoot.ReconstructFrom(user);
             var isSucceed = false;
       
-            if (agg.ValidationResults.IsValid)
+            if (agg.IsValid)
             {
                 agg.Remove();
                 
@@ -58,7 +63,7 @@ namespace AppFabric.Business.CommandHandlers
                 isSucceed = true;
             }
             
-            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
+            return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
         }
     }
 }

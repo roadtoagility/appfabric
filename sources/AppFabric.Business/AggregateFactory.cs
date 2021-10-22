@@ -3,8 +3,12 @@ using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Specifications;
 using AppFabric.Domain.AggregationBilling;
 using AppFabric.Domain.AggregationBilling.Specifications;
+using AppFabric.Domain.AggregationProject;
+using AppFabric.Domain.AggregationProject.Specifications;
 using AppFabric.Domain.AggregationRelease;
 using AppFabric.Domain.AggregationRelease.Specifications;
+using AppFabric.Domain.AggregationUser;
+using AppFabric.Domain.AggregationUser.Specifications;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using DFlow.Domain.Aggregates;
@@ -22,7 +26,11 @@ namespace AppFabric.Business
     public class AggregateFactory : IAggregateFactory<ActivityAggregationRoot, LoadActivityCommand>,
         IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand>,
         IAggregateFactory<BillingAggregationRoot, CreateBillingCommand>,
-        IAggregateFactory<BillingAggregationRoot, LoadBillingCommand>
+        IAggregateFactory<BillingAggregationRoot, LoadBillingCommand>,
+        IAggregateFactory<UserAggregationRoot, AddUserCommand>,
+        IAggregateFactory<UserAggregationRoot, LoadUserCommand>,
+        IAggregateFactory<ProjectAggregationRoot, AddProjectCommand>,
+        IAggregateFactory<ProjectAggregationRoot, LoadProjectCommand>
     {
         public ActivityAggregationRoot Create(LoadActivityCommand source)
         {
@@ -93,6 +101,67 @@ namespace AppFabric.Business
             if (releaseSpec.IsSatisfiedBy(source.Release))
             {
                 return ReleaseAggregationRoot.ReconstructFrom(source.Release, releaseSpec);
+            }
+            throw new Exception("Invalid Command");
+        }
+
+        public UserAggregationRoot Create(AddUserCommand source)
+        {
+            var newUserSpec = new UserCreationSpecification();
+            var userSpec = new UserSpecification();
+
+            var name = Name.From(source.Name);
+            var cnpj = SocialSecurityId.From(source.Cnpj);
+            var email = Email.From(source.CommercialEmail);
+            var user = User.NewRequest(EntityId2.GetNext(), name, cnpj, email, VersionId.New());
+
+            if (newUserSpec.IsSatisfiedBy(user))
+            {
+                return UserAggregationRoot.ReconstructFrom(user, userSpec);
+            }
+            throw new Exception("Invalid Command");
+        }
+
+        public UserAggregationRoot Create(LoadUserCommand source)
+        {
+            var userSpec = new UserSpecification();
+
+            if (userSpec.IsSatisfiedBy(source.User))
+            {
+                return UserAggregationRoot.ReconstructFrom(source.User, userSpec);
+            }
+            throw new Exception("Invalid Command");
+        }
+
+        public ProjectAggregationRoot Create(AddProjectCommand command)
+        {
+            var newProjectSpec = new ProjectCreationSpecification();
+            var projectSpec = new ProjectSpecification();
+
+            //TODO: update to get ServiceOrder and ProjectStatus from command
+            var project = Project.NewRequest(EntityId2.GetNext(), 
+                ProjectName.From(command.Name),
+                ServiceOrder.From(command.ServiceOrder, true),
+                ProjectStatus.From(command.Status),
+                ProjectCode.From(command.Code),
+                DateAndTime.From(command.StartDate),
+                Money.From(command.Budget),
+                EntityId2.From(command.ClientId));
+
+            if (newProjectSpec.IsSatisfiedBy(project))
+            {
+                return ProjectAggregationRoot.ReconstructFrom(project, projectSpec);
+            }
+            throw new Exception("Invalid Command");
+        }
+
+        public ProjectAggregationRoot Create(LoadProjectCommand source)
+        {
+            var projectSpec = new ProjectSpecification();
+
+            if (projectSpec.IsSatisfiedBy(source.Project))
+            {
+                return ProjectAggregationRoot.ReconstructFrom(source.Project, projectSpec);
             }
             throw new Exception("Invalid Command");
         }

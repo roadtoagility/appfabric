@@ -30,7 +30,9 @@ namespace AppFabric.Persistence.Framework.ReadModel.Repositories
     {
         void Add(TModel entity);
         void Remove(TModel entity);
+        //TODO: remover o 2
         TModel Get(EntityId id);
+        TModel Get(EntityId2 id);
         IReadOnlyList<TModel> Find(Expression<Func<TModel, bool>> predicate);
     }
 }

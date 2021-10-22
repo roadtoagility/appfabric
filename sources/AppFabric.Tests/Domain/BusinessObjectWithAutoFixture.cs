@@ -23,6 +23,8 @@ using AppFabric.Domain.AggregationUser;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AutoFixture;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.Specifications;
 using Xunit;
 using Xunit.Gherkin.Quick;
 using Version = AppFabric.Domain.BusinessObjects.Version;
@@ -43,11 +45,11 @@ namespace AppFabric.Tests.Domain
             fixture.Register<UserAggregationRoot>(
                 ()=> UserAggregationRoot.CreateFrom(fixture.Create<Name>(), 
                     fixture.Create<SocialSecurityId>(),
-                    fixture.Create<Email>()));
+                    fixture.Create<Email>(), fixture.Create<CompositeSpecification<User>>()));
 
             var agg = fixture.Create<UserAggregationRoot>();
             
-            Assert.True(agg.ValidationResults.IsValid);
+            Assert.True(agg.IsValid);
         }
         
         [Fact]
@@ -59,16 +61,16 @@ namespace AppFabric.Tests.Domain
             fixture.Register<Name>(() => Name.From(fixture.Create<string>()));
             fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
-            fixture.Register<User>(() => User.From(fixture.Create<EntityId>(),
+            fixture.Register<User>(() => User.NewRequest(fixture.Create<EntityId2>(),
                 fixture.Create<Name>(),fixture.Create<SocialSecurityId>(),
-                fixture.Create<Email>(), fixture.Create<Version>()));
+                fixture.Create<Email>(), fixture.Create<VersionId>()));
 
             fixture.Register<UserAggregationRoot>(
-                ()=> UserAggregationRoot.ReconstructFrom(fixture.Create<User>()));
+                ()=> UserAggregationRoot.ReconstructFrom(fixture.Create<User>(), fixture.Create<CompositeSpecification<User>>()));
 
             var agg = fixture.Create<UserAggregationRoot>();
             
-            Assert.True(agg.ValidationResults.IsValid);
+            Assert.True(agg.IsValid);
         }
         [Fact]
         public void entityid_create_a_valid()

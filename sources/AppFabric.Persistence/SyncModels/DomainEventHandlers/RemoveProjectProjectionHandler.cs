@@ -18,9 +18,11 @@
 
 
 using AppFabric.Domain.AggregationProject.Events;
-using AppFabric.Domain.Framework.DomainEvents;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.ReadModel.Repositories;
+using DFlow.Domain.Events;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {
@@ -33,13 +35,14 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
             _projectSession = projectSession;
         }
 
-        protected override void ExecuteHandle(ProjectRemovedEvent @event)
+        protected override Task ExecuteHandle(ProjectRemovedEvent @event, CancellationToken cancellationToken)
         {
             var project = _projectSession.Repository.Get(@event.Id);
-          
+
             _projectSession.Repository.Remove(project);
-            
+
             _projectSession.SaveChanges();
+            return Task.CompletedTask;
         }
     }
 }

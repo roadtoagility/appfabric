@@ -35,15 +35,18 @@ namespace AppFabric.Business.CommandHandlers
         private readonly IDbSession<IUserRepository> _dbUserSession;
         private readonly IDbSession<IProjectRepository> _dbSession;
         private readonly ILogger<AddProjectCommandHandler> _logger;
+        private readonly AggregateFactory _factory;
 
         public AddProjectCommandHandler(ILogger<AddProjectCommandHandler> logger, IMediator publisher,
             IDbSession<IProjectRepository> dbSession
-            , IDbSession<IUserRepository> dbUserSession)
+            , IDbSession<IUserRepository> dbUserSession,
+            AggregateFactory factory)
             : base(logger, publisher)
         {
             _logger = logger;
             _dbSession = dbSession;
             _dbUserSession = dbUserSession;
+            _factory = factory;
         }
 
         protected override CommandResult<Guid> ExecuteCommand(AddProjectCommand command)
@@ -55,20 +58,10 @@ namespace AppFabric.Business.CommandHandlers
                 nameof(command), command);
 
             var client = _dbUserSession.Repository.Get(EntityId.From(command.ClientId));
-            
-            //TODO: update to get ServiceOrder and ProjectStatus from command
-            var agg = ProjectAggregationRoot.CreateFrom(
-                ProjectName.From(command.Name),
-                ServiceOrder.From("AAAAAAAA", true),
-                ProjectStatus.From(1),
-                ProjectCode.From(command.Code),
-                Money.From(command.Budget),
-                DateAndTime.From(command.StartDate),
-                client.Id);
 
+            var agg = _factory.Create(command);
 
-
-            if (agg.ValidationResults.IsValid)
+            if (agg.IsValid)
             {
                 // _logger.LogInformation($"Agregação Project valida id gerado", agg.GetChange().Id);
 
@@ -88,7 +81,7 @@ namespace AppFabric.Business.CommandHandlers
                 aggregationId = agg.GetChange().Id.Value;
             }
 
-            return new CommandResult<Guid>(isSucceed, aggregationId, agg.ValidationResults.Errors.ToImmutableList());
+            return new CommandResult<Guid>(isSucceed, aggregationId, agg.Failures.ToImmutableList());
         }
     }
 }

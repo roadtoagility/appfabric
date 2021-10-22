@@ -1,5 +1,6 @@
 ﻿using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,14 @@ namespace AppFabric.Domain.AggregationRelease.Specifications
     {
         public override bool IsSatisfiedBy(Release candidate)
         {
-            //TODO: Criar Validação Release
-            //RuleFor(project => project.Id).SetValidator(new EntityIdValidator());
+            var haveNotClosed = candidate.Activities.Any(x => x.ActivityStatus.Value != (int)ActivityStatus.Status.Closed);
+            if (haveNotClosed)
+            {
+                candidate.AppendValidationResult(new ValidationFailure("ReleaseSpecification",
+                    "Todas as atividades de uma release devem ter sido concluídas."));
+                return false;
+            }
+
             return true;
         }
     }

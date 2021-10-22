@@ -54,5 +54,10 @@ namespace AppFabric.Persistence.ReadModel.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public ActivityProjection Get(EntityId2 id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

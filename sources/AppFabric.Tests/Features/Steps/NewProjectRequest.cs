@@ -34,7 +34,7 @@ namespace AppFabric.Tests.Features.Steps
         private DateAndTime _startDate;
         private Project _project;
         private Money _budget;
-        private EntityId _clientId;
+        private EntityId2 _clientId;
         private ProjectStatus _status;
         private ServiceOrder _serviceOrder;
         
@@ -50,20 +50,20 @@ namespace AppFabric.Tests.Features.Steps
             _projectCode = ProjectCode.From(code);
             _startDate= DateAndTime.From(date);
             _budget = Money.From(budget);
-            _clientId = EntityId.From(Guid.Parse(clientId));
+            _clientId = EntityId2.From(Guid.Parse(clientId));
         }
         
         //TODO: Fix the feature, include serviceorder and projectstatus
         [When(@"The client request a project")]
         public void The_client_request_a_project()
         {
-            _project = Project.NewRequest(EntityId.GetNext(), _projectName,ServiceOrder.Empty(), ProjectStatus.Default(),  _projectCode, _startDate,_budget, _clientId);
+            _project = Project.NewRequest(EntityId2.GetNext(), _projectName,ServiceOrder.Empty(), ProjectStatus.Default(),  _projectCode, _startDate,_budget, _clientId);
         }
 
         [Then(@"The client see a project request created equals (\w+)")]
         public void The_client_see_a_project_request_created(bool created)
         {
-            Assert.Equal(created, _project.ValidationResults.IsValid);
+            Assert.Equal(created, _project.IsValid);
         }
     }
 }

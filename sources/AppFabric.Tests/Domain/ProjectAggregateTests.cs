@@ -1,4 +1,6 @@
-﻿using AppFabric.Domain.AggregationActivity;
+﻿using AppFabric.Business;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Events;
 using AppFabric.Domain.AggregationBilling;
 using AppFabric.Domain.AggregationBilling.Events;
@@ -27,9 +29,11 @@ namespace AppFabric.Tests.Domain
             var orderService = ServiceOrder.From("S20210209O125478593", true);
             var projectId = EntityId.From(Guid.NewGuid());
             var status = ProjectStatus.From(1);
-            var projAgg = ProjectAggregationRoot.CreateFrom(null, orderService, status, null, null, null, projectId);
-           
-            Assert.True(projAgg.ValidationResults.IsValid);
+            AggregateFactory factory = new AggregateFactory();
+            var projAgg = factory.Create(new AddProjectCommand() { ServiceOrder = "S20210209O125478593" });
+
+
+            Assert.True(projAgg.IsValid);
             Assert.Contains(projAgg.GetEvents(), x => x.GetType() == typeof(ProjectAddedEvent));
         }
 
@@ -39,9 +43,11 @@ namespace AppFabric.Tests.Domain
             var orderService = ServiceOrder.From("S20210209O125478593", false);
             var projectId = EntityId.From(Guid.NewGuid());
             var status = ProjectStatus.From(1);
-            var projAgg = ProjectAggregationRoot.CreateFrom(null, orderService, status, null, null, null, projectId);
+            AggregateFactory factory = new AggregateFactory();
 
-            Assert.False(projAgg.ValidationResults.IsValid);
+            var projAgg = factory.Create(new AddProjectCommand() { ServiceOrder = "S20210209O125478593", Status = 1 });
+
+            Assert.False(projAgg.IsValid);
             Assert.DoesNotContain(projAgg.GetEvents(), x => x.GetType() == typeof(ProjectAddedEvent));
         }
     }

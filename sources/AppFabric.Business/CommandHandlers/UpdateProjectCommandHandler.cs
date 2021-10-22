@@ -34,21 +34,23 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IProjectRepository> _dbSession;
         private readonly ILogger<UpdateProjectCommandHandler> _logger;
-        
-        public UpdateProjectCommandHandler(ILogger<UpdateProjectCommandHandler> logger, IMediator publisher, IDbSession<IProjectRepository> dbSession)
+        private readonly AggregateFactory _factory;
+
+        public UpdateProjectCommandHandler(ILogger<UpdateProjectCommandHandler> logger, IMediator publisher, IDbSession<IProjectRepository> dbSession, AggregateFactory factory)
             :base(logger,publisher)
         {
             _dbSession = dbSession;
             _logger = logger;
+            _factory = factory;
         }
         
         protected override ExecutionResult ExecuteCommand(UpdateProjectCommand command)
         {
             var project = _dbSession.Repository.Get(EntityId.From(command.Id));
-            var agg = ProjectAggregationRoot.ReconstructFrom(project);
+            var agg = _factory.Create(new LoadProjectCommand(project));
             var isSucceed = false;
       
-            if (agg.ValidationResults.IsValid)
+            if (agg.IsValid)
             {
                 agg.UpdateDetail(command.ToProjectDetail()); // dado inválido
                 
@@ -58,7 +60,7 @@ namespace AppFabric.Business.CommandHandlers
                 isSucceed = true;
             }
             
-            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
+            return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
         }
     }
 }

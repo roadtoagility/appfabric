@@ -43,7 +43,7 @@ namespace AppFabric.Domain.AggregationActivity.Specifications
                     "Uma atividade não pode ter esforço maior do que 8 horas"));
                 isValid = false;
             }
-            if (!CanHaveResponsible(candidate))
+            if (!ResponsibleInTheSameProject(candidate))
             {
                 candidate.AppendValidationResult(new ValidationFailure("CanHaveResponsible",
                     "Só é possível adicionar como responsável membros do projeto"));
@@ -66,7 +66,7 @@ namespace AppFabric.Domain.AggregationActivity.Specifications
             return true;
         }
 
-        private bool CanHaveResponsible(Activity activity)
+        private bool ResponsibleInTheSameProject(Activity activity)
         {
             if (activity.Responsible.ProjectId.Value != Guid.Empty && activity.ProjectId != activity.Responsible.ProjectId)
             {

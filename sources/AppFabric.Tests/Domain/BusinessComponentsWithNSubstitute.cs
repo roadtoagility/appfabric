@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
+using AppFabric.Business;
 using AppFabric.Business.CommandHandlers;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
@@ -33,6 +34,7 @@ using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using AutoFixture;
 using AutoFixture.AutoNSubstitute;
+using DFlow.Domain.BusinessObjects;
 using FluentMediator;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
@@ -56,9 +58,9 @@ namespace AppFabric.Tests.Domain
             fixture.Register<Version>(() => Version.From(fixture.Create<int>()));
             fixture.Register<SocialSecurityId>(() => SocialSecurityId.From(fixture.Create<string>()));
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
-            fixture.Register<User>(() => User.From(fixture.Create<EntityId>(),
+            fixture.Register<User>(() => User.NewRequest(fixture.Create<EntityId2>(),
                 fixture.Create<Name>(),fixture.Create<SocialSecurityId>(),
-                fixture.Create<Email>(), fixture.Create<Version>()));
+                fixture.Create<Email>(), fixture.Create<VersionId>()));
 
             var finalUser = fixture.Create<User>();
 
@@ -119,12 +121,12 @@ namespace AppFabric.Tests.Domain
             fixture.Register<ProjectStatus>(() => ProjectStatus.Default());
             fixture.Register<ServiceOrder>(() => ServiceOrder.Empty());
             fixture.Register<Email>(() => Email.From(string.Format($"{fixture.Create<string>()}@teste.com")));
-            fixture.Register<Project>(() => Project.NewRequest(fixture.Create<EntityId>(),
+            fixture.Register<Project>(() => Project.NewRequest(fixture.Create<EntityId2>(),
                 fixture.Create<ProjectName>(), fixture.Create<ServiceOrder>(), fixture.Create<ProjectStatus>(), fixture.Create<ProjectCode>(),
-                fixture.Create<DateAndTime>(), fixture.Create<Money>(), fixture.Create<EntityId>()));
-            fixture.Register<User>(() => User.From(fixture.Create<EntityId>(),
+                fixture.Create<DateAndTime>(), fixture.Create<Money>(), fixture.Create<EntityId2>()));
+            fixture.Register<User>(() => User.NewRequest(fixture.Create<EntityId2>(),
                 fixture.Create<Name>(),fixture.Create<SocialSecurityId>(),
-                fixture.Create<Email>(), fixture.Create<Version>()));
+                fixture.Create<Email>(), fixture.Create<VersionId>()));
             
             var finalProject = fixture.Create<Project>();
             var finalClient = fixture.Create<User>();
@@ -141,7 +143,8 @@ namespace AppFabric.Tests.Domain
             var logger = fixture.Create<ILogger<AddProjectCommandHandler>>();
             var projectDb = fixture.Create<IDbSession<IProjectRepository>>();
             var userDb = fixture.Create<IDbSession<IUserRepository>>();
-            var handler = new AddProjectCommandHandler(logger,mediator,projectDb,userDb);
+            var factory = fixture.Create<AggregateFactory>();
+            var handler = new AddProjectCommandHandler(logger,mediator,projectDb,userDb, factory);
 
             var result = handler.Execute(command);
             
@@ -173,9 +176,10 @@ namespace AppFabric.Tests.Domain
             var logger = fixture.Create<ILogger<AddProjectCommandHandler>>();
             var projectDb = fixture.Create<IDbSession<IProjectRepository>>();
             var userDb = fixture.Create<IDbSession<IUserRepository>>();
+            var factory = fixture.Create<AggregateFactory>();
 
             // when 
-            var handler = new AddProjectCommandHandler(logger,mediator,projectDb,userDb);
+            var handler = new AddProjectCommandHandler(logger,mediator,projectDb,userDb, factory);
 
             var result = handler.Execute(command);
 

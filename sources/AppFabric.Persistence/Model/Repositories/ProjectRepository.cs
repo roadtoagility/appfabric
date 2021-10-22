@@ -26,6 +26,7 @@ using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.ExtensionMethods;
 using Version = AppFabric.Domain.BusinessObjects.Version;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
@@ -54,9 +55,9 @@ namespace AppFabric.Persistence.Model.Repositories
             }
             else
             {
-                var version = Version.From(BitConverter.ToInt32(oldState.RowVersion));
+                var version = VersionId.From(BitConverter.ToInt32(oldState.RowVersion));
                 
-                if (Version.Next(version) > entity.Version)
+                if (VersionId.Next(version) > entity.Version)
                 {
                     throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
                 }
@@ -69,7 +70,7 @@ namespace AppFabric.Persistence.Model.Repositories
         {
             var oldState = Get(entity.Id);
 
-            if (Version.Next(oldState.Version) > entity.Version)
+            if (VersionId.Next(oldState.Version) > entity.Version)
             {
                 throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
             }
@@ -99,6 +100,11 @@ namespace AppFabric.Persistence.Model.Repositories
             return DbContext.Projects.Where(predicate).AsNoTracking()
                 .Select(t =>  t.ToProject());
             ;
+        }
+
+        public Project Get(EntityId2 id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

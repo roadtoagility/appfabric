@@ -37,5 +37,10 @@ namespace AppFabric.Persistence.Model.Repositories
         {
             throw new NotImplementedException(); 
         }
+
+        public Release Get(EntityId2 id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

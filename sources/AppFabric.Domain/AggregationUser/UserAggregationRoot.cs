@@ -22,55 +22,57 @@ using AppFabric.Domain.AggregationUser.Events;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.Aggregates;
 using AppFabric.Domain.Framework.BusinessObjects;
+using DFlow.Domain.Aggregates;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationUser
 {
-    public sealed class UserAggregationRoot : AggregationRoot<User>
+    public sealed class UserAggregationRoot : ObjectBasedAggregationRoot<User, EntityId2>
     {
+        private CompositeSpecification<User> _spec;
 
-        private UserAggregationRoot(User user)
+        private UserAggregationRoot(CompositeSpecification<User> specification, User user)
         {
-            if (user.ValidationResults.IsValid)
+            _spec = specification;
+
+            if (_spec.IsSatisfiedBy(user))
             {
                 Apply(user);
-                
+
                 if (user.IsNew())
                 {
                     Raise(UserAddedEvent.For(user));
                 }
             }
-
-            ValidationResults = user.ValidationResults;
+             
+            AppendValidationResult(user.Failures);
         }
 
         #region Aggregation contruction
 
         
-        public static UserAggregationRoot ReconstructFrom(User currentState)
+        public static UserAggregationRoot ReconstructFrom(User user, CompositeSpecification<User> spec)
         {
-            var nextVersion = currentState.ValidationResults.IsValid?
-                Version.Next(currentState.Version):currentState.Version;
-            var user = User.From(currentState.Id, currentState.Name, currentState.Cnpj,
-                currentState.CommercialEmail, nextVersion);
-            
-            return new UserAggregationRoot(user);
+            return new UserAggregationRoot(spec, user);
 
         }
 
         
-        public static UserAggregationRoot CreateFrom(Name name, SocialSecurityId cnpj, Email commercialEmail)
+        public static UserAggregationRoot CreateFrom(Name name, SocialSecurityId cnpj, Email commercialEmail, CompositeSpecification<User> spec)
         {
-            var user = User.From(EntityId.GetNext(), name, cnpj, commercialEmail, Version.New());
-            return new UserAggregationRoot(user);
+            var user = User.NewRequest(EntityId2.GetNext(), name, cnpj, commercialEmail, VersionId.New());
+            return new UserAggregationRoot(spec, user);
         }
 
         #endregion
 
         public void Remove()
         {
-            if (ValidationResults.IsValid)
+            //TODO: definir deleção
+            if (_spec.IsSatisfiedBy(GetChange()))
             {
-                Raise(UserRemovedEvent.For(this.GetChange()));
+                Raise(UserRemovedEvent.For(GetChange()));
             }
         }
     }

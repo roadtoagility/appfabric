@@ -45,15 +45,13 @@ namespace AppFabric.Business.CommandHandlers
         
         protected override CommandResult<Guid> ExecuteCommand(AddUserCommand command)
         {
-            var agg = UserAggregationRoot.CreateFrom(
-                Name.From(command.Name),
-                SocialSecurityId.From(command.Cnpj),
-                Email.From(command.CommercialEmail));
+            var aggFactory = new AggregateFactory();
+            var agg = aggFactory.Create(command);
             
             var isSucceed = false;
             var okId = Guid.Empty;
       
-            if (agg.ValidationResults.IsValid)
+            if (agg.IsValid)
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 _dbSession.SaveChanges();
@@ -65,7 +63,7 @@ namespace AppFabric.Business.CommandHandlers
                 okId = agg.GetChange().Id.Value;
             }
             
-            return new CommandResult<Guid>(isSucceed, okId,agg.ValidationResults.Errors.ToImmutableList());
+            return new CommandResult<Guid>(isSucceed, okId,agg.Failures.ToImmutableList());
         }
     }
 }

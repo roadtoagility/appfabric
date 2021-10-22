@@ -77,5 +77,10 @@ namespace AppFabric.Persistence.ReadModel.Repositories
         {
             return _context.UsersProjection.Where(predicate).ToList();
         }
+
+        public UserProjection Get(EntityId2 id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
