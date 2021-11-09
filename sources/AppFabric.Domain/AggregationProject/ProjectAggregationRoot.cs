@@ -47,8 +47,8 @@ namespace AppFabric.Domain.AggregationProject
         }
         
         private ProjectAggregationRoot(CompositeSpecification<Project> specification, EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, 
-            Money budget, DateAndTime startDate, EntityId clientId)
-            : this(specification, Project.NewRequest(id, name, serviceOrder, status, code, startDate,budget,clientId))
+            Money budget, DateAndTime startDate, EntityId clientId, Email owner)
+            : this(specification, Project.NewRequest(id, name, serviceOrder, status, code, startDate,budget,clientId, owner))
         {
         }
 
@@ -74,9 +74,9 @@ namespace AppFabric.Domain.AggregationProject
         }
 
         
-        public static ProjectAggregationRoot CreateFrom(ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId, CompositeSpecification<Project> spec)
+        public static ProjectAggregationRoot CreateFrom(ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId, Email owner, CompositeSpecification<Project> spec)
         {
-            return new ProjectAggregationRoot(spec, EntityId.GetNext(), name, serviceOrder, status, code, budget,startDate,clientId);
+            return new ProjectAggregationRoot(spec, EntityId.GetNext(), name, serviceOrder, status, code, budget,startDate,clientId, owner);
         }
 
         #endregion

@@ -138,15 +138,15 @@ namespace AppFabric.Business
             var newProjectSpec = new ProjectCreationSpecification();
             var projectSpec = new ProjectSpecification();
 
-            //TODO: update to get ServiceOrder and ProjectStatus from command
             var project = Project.NewRequest(EntityId.GetNext(), 
                 ProjectName.From(command.Name),
-                ServiceOrder.From(command.ServiceOrder, true),
+                ServiceOrder.From(command.ServiceOrderNumber, command.ServiceOrderStatus),
                 ProjectStatus.From(command.Status),
                 ProjectCode.From(command.Code),
                 DateAndTime.From(command.StartDate),
                 Money.From(command.Budget),
-                EntityId.From(command.ClientId));
+                EntityId.From(command.ClientId),
+                Email.From(command.Owner));
 
             if (newProjectSpec.IsSatisfiedBy(project))
             {

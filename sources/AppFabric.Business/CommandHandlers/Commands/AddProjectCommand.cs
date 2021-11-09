@@ -24,11 +24,13 @@ namespace AppFabric.Business.CommandHandlers.Commands
     public class AddProjectCommand : BaseCommand
     {
         public string Name { get; set; }
+        public string Owner { get; set; }
         public string Code { get; set; }
         public DateTime StartDate { get; set; }
         public decimal Budget { get; set; }
         public Guid ClientId { get; set; }
-        public string ServiceOrder { get; set; }
+        public string ServiceOrderNumber { get; set; }
+        public bool ServiceOrderStatus { get; set; }
         //TODO: Muito ruim a forma atual desse status
         public int Status { get; set; }
     }

@@ -57,7 +57,7 @@ namespace AppFabric.Tests.Features.Steps
         [When(@"The client request a project")]
         public void The_client_request_a_project()
         {
-            _project = Project.NewRequest(EntityId.GetNext(), _projectName,ServiceOrder.Empty(), ProjectStatus.Default(),  _projectCode, _startDate,_budget, _clientId);
+            _project = Project.NewRequest(EntityId.GetNext(), _projectName,ServiceOrder.Empty(), ProjectStatus.Default(),  _projectCode, _startDate,_budget, _clientId, Email.Empty());
         }
 
         [Then(@"The client see a project request created equals (\w+)")]

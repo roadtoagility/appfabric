@@ -1,9 +1,11 @@
 ﻿using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AppFabric.Domain.AggregationProject.Specifications
@@ -12,48 +14,90 @@ namespace AppFabric.Domain.AggregationProject.Specifications
     {
         public override bool IsSatisfiedBy(Project candidate)
         {
-            ////RuleFor(project => project.Id).SetValidator(new EntityIdValidator());
-            //RuleFor(project => project.Name).SetValidator(new ProjectNameValidator());
-            //RuleFor(project => project.StartDate).SetValidator(new DateAndTimeValidator());
-            ////RuleFor(project => project.ClientId).SetValidator(new EntityIdValidator());
+            var isSatisfiedBy = true;
+            if (string.IsNullOrEmpty(candidate.Code.Value))
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.Code",
+                    "O código do projeto não pode estar vazio"));
+                isSatisfiedBy = false;
+            }
 
-            //RuleFor(project => project.Code).SetValidator(new ProjectCodeValidator())
-            //    .DependentRules(() =>
-            //    {
-            //        RuleFor(current => current.Code).Custom((code, context) =>
-            //        {
-            //            if (context.ParentContext.RootContextData.ContainsKey("project"))
-            //            {
-            //                var changedProject = context.ParentContext.RootContextData["project"] as Project;
+            if (string.IsNullOrEmpty(candidate.Name.Value))
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.Name",
+                    "O nome do projeto não pode estar vazio"));
+                isSatisfiedBy = false;
+            }
 
-            //                if (code.Equals(changedProject?.Code))
-            //                {
-            //                    context.AddFailure("O código do novo projeto não pode ser igual ao atual.");
-            //                }
-            //            }
-            //        });
-            //    });
+            if (candidate.Status == null)
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.Status",
+                    "O nome do projeto não pode estar nulo"));
+                isSatisfiedBy = false;
+            }
+            else if (!Enumerable.Range(0, 2).Contains(candidate.Status.Value))
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.Status",
+                    "Status inválido para o projeto"));
+                isSatisfiedBy = false;
+            }
 
-            //RuleFor(project => project.Budget).SetValidator(new MoneyValidator());
-            //RuleFor(project => project.Status).SetValidator(new ProjectStatusValidator())
-            //    .When(status => !status.Equals(ProjectStatus.Default()));
+            if (candidate.StartDate == null)
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.StartDate",
+                    "Data não pode ser nula"));
+                isSatisfiedBy = false;
+            }
 
-            //RuleFor(project => project.Owner).SetValidator(new EmailValidator())
-            //    .When(project => !project.Owner.Equals(Email.Empty()));
+            if (candidate.StartDate.Value >= DateTime.UnixEpoch)
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.StartDate",
+                    "Data de inicio inválida"));
+                isSatisfiedBy = false;
+            }
 
-            //RuleFor(project => project.OrderNumber).SetValidator(new ServiceOrderNumberValidator())
-            //    .DependentRules(() =>
-            //    {
-            //        RuleFor(current => current.OrderNumber).Custom((serviceOrder, context) =>
-            //        {
-            //            if (!serviceOrder.IsAproved)
-            //            {
-            //                context.AddFailure("A ordem de serviço precisa estar aprovada");
-            //            }
-            //        });
-            //    });
+            if (candidate.Budget == null)
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.Budget",
+                    "Budget do projeto deve ser informado"));
+                isSatisfiedBy = false;
+            }
+            else if (candidate.Budget.Value < Decimal.Zero)
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.Budget",
+                    "Não é possível informar um budget com valor negativo"));
+                isSatisfiedBy = false;
+            }
 
-            throw new NotImplementedException();
+            Regex regex = new Regex(@"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+            + "@"
+            + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$");
+            if (candidate.Owner == null)
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.Owner",
+                    "Owner do projeto deve ser informado"));
+                isSatisfiedBy = false;
+            }
+            else if (!regex.Match(candidate.Owner.Value).Success)
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.Owner",
+                       "Endereço de email do Owner inválido"));
+
+            }
+
+            if (candidate.OrderNumber == null || string.IsNullOrEmpty(candidate.OrderNumber.Number))
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.OrderNumber",
+                    "OS do projeto deve ser informada"));
+                isSatisfiedBy = false;
+            }
+            else if (!candidate.OrderNumber.IsAproved)
+            {
+                candidate.AppendValidationResult(new ValidationFailure("Project.OrderNumber",
+                    "A ordem de serviço precisa estar aprovada"));
+            }
+
+            return isSatisfiedBy;
         }
     }
 }

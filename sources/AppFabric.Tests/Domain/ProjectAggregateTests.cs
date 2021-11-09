@@ -30,7 +30,13 @@ namespace AppFabric.Tests.Domain
             var projectId = EntityId.From(Guid.NewGuid());
             var status = ProjectStatus.From(1);
             AggregateFactory factory = new AggregateFactory();
-            var projAgg = factory.Create(new AddProjectCommand() { ServiceOrder = "S20210209O125478593" });
+            var projAgg = factory.Create(new AddProjectCommand() { 
+                ServiceOrderNumber = "S20210209O125478593", 
+                Owner = "doug.ramalho@gma.com",
+                Code = "PojectFake",
+                Name = "NameFake",
+                ServiceOrderStatus = true
+            });
 
 
             Assert.True(projAgg.IsValid);
@@ -45,10 +51,18 @@ namespace AppFabric.Tests.Domain
             var status = ProjectStatus.From(1);
             AggregateFactory factory = new AggregateFactory();
 
-            var projAgg = factory.Create(new AddProjectCommand() { ServiceOrder = "S20210209O125478593", Status = 1 });
-
-            Assert.False(projAgg.IsValid);
-            Assert.DoesNotContain(projAgg.GetEvents(), x => x.GetType() == typeof(ProjectAddedEvent));
+            var ex = Assert.Throws<Exception>(() =>
+            {
+                var projAgg = factory.Create(new AddProjectCommand()
+                {
+                    ServiceOrderNumber = "S20210209O125478593",
+                    Owner = "doug.ramalho@gma.com",
+                    Code = "PojectFake",
+                    Name = "NameFake",
+                    Status = 1,
+                    ServiceOrderStatus = false
+                });
+            });
         }
     }
 }

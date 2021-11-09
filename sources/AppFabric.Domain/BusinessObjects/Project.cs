@@ -63,9 +63,9 @@ namespace AppFabric.Domain.BusinessObjects
         }
 
 
-        public static Project NewRequest(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId)
+        public static Project NewRequest(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner)
         {
-            return From(id, name, serviceOrder, status, code, startDate, budget, clientId, Email.Empty(), VersionId.New());
+            return From(id, name, serviceOrder, status, code, startDate, budget, clientId, owner, VersionId.New());
         }
         
         public static Project CombineWith(Project current, ProjectDetail detail)

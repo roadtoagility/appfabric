@@ -39,6 +39,7 @@ namespace AppFabric.Domain.BusinessObjects
             : base(id, version)
         {
             this.ClientId = clientId;
+            this.Activities = new List<Activity>();
         }
 
         public static Release From(EntityId id, EntityId clientId, VersionId version)
