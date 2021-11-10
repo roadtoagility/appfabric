@@ -1,0 +1,45 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: appfabric-ui
+  labels:
+    app: appfabric-ui
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: appfabric-ui
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: appfabric-ui
+        # application: appfabric
+        # name: appfabric-ui
+        # version: 0.1
+        # framework: angular
+    spec:
+      containers:
+      - name: appfabric-ui
+        image: k3d-myregistry.localhost:5001/appfabric-ui:v0.1
+        ports:
+        - containerPort: 8181
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appfabric-ui
+spec:
+  selector:
+    app: appfabric-ui
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: ClusterIP
+---

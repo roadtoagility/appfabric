@@ -1,0 +1,86 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: appfabric-project
+  labels:
+    app: appfabric-project
+spec:
+  replicas: 1
+  revisionHistoryLimit: 0
+  # minReadySeconds: 10
+  # progressDeadlineSeconds: 180
+  selector:
+    matchLabels:
+      app: appfabric-project
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: appfabric-project
+        # application: appfabric
+        # name: appfabric-project
+        # version: 0.2
+        # framework: dotnet5
+    spec:
+      containers:
+      - name: appfabric-project
+        image: k3d-myregistry.localhost:5001/appfabric:v0.3
+        ports:
+        - containerPort: 8181
+        # resources:
+        #   requests:
+        #     memory: "128M"
+        #     cpu: "100m"
+        #   limits:
+        #     memory: "256M"
+        #     cpu: "200m"
+        # livenessProbe:
+        #    failureThreshold: 5
+        #    httpGet:
+        #      path: /healthcheck/liveness
+        #      port: 80
+        #    initialDelaySeconds: 15
+        #    timeoutSeconds: 10
+        #    periodSeconds: 60
+        # readinessProbe:
+        #    failureThreshold: 3
+        #    httpGet:
+        #      path: /healthcheck/readiness
+        #      port: 80
+        #    initialDelaySeconds: 15
+        #    timeoutSeconds: 10
+        #    periodSeconds: 60
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appfabric-project
+spec:
+  selector:
+    app: appfabric-project
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8181
+  type: ClusterIP
+---
+
+# apiVersion: autoscaling/v1
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: appfabric-project
+#   labels:
+#     app: appfabric-project
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: appfabric-project
+#   minReplicas: 1
+#   maxReplicas: 1
+#   targetCPUUtilizationPercentage: 50

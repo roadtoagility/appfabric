@@ -26,15 +26,11 @@ RUN dotnet publish -c Release -o /app
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
+
+ENV ASPNETCORE_URLS=http://+:8181
+ENV COMPlus_ENableDIagnostics=0
+
 WORKDIR /app
 COPY --from=build /app ./
-
-# See: https://github.com/dotnet/announcements/issues/20
-# Uncomment to enable globalization APIs (or delete)
-# ENV \
-#     DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
-#     LC_ALL=en_US.UTF-8 \
-#     LANG=en_US.UTF-8
-# RUN apk add --no-cache icu-libs
 
 ENTRYPOINT ["dotnet","./AppFabric.API.dll"]
