@@ -1,0 +1,43 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: servicenamestrip
+spec:
+  stripPrefix:
+    prefixes:
+      - /project
+      - /user
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: appfabric
+spec:
+  entryPoints:
+    - web
+  routes:
+    project:
+    - match: Host(`appfabric.localhost`) && PathPrefix(`/project/`)
+      kind: Rule
+      middlewares:
+      - name: servicenamestrip
+      services:
+      - kind: Service
+        name: appfabric-project
+        port: 80
+    user:
+    - match: Host(`appfabric.localhost`) && PathPrefix(`/user`)
+      kind: Rule
+      middlewares:
+      - name: servicenamestrip
+      services:
+      - kind: Service
+        name: appfabric-user
+        port: 80
+    frontend:
+    - match: Host(`appfabric.localhost`)
+      kind: Rule
+      services:
+      - kind: Service
+        name: appfabric-ui
+        port: 80
