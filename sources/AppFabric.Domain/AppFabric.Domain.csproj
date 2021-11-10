@@ -8,6 +8,11 @@
       <PackageReference Include="DFlow.Domain" Version="0.4.0-pre273" />
       <PackageReference Include="FluentValidation" Version="9.3.0" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="BusinessObjects\Validations\BillingRules\" />
+      <Folder Include="BusinessObjects\Validations\ReleaseRules\" />
+    </ItemGroup>
     <PropertyGroup>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
     </PropertyGroup>
