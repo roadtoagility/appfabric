@@ -23,7 +23,7 @@ using System.Threading.Tasks;
 
 namespace AppFabric.Business
 {
-    public class AggregateFactory : IAggregateFactory<ActivityAggregationRoot, LoadActivityCommand>,
+    public class AggregateFactory : IAggregateFactory<ActivityAggregationRoot, Activity>,
         IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand>,
         IAggregateFactory<BillingAggregationRoot, CreateBillingCommand>,
         IAggregateFactory<BillingAggregationRoot, LoadBillingCommand>,
@@ -32,13 +32,13 @@ namespace AppFabric.Business
         IAggregateFactory<ProjectAggregationRoot, AddProjectCommand>,
         IAggregateFactory<ProjectAggregationRoot, LoadProjectCommand>
     {
-        public ActivityAggregationRoot Create(LoadActivityCommand source)
+        public ActivityAggregationRoot Create(Activity source)
         {
             var activitySpec = new ActivitySpecification();
 
-            if (activitySpec.IsSatisfiedBy(source.Activity))
+            if (activitySpec.IsSatisfiedBy(source))
             {
-                return ActivityAggregationRoot.ReconstructFrom(source.Activity, activitySpec);
+                return new ActivityAggregationRoot(activitySpec, source);
             }
             throw new Exception("Invalid Command");
         }
@@ -51,7 +51,7 @@ namespace AppFabric.Business
 
             if (newActivitySpec.IsSatisfiedBy(activity))
             {
-                return ActivityAggregationRoot.ReconstructFrom(activity, activitySpec);
+                return new ActivityAggregationRoot(activitySpec, activity);
             }
             throw new Exception("Invalid Command");
         }

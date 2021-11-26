@@ -29,8 +29,10 @@ namespace AppFabric.Tests.Domain
             var releaseAgg = factory.Create(new CreateReleaseCommand(Guid.NewGuid()));
 
             var projectId = EntityId.From(Guid.NewGuid());
-            //TODO: update
-            var activityAgg = ActivityAggregationRoot.CreateFrom(projectId, 8, null);
+            
+            var activity = factory.Create(new CreateActivityCommand(projectId, 3));
+            
+            var activityAgg = factory.Create(activity.GetChange());
 
             releaseAgg.AddActivity(activityAgg.GetChange());
             Assert.False(releaseAgg.Failures.Any());

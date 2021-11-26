@@ -30,6 +30,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using AppFabric.Domain.AggregationActivity;
 using System.Linq;
+using DFlow.Domain.Aggregates;
 
 namespace AppFabric.Business.CommandHandlers
 {
@@ -37,10 +38,15 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IActivityRepository> _dbSession;
         private readonly ILogger<CloseActivityCommandHandler> _logger;
+        private readonly IAggregateFactory<ActivityAggregationRoot, Activity> _factory;
 
-        public CloseActivityCommandHandler(ILogger<CloseActivityCommandHandler> logger, IMediator publisher, IDbSession<IActivityRepository> dbSession)
+
+        public CloseActivityCommandHandler(ILogger<CloseActivityCommandHandler> logger, IMediator publisher, 
+            IAggregateFactory<ActivityAggregationRoot, Activity> factory,
+            IDbSession<IActivityRepository> dbSession)
             : base(logger, publisher)
         {
+            _factory = factory;
             _dbSession = dbSession;
             _logger = logger;
         }
@@ -50,17 +56,27 @@ namespace AppFabric.Business.CommandHandlers
             //TODO: errado o ProjectId, deveria ser o ID da atividade
             var activity = _dbSession.Repository.Get(EntityId.From(command.ProjectId.Value));
             //TODO: update
-            var agg = ActivityAggregationRoot.ReconstructFrom(activity, null);
+            var agg = _factory.Create(activity);
             var isSucceed = false;
 
             if (!agg.Failures.Any())
             {
+                // #TODO: qual a condição para o fechamento da atividade? 
+                // melhorar forma de lidar com o retorno de erros
+                // agg.Close(closeSpec);
+                //
                 agg.Close();
 
+                // não curti esse "aninhamento"
+                //
+                //if(!agg.Failures.Any()){
+                
                 _dbSession.Repository.Add(agg.GetChange());
                 _dbSession.SaveChanges();
                 agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
                 isSucceed = true;
+                
+                //}
             }
 
             return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());

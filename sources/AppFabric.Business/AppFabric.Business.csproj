@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="DFlow.Domain" Version="0.4.0-pre273" />
       <PackageReference Include="FluentMediator" Version="0.4.7" />
     </ItemGroup>
 

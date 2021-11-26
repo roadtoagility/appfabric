@@ -30,6 +30,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using AppFabric.Domain.AggregationActivity;
 using System.Linq;
+using DFlow.Domain.Aggregates;
 
 namespace AppFabric.Business.CommandHandlers
 {
@@ -37,10 +38,15 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IActivityRepository> _dbSession;
         private readonly ILogger<CreateActivityCommandHandler> _logger;
+        private readonly IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand> _factory;
 
-        public CreateActivityCommandHandler(ILogger<CreateActivityCommandHandler> logger, IMediator publisher, IDbSession<IActivityRepository> dbSession)
+
+        public CreateActivityCommandHandler(ILogger<CreateActivityCommandHandler> logger, IMediator publisher, 
+            IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand> factory,
+            IDbSession<IActivityRepository> dbSession)
             : base(logger, publisher)
         {
+            _factory = factory;
             _dbSession = dbSession;
             _logger = logger;
         }
@@ -52,9 +58,8 @@ namespace AppFabric.Business.CommandHandlers
 
             _logger.LogDebug("Criada agregação a partir do comando {CommandName} com valores {Valores}",
                 nameof(command), command);
-
-            //TODO: update
-            var agg = ActivityAggregationRoot.CreateFrom(EntityId.From(command.ProjectId.Value), command.EstimatedHours, null);
+            
+            var agg = _factory.Create(command);
 
             if (!agg.Failures.Any())
             {

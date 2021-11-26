@@ -30,6 +30,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using AppFabric.Domain.AggregationActivity;
 using System.Linq;
+using DFlow.Domain.Aggregates;
 
 namespace AppFabric.Business.CommandHandlers
 {
@@ -38,10 +39,14 @@ namespace AppFabric.Business.CommandHandlers
         private readonly IDbSession<IActivityRepository> _dbSession;
         private readonly IDbSession<IMemberRepository> _dbMemberSession;
         private readonly ILogger<AsignResponsibleCommandHandler> _logger;
+        private readonly IAggregateFactory<ActivityAggregationRoot, Activity> _factory;
 
-        public AsignResponsibleCommandHandler(ILogger<AsignResponsibleCommandHandler> logger, IMediator publisher, IDbSession<IActivityRepository> dbSession, IDbSession<IMemberRepository> dbMemberSession)
+        public AsignResponsibleCommandHandler(ILogger<AsignResponsibleCommandHandler> logger, IMediator publisher, 
+            IAggregateFactory<ActivityAggregationRoot, Activity> factory,
+            IDbSession<IActivityRepository> dbSession, IDbSession<IMemberRepository> dbMemberSession)
             : base(logger, publisher)
         {
+            _factory = factory;
             _dbSession = dbSession;
             _dbMemberSession = dbMemberSession;
             _logger = logger;
@@ -50,13 +55,13 @@ namespace AppFabric.Business.CommandHandlers
         protected override ExecutionResult ExecuteCommand(AsignResponsibleCommand command)
         {
             var activity = _dbSession.Repository.Get(EntityId.From(command.Id));
-            var agg = ActivityAggregationRoot.ReconstructFrom(activity, null);
+            var agg = _factory.Create(activity);
             var isSucceed = false;
 
             if (!agg.Failures.Any())
             {
                 var member = _dbMemberSession.Repository.Get(EntityId.From(command.MemberId));
-                agg.Asign(member);
+                agg.Assign(member);
 
                 _dbSession.Repository.Add(agg.GetChange());
                 _dbSession.SaveChanges();

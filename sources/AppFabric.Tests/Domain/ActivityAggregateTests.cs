@@ -60,7 +60,7 @@ namespace AppFabric.Tests.Domain
 
             var memberId = EntityId.From(Guid.NewGuid());
             var member = Member.From(memberId, projectId, "Douglas", VersionId.Empty());
-            activityAgg.Asign(member);
+            activityAgg.Assign(member);
 
             Assert.False(activityAgg.Failures.Any());
             Assert.Contains(activityAgg.GetEvents(), x => x.GetType() == typeof(MemberAsignedEvent));
@@ -78,7 +78,7 @@ namespace AppFabric.Tests.Domain
 
             projectId = EntityId.From(Guid.NewGuid());
             var member = Member.From(memberId, projectId, "Douglas", VersionId.Empty());
-            activityAgg.Asign(member);
+            activityAgg.Assign(member);
 
             Assert.True(activityAgg.Failures.Any());
             Assert.DoesNotContain(activityAgg.GetEvents(), x => x.GetType() == typeof(MemberAsignedEvent));

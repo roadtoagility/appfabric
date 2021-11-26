@@ -2,18 +2,14 @@
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
-using System;
 using DFlow.Domain.Aggregates;
-using DFlow.Domain.BusinessObjects;
-using System.Linq;
 using DFlow.Domain.Specifications;
-using AppFabric.Domain.AggregationActivity.Specifications;
 
 namespace AppFabric.Domain.AggregationActivity
 {    public class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId>
     {
-        private CompositeSpecification<Activity> _spec;
-        private ActivityAggregationRoot(CompositeSpecification<Activity> specification, Activity activity)
+        private readonly ISpecification<Activity> _spec;
+        public ActivityAggregationRoot(ISpecification<Activity> specification, Activity activity)
         {
             _spec = specification;
             Apply(activity);
@@ -23,21 +19,8 @@ namespace AppFabric.Domain.AggregationActivity
                 Raise(ActivityCreatedEvent.For(activity));
             }
         }
-
-        #region Aggregation contruction
-
-        public static ActivityAggregationRoot CreateFrom(EntityId projectId, int hours, CompositeSpecification<Activity> spec)
-        {
-            var activity = Activity.From(EntityId.GetNext(), projectId, hours, VersionId.New());
-            return new ActivityAggregationRoot(spec, activity);
-        }
-
-        public static ActivityAggregationRoot ReconstructFrom(Activity activity, CompositeSpecification<Activity> spec)
-        {
-            return new ActivityAggregationRoot(spec, activity);
-        }
-
-        public void Asign(Member member)
+        
+        public void Assign(Member member)
         {
             var current = GetChange();
             current.AddMember(member);
@@ -85,9 +68,7 @@ namespace AppFabric.Domain.AggregationActivity
 
             AppendValidationResult(current.Failures);
         }
-
-        #endregion
-
+        
         public void Remove()
         {
             if (GetChange().IsValid)
