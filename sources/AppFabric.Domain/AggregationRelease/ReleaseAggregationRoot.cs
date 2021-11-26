@@ -30,24 +30,23 @@ namespace AppFabric.Domain.AggregationRelease
 
         public void AddActivity(Activity activity)
         {
-            var current = GetChange();
-            current.AddActivity(activity);
+            AggregateRootEntity.AddActivity(activity);
 
-            if (_spec.IsSatisfiedBy(current))
+            if (_spec.IsSatisfiedBy(AggregateRootEntity))
             {
-                Apply(current);
-                Raise(ActivityAddedEvent.For(current));
+                Apply(AggregateRootEntity);
+                Raise(ActivityAddedEvent.For(AggregateRootEntity));
             }
 
-            AppendValidationResult(current.Failures);
+            AppendValidationResult(AggregateRootEntity.Failures);
         }
 
         public void Remove()
         {
             //TODO: definir deleção
-            if (_spec.IsSatisfiedBy(GetChange()))
+            if (_spec.IsSatisfiedBy(AggregateRootEntity))
             {
-                Raise(ReleaseRemovedEvent.For(GetChange()));
+                Raise(ReleaseRemovedEvent.For(AggregateRootEntity));
             }
         }
     }

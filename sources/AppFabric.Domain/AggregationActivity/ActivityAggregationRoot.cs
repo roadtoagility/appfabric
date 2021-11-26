@@ -22,51 +22,47 @@ namespace AppFabric.Domain.AggregationActivity
         
         public void Assign(Member member)
         {
-            var current = GetChange();
-            current.AddMember(member);
+            AggregateRootEntity.AddMember(member);
 
-            if (_spec.IsSatisfiedBy(current))
+            if (_spec.IsSatisfiedBy(AggregateRootEntity))
             {
-                Apply(current);
-                Raise(MemberAsignedEvent.For(current));
+                Apply(AggregateRootEntity);
+                Raise(MemberAsignedEvent.For(AggregateRootEntity));
             }
 
-            AppendValidationResult(current.Failures);
+            AppendValidationResult(AggregateRootEntity.Failures);
         }
 
         public void UpdateRemaining(int hours)
         {
-            var current = GetChange();
-            var oldEffort = current.Effort.Value;
-            current.UpdateEffort(hours);
-            if (_spec.IsSatisfiedBy(current))
+            var oldEffort = AggregateRootEntity.Effort.Value;
+            AggregateRootEntity.UpdateEffort(hours);
+            if (_spec.IsSatisfiedBy(AggregateRootEntity))
             {
-                Apply(current);
+                Apply(AggregateRootEntity);
 
                 if(oldEffort > hours)
                 {
-                    Raise(EffortDecreasedEvent.For(current));
+                    Raise(EffortDecreasedEvent.For(AggregateRootEntity));
                 }
                 else
                 {
-                    Raise(EffortIncreasedEvent.For(current));
+                    Raise(EffortIncreasedEvent.For(AggregateRootEntity));
                 }
             }
-            AppendValidationResult(current.Failures);
+            AppendValidationResult(AggregateRootEntity.Failures);
         }
 
         public void Close()
         {
-            var current = GetChange();
-
-            current.Close();
-            if (_spec.IsSatisfiedBy(current))
+            AggregateRootEntity.Close();
+            if (_spec.IsSatisfiedBy(AggregateRootEntity))
             {
-                Apply(current);
-                Raise(ActivityClosedEvent.For(current));
+                Apply(AggregateRootEntity);
+                Raise(ActivityClosedEvent.For(AggregateRootEntity));
             }
 
-            AppendValidationResult(current.Failures);
+            AppendValidationResult(AggregateRootEntity.Failures);
         }
         
         public void Remove()

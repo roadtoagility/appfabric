@@ -51,9 +51,9 @@ namespace AppFabric.Domain.AggregationUser
         public void Remove()
         {
             //TODO: definir deleção
-            if (_spec.IsSatisfiedBy(GetChange()))
+            if (_spec.IsSatisfiedBy(AggregateRootEntity))
             {
-                Raise(UserRemovedEvent.For(GetChange()));
+                Raise(UserRemovedEvent.For(AggregateRootEntity));
             }
         }
     }

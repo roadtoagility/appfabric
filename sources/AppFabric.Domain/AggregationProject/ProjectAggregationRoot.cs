@@ -16,12 +16,10 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.ComponentModel.DataAnnotations;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.Framework.BusinessObjects;
 using DFlow.Domain.Aggregates;
-using DFlow.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationProject
@@ -48,7 +46,7 @@ namespace AppFabric.Domain.AggregationProject
 
         public void UpdateDetail(Project.ProjectDetail detail)
         {
-            var projUpdated = Project.CombineWith(GetChange(), detail);
+            var projUpdated = Project.CombineWith(AggregateRootEntity, detail);
 
             if (_spec.IsSatisfiedBy(projUpdated))
             {
@@ -58,28 +56,12 @@ namespace AppFabric.Domain.AggregationProject
 
             AppendValidationResult(projUpdated.Failures);
         }
-
-        // #region Aggregation contruction
-        //
-        //
-        // public static ProjectAggregationRoot ReconstructFrom(Project currentState, CompositeSpecification<Project> spec)
-        // {
-        //     return new ProjectAggregationRoot(spec, currentState);
-        // }
-        //
-        //
-        // public static ProjectAggregationRoot CreateFrom(ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId, Email owner, CompositeSpecification<Project> spec)
-        // {
-        //     return new ProjectAggregationRoot(spec, EntityId.GetNext(), name, serviceOrder, status, code, budget,startDate,clientId, owner);
-        // }
-        //
-        // #endregion
-
+        
         public void Remove()
         {
             if (IsValid)
             {
-                Raise(ProjectRemovedEvent.For(this.GetChange()));
+                Raise(ProjectRemovedEvent.For(AggregateRootEntity));
             }
         }
     }

@@ -29,24 +29,23 @@ namespace AppFabric.Domain.AggregationBilling
 
         public void AddRelease(Release release)
         {
-            var current = GetChange();
-            current.AddRelease(release);
+            AggregateRootEntity.AddRelease(release);
 
-            if (_spec.IsSatisfiedBy(current))
+            if (_spec.IsSatisfiedBy(AggregateRootEntity))
             {
-                Apply(current);
-                Raise(ReleaseAddedEvent.For(current));
+                Apply(AggregateRootEntity);
+                Raise(ReleaseAddedEvent.For(AggregateRootEntity));
             }
 
-            AppendValidationResult(current.Failures);
+            AppendValidationResult(AggregateRootEntity.Failures);
         }
 
         public void Remove()
         {
             //TODO: definir deleção
-            if (_spec.IsSatisfiedBy(GetChange()))
+            if (_spec.IsSatisfiedBy(AggregateRootEntity))
             {
-                Raise(BillingRemovedEvent.For(GetChange()));
+                Raise(BillingRemovedEvent.For(AggregateRootEntity));
             }
         }
     }
