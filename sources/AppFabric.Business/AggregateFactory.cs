@@ -117,7 +117,7 @@ namespace AppFabric.Business
 
             if (newUserSpec.IsSatisfiedBy(user))
             {
-                return UserAggregationRoot.ReconstructFrom(user, userSpec);
+                return new UserAggregationRoot(userSpec, user);
             }
             throw new Exception("Invalid Command");
         }
@@ -128,7 +128,7 @@ namespace AppFabric.Business
 
             if (userSpec.IsSatisfiedBy(source.User))
             {
-                return UserAggregationRoot.ReconstructFrom(source.User, userSpec);
+                return new UserAggregationRoot(userSpec, source.User);
             }
             throw new Exception("Invalid Command");
         }

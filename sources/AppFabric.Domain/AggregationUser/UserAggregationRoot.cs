@@ -29,9 +29,9 @@ namespace AppFabric.Domain.AggregationUser
 {
     public sealed class UserAggregationRoot : ObjectBasedAggregationRoot<User, EntityId>
     {
-        private CompositeSpecification<User> _spec;
+        private ISpecification<User> _spec;
 
-        private UserAggregationRoot(CompositeSpecification<User> specification, User user)
+        public UserAggregationRoot(ISpecification<User> specification, User user)
         {
             _spec = specification;
 
@@ -47,25 +47,7 @@ namespace AppFabric.Domain.AggregationUser
              
             AppendValidationResult(user.Failures);
         }
-
-        #region Aggregation contruction
-
         
-        public static UserAggregationRoot ReconstructFrom(User user, CompositeSpecification<User> spec)
-        {
-            return new UserAggregationRoot(spec, user);
-
-        }
-
-        
-        public static UserAggregationRoot CreateFrom(Name name, SocialSecurityId cnpj, Email commercialEmail, CompositeSpecification<User> spec)
-        {
-            var user = User.NewRequest(EntityId.GetNext(), name, cnpj, commercialEmail, VersionId.New());
-            return new UserAggregationRoot(spec, user);
-        }
-
-        #endregion
-
         public void Remove()
         {
             //TODO: definir deleção
