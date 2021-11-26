@@ -10,8 +10,8 @@ namespace AppFabric.Domain.AggregationRelease
 {
     public class ReleaseAggregationRoot : ObjectBasedAggregationRoot<Release, EntityId>
     {
-        private CompositeSpecification<Release> _spec;
-        private ReleaseAggregationRoot(CompositeSpecification<Release> specification, Release release)
+        private readonly ISpecification<Release> _spec;
+        public ReleaseAggregationRoot(ISpecification<Release> specification, Release release)
         {
             _spec = specification;
 
@@ -28,13 +28,14 @@ namespace AppFabric.Domain.AggregationRelease
             AppendValidationResult(release.Failures);
         }
 
-        #region Aggregation contruction
-
-
-        public static ReleaseAggregationRoot ReconstructFrom(Release currentState, CompositeSpecification<Release> spec)
-        {
-            return new ReleaseAggregationRoot(spec, currentState);
-        }
+        // #region Aggregation contruction
+        //
+        //
+        // public static ReleaseAggregationRoot ReconstructFrom(Release currentState, CompositeSpecification<Release> spec)
+        // {
+        //     return new ReleaseAggregationRoot(spec, currentState);
+        // }
+        // #endregion
 
         public void AddActivity(Activity activity)
         {
@@ -49,8 +50,6 @@ namespace AppFabric.Domain.AggregationRelease
 
             AppendValidationResult(current.Failures);
         }
-
-        #endregion
 
         public void Remove()
         {

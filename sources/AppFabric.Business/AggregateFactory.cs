@@ -89,7 +89,7 @@ namespace AppFabric.Business
 
             if (newReleaseSpec.IsSatisfiedBy(release))
             {
-                return ReleaseAggregationRoot.ReconstructFrom(release, releaseSpec);
+                return new ReleaseAggregationRoot(releaseSpec, release);
             }
             throw new Exception("Invalid Command");
         }
@@ -100,7 +100,7 @@ namespace AppFabric.Business
 
             if (releaseSpec.IsSatisfiedBy(source.Release))
             {
-                return ReleaseAggregationRoot.ReconstructFrom(source.Release, releaseSpec);
+                return new ReleaseAggregationRoot(releaseSpec, source.Release);
             }
             throw new Exception("Invalid Command");
         }
