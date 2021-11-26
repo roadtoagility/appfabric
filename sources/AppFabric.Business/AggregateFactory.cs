@@ -150,7 +150,7 @@ namespace AppFabric.Business
 
             if (newProjectSpec.IsSatisfiedBy(project))
             {
-                return ProjectAggregationRoot.ReconstructFrom(project, projectSpec);
+                return new ProjectAggregationRoot(projectSpec, project);
             }
             throw new Exception("Invalid Command");
         }
@@ -161,7 +161,7 @@ namespace AppFabric.Business
 
             if (projectSpec.IsSatisfiedBy(source.Project))
             {
-                return ProjectAggregationRoot.ReconstructFrom(source.Project, projectSpec);
+                return new ProjectAggregationRoot(projectSpec, source.Project);
             }
             throw new Exception("Invalid Command");
         }

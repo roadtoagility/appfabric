@@ -28,9 +28,9 @@ namespace AppFabric.Domain.AggregationProject
 {
     public sealed class ProjectAggregationRoot : ObjectBasedAggregationRoot<Project, EntityId>
     {
-        private CompositeSpecification<Project> _spec;
+        private readonly ISpecification<Project> _spec;
 
-        private ProjectAggregationRoot(CompositeSpecification<Project> specification, Project project)
+        public ProjectAggregationRoot(ISpecification<Project> specification, Project project)
         {
             _spec = specification;
             if (_spec.IsSatisfiedBy(project))
@@ -44,12 +44,6 @@ namespace AppFabric.Domain.AggregationProject
             }
 
             AppendValidationResult(project.Failures);
-        }
-        
-        private ProjectAggregationRoot(CompositeSpecification<Project> specification, EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, 
-            Money budget, DateAndTime startDate, EntityId clientId, Email owner)
-            : this(specification, Project.NewRequest(id, name, serviceOrder, status, code, startDate,budget,clientId, owner))
-        {
         }
 
         public void UpdateDetail(Project.ProjectDetail detail)
@@ -65,21 +59,21 @@ namespace AppFabric.Domain.AggregationProject
             AppendValidationResult(projUpdated.Failures);
         }
 
-        #region Aggregation contruction
-
-        
-        public static ProjectAggregationRoot ReconstructFrom(Project currentState, CompositeSpecification<Project> spec)
-        {
-            return new ProjectAggregationRoot(spec, currentState);
-        }
-
-        
-        public static ProjectAggregationRoot CreateFrom(ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId, Email owner, CompositeSpecification<Project> spec)
-        {
-            return new ProjectAggregationRoot(spec, EntityId.GetNext(), name, serviceOrder, status, code, budget,startDate,clientId, owner);
-        }
-
-        #endregion
+        // #region Aggregation contruction
+        //
+        //
+        // public static ProjectAggregationRoot ReconstructFrom(Project currentState, CompositeSpecification<Project> spec)
+        // {
+        //     return new ProjectAggregationRoot(spec, currentState);
+        // }
+        //
+        //
+        // public static ProjectAggregationRoot CreateFrom(ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId, Email owner, CompositeSpecification<Project> spec)
+        // {
+        //     return new ProjectAggregationRoot(spec, EntityId.GetNext(), name, serviceOrder, status, code, budget,startDate,clientId, owner);
+        // }
+        //
+        // #endregion
 
         public void Remove()
         {
