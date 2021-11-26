@@ -28,15 +28,6 @@ namespace AppFabric.Domain.AggregationRelease
             AppendValidationResult(release.Failures);
         }
 
-        // #region Aggregation contruction
-        //
-        //
-        // public static ReleaseAggregationRoot ReconstructFrom(Release currentState, CompositeSpecification<Release> spec)
-        // {
-        //     return new ReleaseAggregationRoot(spec, currentState);
-        // }
-        // #endregion
-
         public void AddActivity(Activity activity)
         {
             var current = GetChange();
