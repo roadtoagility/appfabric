@@ -27,15 +27,6 @@ namespace AppFabric.Domain.AggregationBilling
             AppendValidationResult(billing.Failures);
         }
 
-        // #region Aggregation contruction
-        //
-        //
-        // public static BillingAggregationRoot ReconstructFrom(Billing currentState, CompositeSpecification<Billing> spec)
-        // {
-        //     return new BillingAggregationRoot(spec, currentState);
-        // }
-        // #endregion
-
         public void AddRelease(Release release)
         {
             var current = GetChange();
