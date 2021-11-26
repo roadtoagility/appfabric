@@ -29,7 +29,7 @@ namespace AppFabric.Domain.AggregationUser
 {
     public sealed class UserAggregationRoot : ObjectBasedAggregationRoot<User, EntityId>
     {
-        private ISpecification<User> _spec;
+        private readonly ISpecification<User> _spec;
 
         public UserAggregationRoot(ISpecification<User> specification, User user)
         {
