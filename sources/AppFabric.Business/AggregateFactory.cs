@@ -65,7 +65,7 @@ namespace AppFabric.Business
 
             if (newBillingSpec.IsSatisfiedBy(billing))
             {
-                return BillingAggregationRoot.ReconstructFrom(billing, billingSpec);
+                return new BillingAggregationRoot(billingSpec, billing);
             }
             throw new Exception("Invalid Command");
         }
@@ -76,7 +76,7 @@ namespace AppFabric.Business
 
             if (billingSpec.IsSatisfiedBy(source.Billing))
             {
-                return BillingAggregationRoot.ReconstructFrom(source.Billing, billingSpec);
+                return new BillingAggregationRoot(billingSpec, source.Billing);
             }
             throw new Exception("Invalid Command");
         }

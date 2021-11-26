@@ -10,8 +10,8 @@ namespace AppFabric.Domain.AggregationBilling
 {
     public class BillingAggregationRoot : ObjectBasedAggregationRoot<Billing, EntityId>
     {
-        private CompositeSpecification<Billing> _spec;
-        private BillingAggregationRoot(CompositeSpecification<Billing> specification, Billing billing)
+        private readonly ISpecification<Billing> _spec;
+        public  BillingAggregationRoot(ISpecification<Billing> specification, Billing billing)
         {
             _spec = specification;
             if (_spec.IsSatisfiedBy(billing))
@@ -27,13 +27,14 @@ namespace AppFabric.Domain.AggregationBilling
             AppendValidationResult(billing.Failures);
         }
 
-        #region Aggregation contruction
-
-
-        public static BillingAggregationRoot ReconstructFrom(Billing currentState, CompositeSpecification<Billing> spec)
-        {
-            return new BillingAggregationRoot(spec, currentState);
-        }
+        // #region Aggregation contruction
+        //
+        //
+        // public static BillingAggregationRoot ReconstructFrom(Billing currentState, CompositeSpecification<Billing> spec)
+        // {
+        //     return new BillingAggregationRoot(spec, currentState);
+        // }
+        // #endregion
 
         public void AddRelease(Release release)
         {
@@ -48,8 +49,6 @@ namespace AppFabric.Domain.AggregationBilling
 
             AppendValidationResult(current.Failures);
         }
-
-        #endregion
 
         public void Remove()
         {
