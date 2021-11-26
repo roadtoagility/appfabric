@@ -35,9 +35,7 @@ namespace AppFabric.Tests.Features.Steps
         private Project _project;
         private Money _budget;
         private EntityId _clientId;
-        private ProjectStatus _status;
-        private ServiceOrder _serviceOrder;
-        
+
         public NewProjectRequest()
         {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
