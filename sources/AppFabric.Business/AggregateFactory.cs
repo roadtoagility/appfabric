@@ -10,7 +10,6 @@ using AppFabric.Domain.AggregationRelease.Specifications;
 using AppFabric.Domain.AggregationUser;
 using AppFabric.Domain.AggregationUser.Specifications;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.BusinessObjects;
 using DFlow.Domain.Command;

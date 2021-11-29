@@ -22,15 +22,15 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
             if (candidate.Owner == null)
             {
                 candidate.AppendValidationResult(_ownerNullFailure);
-                return NOT_VALID;
+                return NotValid;
             }
             else if (!regex.Match(candidate.Owner.Value).Success)
             {
                 candidate.AppendValidationResult(_ownerInvalidFailure);
-                return NOT_VALID;
+                return NotValid;
             }
 
-            return VALID;
+            return Valid;
         }
     }
 }

@@ -19,7 +19,6 @@
 using System.Collections.Generic;
 using DFlow.Domain.BusinessObjects;
 using System.Collections.Immutable;
-using AppFabric.Domain.Framework.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
@@ -27,7 +26,7 @@ namespace AppFabric.Domain.BusinessObjects
     {
         public EntityId ProjectId { get; }
 
-        public Effort Effort { get; }
+        public Effort Effort { get; private set; }
 
         public ActivityStatus ActivityStatus { get; }
         public Member Responsible { get; }
@@ -41,15 +40,15 @@ namespace AppFabric.Domain.BusinessObjects
             : base(id, version)
         {
             this.ProjectId = projectId;
-            this.Effort = Effort.From(0);
-            this.ActivityStatus = ActivityStatus.From(0);
+            this.Effort = Effort.UnEstimated();
+            this.ActivityStatus = ActivityStatus.NotStarted();
             this.Responsible = Member.Empty();
 
             AppendValidationResult(Identity.ValidationStatus.Errors.ToImmutableList());
             AppendValidationResult(projectId.ValidationStatus.Errors.ToImmutableList());
         }
 
-        public static Activity From(EntityId id, EntityId projectId, int hours, VersionId version)
+        public static Activity From(EntityId id, EntityId projectId, Effort hours, VersionId version)
         {
             var activity = new Activity(id, projectId, version);
             activity.UpdateEffort(hours);
@@ -61,14 +60,14 @@ namespace AppFabric.Domain.BusinessObjects
             Responsible.Update(member);
         }
 
-        public void UpdateEffort(int hours)
+        public void UpdateEffort(Effort hours)
         {
-            Effort.Update(hours);
+            Effort = hours;
         }
 
         public void Close()
         {
-            ActivityStatus.Close();
+            ActivityStatus.Closed();
         }
 
         protected override IEnumerable<object> GetEqualityComponents()

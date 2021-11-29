@@ -1,7 +1,6 @@
 ﻿using AppFabric.Domain.AggregationActivity.Events;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Specifications;
 
@@ -33,15 +32,14 @@ namespace AppFabric.Domain.AggregationActivity
             AppendValidationResult(AggregateRootEntity.Failures);
         }
 
-        public void UpdateRemaining(int hours)
+        public void UpdateRemaining(Effort newEffortHours)
         {
-            var oldEffort = AggregateRootEntity.Effort.Value;
-            AggregateRootEntity.UpdateEffort(hours);
+            AggregateRootEntity.UpdateEffort(AggregateRootEntity.Effort);
             if (_spec.IsSatisfiedBy(AggregateRootEntity))
             {
                 Apply(AggregateRootEntity);
 
-                if(oldEffort > hours)
+                if(AggregateRootEntity.Effort > newEffortHours)
                 {
                     Raise(EffortDecreasedEvent.For(AggregateRootEntity));
                 }

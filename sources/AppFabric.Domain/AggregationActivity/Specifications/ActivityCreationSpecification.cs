@@ -1,7 +1,6 @@
 ﻿using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.BusinessObjects.Validations;
 using AppFabric.Domain.BusinessObjects.Validations.GenericRules;
-using AppFabric.Domain.Framework.BusinessObjects;
 using DFlow.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
 using System.Collections.Generic;

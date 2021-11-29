@@ -18,15 +18,15 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
             if (candidate.Status == null)
             {
                 candidate.AppendValidationResult(_statusNullFailure);
-                return NOT_VALID;
+                return NotValid;
             }
             else if (!Enumerable.Range(0, 2).Contains(candidate.Status.Value))
             {
                 candidate.AppendValidationResult(_invalidStatusFailure);
-                return NOT_VALID;
+                return NotValid;
             }
 
-            return VALID;
+            return Valid;
         }
     }
 }

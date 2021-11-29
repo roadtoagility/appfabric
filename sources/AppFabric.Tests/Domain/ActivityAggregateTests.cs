@@ -10,7 +10,6 @@ using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.AggregationRelease;
 using AppFabric.Domain.AggregationRelease.Events;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using DFlow.Domain.BusinessObjects;
 using System;
 using System.Collections.Generic;
@@ -42,7 +41,7 @@ namespace AppFabric.Tests.Domain
             var projectId = EntityId.From(Guid.NewGuid());
             var aggFactory = new AggregateFactory();
             var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
-            activityAgg.UpdateRemaining(7);
+            activityAgg.UpdateRemaining( Effort.From(7));
             activityAgg.Close();
 
             Assert.True(activityAgg.Failures.Any());

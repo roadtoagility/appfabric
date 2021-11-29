@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using AppFabric.Domain.Framework.BusinessObjects;
+using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Persistence.Framework.Repositories
 {

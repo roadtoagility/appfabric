@@ -23,7 +23,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.ExtensionMethods;
 using DFlow.Domain.BusinessObjects;
 

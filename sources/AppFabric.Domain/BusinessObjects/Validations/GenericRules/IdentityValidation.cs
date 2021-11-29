@@ -1,5 +1,4 @@
-﻿using AppFabric.Domain.Framework.BusinessObjects;
-using DFlow.Domain.BusinessObjects;
+﻿using DFlow.Domain.BusinessObjects;
 using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
@@ -24,10 +23,10 @@ namespace AppFabric.Domain.BusinessObjects.Validations.GenericRules
             if (candidate.Identity == null || candidate.Identity.Value == Guid.Empty)
             {
                 candidate.AppendValidationResult(_invalidIdentityFailure);
-                return NOT_VALID;
+                return NotValid;
             }
 
-            return VALID;
+            return Valid;
         }
     }
 }

@@ -18,15 +18,15 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
             if (candidate.OrderNumber == null || string.IsNullOrEmpty(candidate.OrderNumber.Number))
             {
                 candidate.AppendValidationResult(_osNullFailure);
-                return NOT_VALID;
+                return NotValid;
             }
             else if (!candidate.OrderNumber.IsAproved)
             {
                 candidate.AppendValidationResult(_osNotApprovedFailure);
-                return NOT_VALID;
+                return NotValid;
             }
 
-            return VALID;
+            return Valid;
         }
     }
 }

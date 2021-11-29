@@ -1,7 +1,6 @@
 ﻿using AppFabric.Domain.AggregationBilling.Events;
 using AppFabric.Domain.AggregationBilling.Specifications;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;

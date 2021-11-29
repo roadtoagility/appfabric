@@ -19,15 +19,15 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
             if (candidate.Budget == null)
             {
                 candidate.AppendValidationResult(_budgetNullFailure);
-                return NOT_VALID;
+                return NotValid;
             }
             else if (candidate.Budget.Value < Decimal.Zero)
             {
                 candidate.AppendValidationResult(_negativeBudgetFailure);
-                return NOT_VALID;
+                return NotValid;
             }
 
-            return VALID;
+            return Valid;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;

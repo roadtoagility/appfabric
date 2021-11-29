@@ -9,22 +9,23 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ActivityRules
 {
     public class ActivityCloseWithoutEffortValidation : ValidationRule<Activity>
     {
-        private ValidationFailure _closedWithoutEffortFailure;
+        private readonly ValidationFailure _closedWithoutEffortFailure;
 
         public ActivityCloseWithoutEffortValidation()
         {
-            _closedWithoutEffortFailure = new ValidationFailure("CanHaveResponsible", "Não é possível fechar uma atividade com esforço pendente");
+            _closedWithoutEffortFailure = new ValidationFailure("CanHaveResponsible"
+                , "Não é possível fechar uma atividade com esforço pendente");
         }
 
         public override bool IsValid(Activity candidate)
         {
-            if (candidate.ActivityStatus == ActivityStatus.From(2) && candidate.Effort.Value > 0)
+            if (candidate.ActivityStatus == ActivityStatus.Closed() && candidate.Effort == Effort.WithoutEffort())
             {
                 candidate.AppendValidationResult(_closedWithoutEffortFailure);
-                return NOT_VALID;
+                return NotValid;
             }
 
-            return VALID;
+            return Valid;
         }
     }
 }

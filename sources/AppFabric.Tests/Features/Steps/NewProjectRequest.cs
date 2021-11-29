@@ -20,7 +20,6 @@ using System;
 using System.Globalization;
 using System.Threading;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using Xunit;
 using Xunit.Gherkin.Quick;
 

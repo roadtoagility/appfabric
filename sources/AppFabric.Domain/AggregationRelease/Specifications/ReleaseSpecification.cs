@@ -13,7 +13,7 @@ namespace AppFabric.Domain.AggregationRelease.Specifications
     {
         public override bool IsSatisfiedBy(Release candidate)
         {
-            var haveNotClosed = candidate.Activities.Any(x => x.ActivityStatus.Value != (int)ActivityStatus.Status.Closed);
+            var haveNotClosed = candidate.Activities.Any(x => x.ActivityStatus != ActivityStatus.Closed());
             if (haveNotClosed)
             {
                 candidate.AppendValidationResult(new ValidationFailure("ReleaseSpecification",

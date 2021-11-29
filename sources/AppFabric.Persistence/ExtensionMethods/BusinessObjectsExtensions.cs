@@ -20,7 +20,6 @@
 using System;
 using System.Diagnostics;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Model;
 using DFlow.Domain.BusinessObjects;
 

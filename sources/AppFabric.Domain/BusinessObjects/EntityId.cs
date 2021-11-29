@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,10 +16,24 @@
 // Boston, MA  02110-1301, USA.
 //
 
-namespace AppFabric.Agile.Domain.Framework.BusinessObjects
+using System;
+using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
+
+namespace AppFabric.Domain.BusinessObjects
 {
-    public interface IExposeValue<out TValue>
+    public sealed class EntityId : ValueOf<Guid, EntityId, EntityIdValidator>
     {
-        TValue GetValue();
+        private static readonly Guid EmptyId = Guid.Empty;
+
+        public static EntityId Empty()
+        {
+            return From(EmptyId);
+        }
+
+        public static EntityId GetNext()
+        {
+            return From(Guid.NewGuid());
+        }
     }
 }

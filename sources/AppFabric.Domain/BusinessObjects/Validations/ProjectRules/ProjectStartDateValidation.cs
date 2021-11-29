@@ -19,16 +19,16 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
             if (candidate.StartDate == null)
             {
                 candidate.AppendValidationResult(_dateNullFailure);
-                return NOT_VALID;
+                return NotValid;
             }
 
             if (candidate.StartDate.Value >= DateTime.UnixEpoch)
             {
                 candidate.AppendValidationResult(_invalidDateFailure);
-                return NOT_VALID;
+                return NotValid;
             }
 
-            return VALID;
+            return Valid;
         }
     }
 }

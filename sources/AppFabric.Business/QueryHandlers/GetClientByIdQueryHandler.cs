@@ -19,7 +19,7 @@
 using System;
 using AppFabric.Business.Framework;
 using AppFabric.Business.QueryHandlers.Filters;
-using AppFabric.Domain.Framework.BusinessObjects;
+using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Framework.ReadModel.Repositories;
 using AppFabric.Persistence.ReadModel.Repositories;

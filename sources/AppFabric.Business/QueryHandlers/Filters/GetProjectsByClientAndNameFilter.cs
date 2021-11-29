@@ -18,7 +18,6 @@
 
 using System;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 
 namespace AppFabric.Business.QueryHandlers.Filters
 {

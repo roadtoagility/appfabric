@@ -18,7 +18,6 @@
 
 using System;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using DFlow.Domain.BusinessObjects;
 using DFlow.Domain.DomainEvents;
 

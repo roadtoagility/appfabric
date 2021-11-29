@@ -15,9 +15,9 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
             if (string.IsNullOrEmpty(candidate.Code.Value))
             {
                 candidate.AppendValidationResult(_codeEmptyFailure);
-                return NOT_VALID;
+                return NotValid;
             }
-            return VALID;
+            return Valid;
         }
     }
 }

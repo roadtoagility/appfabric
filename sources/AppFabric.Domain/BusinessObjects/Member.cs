@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Domain.Framework.Validation;
 using DFlow.Domain.BusinessObjects;
 

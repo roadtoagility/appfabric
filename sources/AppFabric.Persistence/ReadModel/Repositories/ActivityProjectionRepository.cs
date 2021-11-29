@@ -21,8 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using AppFabric.Domain.BusinessObjects;
 using Microsoft.EntityFrameworkCore;
-using AppFabric.Domain.Framework.BusinessObjects;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
 {

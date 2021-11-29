@@ -16,13 +16,11 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Generic;
-using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.Validation;
+using System;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ActivityStatus : ValidationStatus
+    public sealed class ActivityStatus : ValueOf.ValueOf<string,ActivityStatus>
     {
         public enum Status
         {
@@ -32,68 +30,29 @@ namespace AppFabric.Domain.BusinessObjects
             Blocked
         }
 
-        private Status _status;
-
-        public int Value { get
-            {
-                return (int)_status;
-            }
-        }
-
-        private ActivityStatus(Status status)
+        public static ActivityStatus NotStarted()
         {
-            _status = status;
+            return From(Status.NotStarted.ToString());
         }
-
-        public static ActivityStatus From(int status)
+        
+        public static ActivityStatus Started()
         {
-            var ps = new ActivityStatus((Status)status);
-
-            return ps;
+            return From(Status.Started.ToString());
         }
 
-        public void Start()
+        public static ActivityStatus Closed()
         {
-            _status = Status.Started;
+            return From(Status.Closed.ToString());
         }
 
-        public void Close()
+        public static ActivityStatus Blocked()
         {
-            _status = Status.Closed;
+            return From(Status.Blocked.ToString());
         }
 
-        public void Block()
+        protected override void Validate()
         {
-            _status = Status.Blocked;
+            // var status = Enum.Parse<ActivityStatus>(Value);
         }
-
-        public override string ToString()
-        {
-            return $"{_status.ToString()}";
-        }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return _status;
-        }
-
-        #region IComparable
-
-        public int CompareTo(ActivityStatus other)
-        {
-            if (ReferenceEquals(this, other))
-            {
-                return 0;
-            }
-
-            if (ReferenceEquals(null, other))
-            {
-                return 1;
-            }
-
-            return _status.CompareTo(other._status);
-        }
-
-        #endregion
     }
 }

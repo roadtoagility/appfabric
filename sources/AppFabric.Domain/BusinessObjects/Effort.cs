@@ -17,47 +17,61 @@
 //
 
 using System.Collections.Generic;
-using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public class Effort : ValidationStatus
+    public class Effort : ValueOf.ValueOf<int,Effort>
     {
-        public int Value { get; private set; }
+        private const int UnEstimatedEffort = -1;
+        private const int NoEffort = 0;
+        private const int MaximumEffort = 8;
 
-        private Effort(int hours)
+        // public static Effort From(int hours)
+        // {
+        //     var effort = new Effort(hours);
+        //     var validator = new EffortValidator();
+        //
+        //     effort.SetValidationResult(validator.Validate(effort));
+        //
+        //     return effort;
+        // }
+
+        public static Effort UnEstimated()
         {
-            Value = hours;
+            return From(UnEstimatedEffort);
         }
 
-        public static Effort From(int hours)
+        public static Effort WithoutEffort()
         {
-            var effort = new Effort(hours);
-            var validator = new EffortValidator();
-
-            effort.SetValidationResult(validator.Validate(effort));
-
-            return effort;
+            return From(NoEffort);
         }
 
+        public static Effort MaxEffort()
+        {
+            return From(MaximumEffort);
+        }
+
+        
         public void Update(int hours)
         {
             Value = hours;
         }
 
-        public override string ToString()
+        protected override void Validate()
         {
-            return $"{Value}";
+            
         }
 
-        #region IEquatable
+        public static bool operator >=(Effort a, Effort b)
+            => a.Value >= b.Value;
 
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
-        #endregion
+        public static bool operator <=(Effort a, Effort b)
+            => a.Value <= b.Value;
+        
+        public static bool operator >(Effort a, Effort b)
+            => a.Value > b.Value;
+
+        public static bool operator <(Effort a, Effort b)
+            => a.Value < b.Value;
     }
 }

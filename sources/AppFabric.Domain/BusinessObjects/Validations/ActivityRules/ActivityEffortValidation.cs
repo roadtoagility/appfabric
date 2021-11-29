@@ -9,22 +9,23 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ActivityRules
 {
     public class ActivityEffortValidation : ValidationRule<Activity>
     {
-        private ValidationFailure _effortFailure;
+        private readonly ValidationFailure _effortFailure;
 
         public ActivityEffortValidation()
         {
-            _effortFailure = new ValidationFailure("IsEffortLessOrEqualEightHours", "Uma atividade não pode ter esforço maior do que 8 horas");
+            _effortFailure = new ValidationFailure("IsEffortLessOrEqualEightHours"
+                , "Uma atividade não pode ter esforço maior do que 8 horas");
         }
 
         public override bool IsValid(Activity candidate)
         {
-            if (candidate.Effort.Value > 8)
+            if (candidate.Effort > Effort.MaxEffort())
             {
                 candidate.AppendValidationResult(_effortFailure);
-                return NOT_VALID;
+                return NotValid;
             }
 
-            return VALID;
+            return Valid;
         }
     }
 }

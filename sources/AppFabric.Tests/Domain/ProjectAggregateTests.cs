@@ -9,7 +9,6 @@ using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.AggregationRelease;
 using AppFabric.Domain.AggregationRelease.Events;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;

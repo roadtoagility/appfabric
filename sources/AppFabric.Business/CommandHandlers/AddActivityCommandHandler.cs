@@ -23,7 +23,6 @@ using AppFabric.Business.CommandHandlers.ExtensionMethods;
 using AppFabric.Business.Framework;
 using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;

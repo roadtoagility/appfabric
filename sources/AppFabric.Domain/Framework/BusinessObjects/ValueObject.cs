@@ -31,24 +31,24 @@ namespace AppFabric.Domain.Framework.BusinessObjects
     public abstract class ValueObject
     {
         protected abstract IEnumerable<object> GetEqualityComponents();
-
+    
         public override bool Equals(object obj)
         {
             if (obj == null)
             {
                 return false;
             }
-
+    
             if (GetType() != obj.GetType())
             {
                 return false;
             }
-
+    
             var valueObject = (ValueObject)obj;
-
+    
             return GetEqualityComponents().SequenceEqual(valueObject.GetEqualityComponents());
         }
-
+    
         public override int GetHashCode()
         {
             return HashCode.Combine(GetEqualityComponents());
