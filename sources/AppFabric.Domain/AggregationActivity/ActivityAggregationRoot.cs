@@ -26,7 +26,7 @@ namespace AppFabric.Domain.AggregationActivity
             if (_spec.IsSatisfiedBy(AggregateRootEntity))
             {
                 Apply(AggregateRootEntity);
-                Raise(MemberAsignedEvent.For(AggregateRootEntity));
+                Raise(MemberAssignedEvent.For(AggregateRootEntity));
             }
 
             AppendValidationResult(AggregateRootEntity.Failures);

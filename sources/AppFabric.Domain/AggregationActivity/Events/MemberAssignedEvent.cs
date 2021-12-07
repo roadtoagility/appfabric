@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,11 +17,27 @@
 //
 
 using System;
+using AppFabric.Domain.BusinessObjects;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.DomainEvents;
 
-namespace AppFabric.Domain.Framework.DomainEvents
+namespace AppFabric.Domain.AggregationActivity.Events
 {
-    public interface IDomainEvent
+    public class MemberAssignedEvent : DomainEvent
     {
-        DateTime When { get; }
+        private MemberAssignedEvent(EntityId id, VersionId version)
+            : base(DateTime.Now, version)
+        {
+            Id = id;
+        }
+        public EntityId Id { get; }
+
+        public static MemberAssignedEvent For(Activity activity)
+        {
+            return new MemberAssignedEvent(activity.Identity, activity.Version);
+        }
     }
 }
+
+
+

@@ -62,7 +62,7 @@ namespace AppFabric.Tests.Domain
             activityAgg.Assign(member);
 
             Assert.False(activityAgg.Failures.Any());
-            Assert.Contains(activityAgg.GetEvents(), x => x.GetType() == typeof(MemberAsignedEvent));
+            Assert.Contains(activityAgg.GetEvents(), x => x.GetType() == typeof(MemberAssignedEvent));
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace AppFabric.Tests.Domain
             activityAgg.Assign(member);
 
             Assert.True(activityAgg.Failures.Any());
-            Assert.DoesNotContain(activityAgg.GetEvents(), x => x.GetType() == typeof(MemberAsignedEvent));
+            Assert.DoesNotContain(activityAgg.GetEvents(), x => x.GetType() == typeof(MemberAssignedEvent));
         }
     }
 }

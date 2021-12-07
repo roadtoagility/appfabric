@@ -100,7 +100,7 @@ namespace AppFabric.API
 
 
             services.AddScoped<DomainEventHandler<ActivityCreatedEvent>, CreatedActivityProjectionHandler>();
-            services.AddScoped<DomainEventHandler<MemberAsignedEvent>, AsignedMemberProjectionHandler>();
+            services.AddScoped<DomainEventHandler<MemberAssignedEvent>, AsignedMemberProjectionHandler>();
             services.AddScoped<DomainEventHandler<EffortDecreasedEvent>, DecreasedEffortProjectionHandler>();
             services.AddScoped<DomainEventHandler<EffortIncreasedEvent>, IncreasedEffortProjectionHandler>();
             services.AddScoped<DomainEventHandler<ActivityClosedEvent>, ClosedActivityProjectionHandler>();
