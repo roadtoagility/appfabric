@@ -17,7 +17,6 @@
 //
 
 using FluentValidation;
-using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {

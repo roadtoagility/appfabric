@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,10 +17,9 @@
 //
 
 using System;
-using AppFabric.Domain.BusinessObjects;
 using FluentValidation;
 
-namespace AppFabric.Domain.Framework.Validation
+namespace AppFabric.Domain.BusinessObjects.Validations
 {
     public sealed class EntityIdValidator: AbstractValidator<EntityId>
     {

@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,7 +17,7 @@
 //
 
 using System;
-using AppFabric.Domain.Framework.Validation;
+using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects

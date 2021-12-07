@@ -18,7 +18,6 @@
 
 using System;
 using FluentMediator;
-using AppFabric.Domain.Framework.DomainEvents;
 using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.Framework

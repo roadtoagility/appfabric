@@ -20,7 +20,6 @@ using FluentValidation;
 using AppFabric.Business.QueryHandlers.Filters;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Business.QueryHandlers.Sanitizers
 {
