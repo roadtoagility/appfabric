@@ -59,7 +59,7 @@ namespace AppFabric.Domain.BusinessObjects.Validations
                 {
                     RuleFor(current => current.OrderNumber).Custom((serviceOrder, context) =>
                     {
-                        if (!serviceOrder.IsAproved)
+                        if (!serviceOrder.Value.IsApproved)
                         {
                             context.AddFailure("A ordem de serviço precisa estar aprovada");
                         }

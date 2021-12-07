@@ -18,71 +18,32 @@
 
 using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ProjectStatus :ValidationStatus
+    public sealed class ProjectStatus :ValueOf<string, ProjectStatus, ProjectStatusValidator>
     {
-        public enum Status
+        private enum Status
         {
-            ToAprove,
-            Aproved,
+            ToApprove,
+            Approved,
             Finished
-        }
-
-        private readonly Status _status;
-
-        public int Value { get; }
-        
-        private ProjectStatus(Status status)
-        {
-            _status = status;
-            Value = (int) status;
-        }
-
-        public static ProjectStatus From(int status)
-        {
-            var ps = new ProjectStatus((Status) status);
-            var validator = new ProjectStatusValidator();
-
-            ps.SetValidationResult(validator.Validate(ps));
-            
-            return ps;
         }
         
         public static ProjectStatus Default()
         {
-            return new ProjectStatus(Status.ToAprove);
+            return From(Status.ToApprove.ToString());
         }
-
-        public override string ToString()
+        
+        public static ProjectStatus Approved()
         {
-            return $"{_status.ToString()}";
+            return From(Status.Approved.ToString());
         }
-
-        protected override IEnumerable<object> GetEqualityComponents()
+        
+        public static ProjectStatus Finished()
         {
-            yield return _status;
+            return From(Status.Finished.ToString());
         }
-
-        #region IComparable
-
-        public int CompareTo(ProjectStatus other)
-        {
-            if (ReferenceEquals(this, other))
-            {
-                return 0;
-            }
-
-            if (ReferenceEquals(null, other))
-            {
-                return 1;
-            }
-
-            return _status.CompareTo(other._status);
-        }
-
-        #endregion
     }
 }

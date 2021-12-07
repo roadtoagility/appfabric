@@ -15,16 +15,16 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
         }
         public override bool IsValid(Project candidate)
         {
-            if (candidate.Status == null)
-            {
-                candidate.AppendValidationResult(_statusNullFailure);
-                return NotValid;
-            }
-            else if (!Enumerable.Range(0, 2).Contains(candidate.Status.Value))
-            {
-                candidate.AppendValidationResult(_invalidStatusFailure);
-                return NotValid;
-            }
+            // if (candidate.Status == null)
+            // {
+            //     candidate.AppendValidationResult(_statusNullFailure);
+            //     return NotValid;
+            // }
+            // else if (!Enumerable.Range(0, 2).Contains(candidate.Status.Value))
+            // {
+            //     candidate.AppendValidationResult(_invalidStatusFailure);
+            //     return NotValid;
+            // }
 
             return Valid;
         }

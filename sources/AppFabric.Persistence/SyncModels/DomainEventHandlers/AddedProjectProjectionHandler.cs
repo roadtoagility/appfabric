@@ -51,8 +51,7 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
                 @event.ClientId.Value,
                 client.Name,
                 @event.Owner.Value,
-                @event.OrderNumber.Number,
-                @event.Status.Value,
+                @event.OrderNumber.Value.Number,
                 @event.Status.ToString(),
                 @event.Version.Value);
 

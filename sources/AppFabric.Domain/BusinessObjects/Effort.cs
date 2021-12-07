@@ -16,25 +16,16 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Generic;
+using DFlow.Domain.BusinessObjects;
+using AppFabric.Domain.BusinessObjects.Validations;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public class Effort : ValueOf.ValueOf<int,Effort>
+    public class Effort : ValueOf<int,Effort, EffortValidator>
     {
         private const int UnEstimatedEffort = -1;
         private const int NoEffort = 0;
         private const int MaximumEffort = 8;
-
-        // public static Effort From(int hours)
-        // {
-        //     var effort = new Effort(hours);
-        //     var validator = new EffortValidator();
-        //
-        //     effort.SetValidationResult(validator.Validate(effort));
-        //
-        //     return effort;
-        // }
 
         public static Effort UnEstimated()
         {

@@ -32,6 +32,6 @@ namespace AppFabric.Business.CommandHandlers.Commands
         public string ServiceOrderNumber { get; set; }
         public bool ServiceOrderStatus { get; set; }
         //TODO: Muito ruim a forma atual desse status
-        public int Status { get; set; }
+        public string Status { get; set; }
     }
 }

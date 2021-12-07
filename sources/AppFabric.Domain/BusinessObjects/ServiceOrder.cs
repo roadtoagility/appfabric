@@ -19,49 +19,15 @@
 using System;
 using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ServiceOrder : ValidationStatus
+    public sealed class ServiceOrder : ValueOf<(string Number, bool IsApproved), ServiceOrder, ServiceOrderNumberValidator>
     {
-        public string Number { get; }
-        public bool IsAproved { get; }
-        
-        
-        private ServiceOrder(string name, bool isAproved)
-        {
-            Number = name;
-            IsAproved = isAproved;
-        }
-
-        public static ServiceOrder From(string name, bool isAproved)
-        {
-            var son = new ServiceOrder(name, isAproved);
-            var validator = new ServiceOrderNumberValidator();
-
-            son.SetValidationResult(validator.Validate(son));
-            
-            return son;
-        }
-
         public static ServiceOrder Empty()
         {
-            var son = new ServiceOrder(String.Empty, false);
-            return son;
+            return From((String.Empty,false));
         }
-        
-        public override string ToString()
-        {
-            return $"{Number}";
-        }
-
-        #region IEquatable
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Number;
-        }
-        #endregion
     }
 }

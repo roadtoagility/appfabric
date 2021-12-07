@@ -22,7 +22,7 @@ namespace AppFabric.Domain.BusinessObjects
 {
     public sealed class ActivityStatus : ValueOf.ValueOf<string,ActivityStatus>
     {
-        public enum Status
+        private enum Status
         {
             NotStarted,
             Started,

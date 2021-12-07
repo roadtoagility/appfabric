@@ -25,9 +25,9 @@ namespace AppFabric.Tests.Domain
         [Fact]
         public void ShouldCreateProjectWithServiceOrder()
         {
-            var orderService = ServiceOrder.From("S20210209O125478593", true);
+            var orderService = ServiceOrder.From(("S20210209O125478593", true));
             var projectId = EntityId.From(Guid.NewGuid());
-            var status = ProjectStatus.From(1);
+            var status = ProjectStatus.From("NotApproved");
             AggregateFactory factory = new AggregateFactory();
             var projAgg = factory.Create(new AddProjectCommand() { 
                 ServiceOrderNumber = "S20210209O125478593", 
@@ -37,17 +37,16 @@ namespace AppFabric.Tests.Domain
                 ServiceOrderStatus = true
             });
 
-
             Assert.True(projAgg.IsValid);
-            Assert.Contains(projAgg.GetEvents(), x => x.GetType() == typeof(ProjectAddedEvent));
+            Assert.Contains(projAgg.GetEvents(), x => x is ProjectAddedEvent);
         }
 
         [Fact]
         public void ShouldNotCreateProjectWithServiceOrderNotApproved()
         {
-            var orderService = ServiceOrder.From("S20210209O125478593", false);
+            var orderService = ServiceOrder.From(("S20210209O125478593", false));
             var projectId = EntityId.From(Guid.NewGuid());
-            var status = ProjectStatus.From(1);
+            var status = ProjectStatus.From("NotApproved");
             AggregateFactory factory = new AggregateFactory();
 
             var ex = Assert.Throws<Exception>(() =>
@@ -58,7 +57,7 @@ namespace AppFabric.Tests.Domain
                     Owner = "doug.ramalho@gma.com",
                     Code = "PojectFake",
                     Name = "NameFake",
-                    Status = 1,
+                    Status = "NotApproved",
                     ServiceOrderStatus = false
                 });
             });

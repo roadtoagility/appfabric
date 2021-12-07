@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,48 +16,18 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
-using System.Collections.Generic;
+
 using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class Email : ValidationStatus
+    public sealed class Email : ValueOf<string, Email, EmailValidator>
     {
-        public string Value { get; }
-        
-        private Email(string name)
-        {
-            Value = name;
-        }
-
-        public static Email From(string name)
-        {
-            var email = new Email(name);
-            var validator = new EmailValidator();
-
-            email.SetValidationResult(validator.Validate(email));
-            
-            return email;
-        }
-        
+        private static readonly string EmailEmpty = "empty@email.com";
         public static Email Empty()
         {
-            return new Email(String.Empty);
+            return From(EmailEmpty);
         }
-        
-        public override string ToString()
-        {
-            return $"{Value}";
-        }
-
-        #region IEquatable
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
-        #endregion
     }
 }

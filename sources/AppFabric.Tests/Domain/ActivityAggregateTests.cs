@@ -58,7 +58,7 @@ namespace AppFabric.Tests.Domain
             var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, estimatedHours));
 
             var memberId = EntityId.From(Guid.NewGuid());
-            var member = Member.From(memberId, projectId, "Douglas", VersionId.Empty());
+            var member = Member.From(memberId, projectId,  Name.From("Douglas"), VersionId.Empty());
             activityAgg.Assign(member);
 
             Assert.False(activityAgg.Failures.Any());
@@ -76,7 +76,7 @@ namespace AppFabric.Tests.Domain
             var memberId = EntityId.From(Guid.NewGuid());
 
             projectId = EntityId.From(Guid.NewGuid());
-            var member = Member.From(memberId, projectId, "Douglas", VersionId.Empty());
+            var member = Member.From(memberId, projectId, Name.From("Douglas"), VersionId.Empty());
             activityAgg.Assign(member);
 
             Assert.True(activityAgg.Failures.Any());

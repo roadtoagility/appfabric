@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.Validation;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
@@ -27,16 +26,16 @@ namespace AppFabric.Domain.BusinessObjects
     public class Member : BaseEntity<EntityId>
     {
         public EntityId ProjectId { get; private set; }
-        public string Name { get; private set; }
+        public Name Name { get; private set; }
 
-        private Member(EntityId id, EntityId projectId, string name, VersionId version)
+        private Member(EntityId id, EntityId projectId, Name name, VersionId version)
             : base(id, version)
         {
             ProjectId = projectId;
             Name = name;
         }
 
-        public static Member From(EntityId id, EntityId projectId, string name, VersionId version)
+        public static Member From(EntityId id, EntityId projectId, Name name, VersionId version)
         {
             var member = new Member(id, projectId, name, version);
             var validator = new MemberValidator();
@@ -48,7 +47,8 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static Member Empty()
         {
-            var member = new Member(EntityId.From(Guid.Empty), EntityId.From(Guid.Empty), string.Empty, VersionId.Empty());
+            var member = new Member(EntityId.From(Guid.Empty), EntityId.From(Guid.Empty), 
+                Name.Empty(), VersionId.Empty());
 
             var validator = new MemberValidator();
 

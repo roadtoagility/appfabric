@@ -17,47 +17,16 @@
 //
 
 using System;
-using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class DateAndTime : ValidationStatus
+    public sealed class DateAndTime : ValueOf<DateTime, DateAndTime, DateAndTimeValidator>
     {
-        public DateTime Value { get; }
-        
-        private DateAndTime(DateTime date)
-        {
-            Value = date;
-        }
-
-        public static DateAndTime From(DateTime date)
-        {
-            var validDate = new DateAndTime(date);
-            var validator = new DateAndTimeValidator();
-
-            validDate.SetValidationResult(validator.Validate(validDate));
-            
-            return validDate;
-        }
-        
         public static DateAndTime Empty()
         {
             return From(DateTime.UnixEpoch);
         }
-
-        public override string ToString()
-        {
-            return $"{Value}";
-        }
-
-        #region IEquatable
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
-        #endregion
     }
 }

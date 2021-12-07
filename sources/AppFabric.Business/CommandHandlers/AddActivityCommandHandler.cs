@@ -19,15 +19,11 @@
 using System.Collections.Immutable;
 using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.CommandHandlers.ExtensionMethods;
 using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
-using System;
-using AppFabric.Domain.AggregationRelease;
 using System.Linq;
 
 namespace AppFabric.Business.CommandHandlers

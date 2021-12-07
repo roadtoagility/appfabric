@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,49 +16,30 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
-using System.Collections.Generic;
+using DFlow.Domain.BusinessObjects;
 using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class Money : ValidationStatus
+    public sealed class Money : ValueOf<decimal, Money, MoneyValidator>
     {
-        public decimal Value { get; }
+        private const int MinimumMoneyAmount = 0;
         
-        private Money(decimal quantity)
-        {
-            Value = quantity;
-        }
-
-        public static Money From(decimal quantity)
-        {
-            var money = new Money(quantity);
-            var validator = new MoneyValidator();
-
-            money.SetValidationResult(validator.Validate(money));
-            
-            return money;
-        }
-
         public static Money Zero()
         {
-            return Money.From(0);
+            return From(MinimumMoneyAmount);
         }
-
         
-        public override string ToString()
-        {
-            return $"{Value}";
-        }
+        public static bool operator >=(Money a, Money b)
+            => a.Value >= b.Value;
 
-        #region IEquatable
+        public static bool operator <=(Money a, Money b)
+            => a.Value <= b.Value;
+        
+        public static bool operator >(Money a, Money b)
+            => a.Value > b.Value;
 
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
-        #endregion
+        public static bool operator <(Money a, Money b)
+            => a.Value < b.Value;
     }
 }

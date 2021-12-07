@@ -24,7 +24,7 @@ namespace AppFabric.Persistence.Model
 {
     public class ProjectState : PersistentState
     {
-        public ProjectState(Guid id, string name, string code, decimal budget, DateTime startDate, Guid clientId, string owner, string orderNumber, int status, byte[] rowVersion)
+        public ProjectState(Guid id, string name, string code, decimal budget, DateTime startDate, Guid clientId, string owner, string orderNumber, string status, byte[] rowVersion)
         :base(startDate, rowVersion)
         {
             Id = id;
@@ -49,6 +49,6 @@ namespace AppFabric.Persistence.Model
         
         public string OrderNumber { get; set;}
         
-        public int Status { get; set;}
+        public string Status { get; set;}
     }
 }

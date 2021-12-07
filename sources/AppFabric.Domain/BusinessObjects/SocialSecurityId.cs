@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,47 +17,16 @@
 //
 
 using System;
-using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class SocialSecurityId : ValidationStatus
+    public sealed class SocialSecurityId : ValueOf<string, SocialSecurityId, SocialSecurityIdValidator>
     {
-        public string Value { get; }
-        
-        private SocialSecurityId(string code)
-        {
-            Value = code;
-        }
-
-        public static SocialSecurityId From(string id)
-        {
-            var ssId = new SocialSecurityId(id);
-            var validator = new SocialSecurityIdValidator();
-
-            ssId.SetValidationResult(validator.Validate(ssId));
-            
-            return ssId;
-        }
-        
         public static SocialSecurityId Empty()
         {
-            return new SocialSecurityId(String.Empty);
+            return From(String.Empty);
         }
-        
-        public override string ToString()
-        {
-            return $"{Value}";
-        }
-
-        #region IEquatable
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
-        #endregion
     }
 }

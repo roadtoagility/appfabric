@@ -139,7 +139,7 @@ namespace AppFabric.Business
 
             var project = Project.NewRequest(EntityId.GetNext(), 
                 ProjectName.From(command.Name),
-                ServiceOrder.From(command.ServiceOrderNumber, command.ServiceOrderStatus),
+                ServiceOrder.From((command.ServiceOrderNumber, command.ServiceOrderStatus)),
                 ProjectStatus.From(command.Status),
                 ProjectCode.From(command.Code),
                 DateAndTime.From(command.StartDate),

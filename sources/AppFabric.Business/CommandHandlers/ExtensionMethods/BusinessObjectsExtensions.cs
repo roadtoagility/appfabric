@@ -31,7 +31,7 @@ namespace AppFabric.Business.CommandHandlers.ExtensionMethods
                 Money.From(command.Budget),
                 Email.From(command.Owner),
                 ProjectStatus.From(command.Status),
-                ServiceOrder.From(command.OrderNumber, true)
+                ServiceOrder.From((command.OrderNumber, true))
                 );
     }
 }

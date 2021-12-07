@@ -25,7 +25,6 @@ namespace AppFabric.Domain.BusinessObjects.Validations
         public ProjectStatusValidator()
         {
             RuleFor(status => status).NotNull();
-            RuleFor(status => status.Value).InclusiveBetween(0,2);
         }
     }
 }
