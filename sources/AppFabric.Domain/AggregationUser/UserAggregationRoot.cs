@@ -47,11 +47,11 @@ namespace AppFabric.Domain.AggregationUser
             AppendValidationResult(user.Failures);
         }
         
-        public void Remove()
+        public void Remove(ISpecification<User> spec)
         {
-            //TODO: definir deleção
-            if (_spec.IsSatisfiedBy(AggregateRootEntity))
+            if (spec.IsSatisfiedBy(AggregateRootEntity))
             {
+                Apply(AggregateRootEntity);
                 Raise(UserRemovedEvent.For(AggregateRootEntity));
             }
         }

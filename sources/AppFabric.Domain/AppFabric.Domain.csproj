@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <Folder Include="BusinessObjects\Validations\ActivityRules" />
+      <Folder Include="BusinessObjects\Validations\ProjectRules" />
     </ItemGroup>
     <PropertyGroup>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>

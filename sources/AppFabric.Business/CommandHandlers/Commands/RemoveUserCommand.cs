@@ -17,11 +17,16 @@
 //
 
 using System;
+using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class RemoveUserCommand
     {
-        public Guid Id { get; set; }
+        public RemoveUserCommand(Guid id)
+        {
+            Id = EntityId.From(id);
+        }
+        public EntityId Id { get; private set; }
     }
 }

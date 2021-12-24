@@ -7,14 +7,14 @@ using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
-    public class AddReleaseCommand
+    public class AssignResponsibleCommand
     {
-        public AddReleaseCommand(Guid id, Guid releaseId)
+        public AssignResponsibleCommand( Guid id, Guid memberId)
         {
             Id = EntityId.From(id);
-            ReleaseId = EntityId.From(releaseId);
+            MemberId = EntityId.From(memberId);
         }
         public EntityId Id { get; set; }
-        public EntityId ReleaseId { get; set; }
+        public EntityId MemberId { get; set; }
     }
 }

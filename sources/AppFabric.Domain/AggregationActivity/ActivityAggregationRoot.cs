@@ -8,23 +8,20 @@ namespace AppFabric.Domain.AggregationActivity
 {    public class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId>
     {
         private readonly ISpecification<Activity> _spec;
-        public ActivityAggregationRoot(ISpecification<Activity> specification, Activity activity)
+        public ActivityAggregationRoot(Activity activity)
         {
-            _spec = specification;
-            
-            Apply(activity);
-
             if (activity.IsNew())
             {
+                Apply(activity);
                 Raise(ActivityCreatedEvent.For(activity));
             }
         }
         
-        public void Assign(Member member)
+        public void Assign(Member member, ISpecification<Activity> spec)
         {
             AggregateRootEntity.AddMember(member);
 
-            if (_spec.IsSatisfiedBy(AggregateRootEntity))
+            if (spec.IsSatisfiedBy(AggregateRootEntity))
             {
                 Apply(AggregateRootEntity);
                 Raise(MemberAssignedEvent.For(AggregateRootEntity));
@@ -33,10 +30,11 @@ namespace AppFabric.Domain.AggregationActivity
             AppendValidationResult(AggregateRootEntity.Failures);
         }
 
-        public void UpdateRemaining(Effort newEffortHours)
+        public void UpdateRemaining(Effort newEffortHours, ISpecification<Activity> spec)
         {
             AggregateRootEntity.UpdateEffort(AggregateRootEntity.Effort);
-            if (_spec.IsSatisfiedBy(AggregateRootEntity))
+            
+            if (spec.IsSatisfiedBy(AggregateRootEntity))
             {
                 Apply(AggregateRootEntity);
 
@@ -49,13 +47,14 @@ namespace AppFabric.Domain.AggregationActivity
                     Raise(EffortIncreasedEvent.For(AggregateRootEntity));
                 }
             }
+            
             AppendValidationResult(AggregateRootEntity.Failures);
         }
 
-        public void Close()
+        public void Close(ISpecification<Activity> spec)
         {
             AggregateRootEntity.Close();
-            if (_spec.IsSatisfiedBy(AggregateRootEntity))
+            if (spec.IsSatisfiedBy(AggregateRootEntity))
             {
                 Apply(AggregateRootEntity);
                 Raise(ActivityClosedEvent.For(AggregateRootEntity));
@@ -64,12 +63,14 @@ namespace AppFabric.Domain.AggregationActivity
             AppendValidationResult(AggregateRootEntity.Failures);
         }
         
-        public void Remove()
+        public void Remove(ISpecification<Activity> spec)
         {
-            if (GetChange().IsValid)
+            if (spec.IsSatisfiedBy(AggregateRootEntity))
             {
+                Apply(AggregateRootEntity);
                 Raise(ActivityRemovedEvent.For(this.GetChange()));
             }
+            AppendValidationResult(AggregateRootEntity.Failures);
         }
     }
 }

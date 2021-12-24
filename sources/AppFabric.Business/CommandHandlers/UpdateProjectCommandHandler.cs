@@ -17,45 +17,52 @@
 //
 
 using System.Collections.Immutable;
-using FluentMediator;
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.CommandHandlers.ExtensionMethods;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
+using AppFabric.Domain.AggregationProject.Specifications;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
+using DFlow.Business.Cqrs;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public sealed class UpdateProjectCommandHandler : CommandHandler<UpdateProjectCommand, ExecutionResult>
     {
         private readonly IDbSession<IProjectRepository> _dbSession;
-        private readonly ILogger<UpdateProjectCommandHandler> _logger;
         private readonly AggregateFactory _factory;
 
-        public UpdateProjectCommandHandler(ILogger<UpdateProjectCommandHandler> logger, IMediator publisher, IDbSession<IProjectRepository> dbSession, AggregateFactory factory)
-            :base(logger,publisher)
+        public UpdateProjectCommandHandler(
+            IDomainEventBus publisher, 
+            IDbSession<IProjectRepository> dbSession, 
+            AggregateFactory factory)
+            :base(publisher)
         {
             _dbSession = dbSession;
-            _logger = logger;
             _factory = factory;
         }
         
-        protected override ExecutionResult ExecuteCommand(UpdateProjectCommand command)
+        protected override async Task<ExecutionResult> ExecuteCommand(
+            UpdateProjectCommand command, 
+            CancellationToken cancellationToken)
         {
             var project = _dbSession.Repository.Get(EntityId.From(command.Id));
-            var agg = _factory.Create(new LoadProjectCommand(project));
+            var agg = _factory.Create(project);
+
+            agg.UpdateDetail(command.ToProjectDetail(), null);
+
             var isSucceed = false;
       
             if (agg.IsValid)
             {
-                agg.UpdateDetail(command.ToProjectDetail()); // dado inválido
-                
                 _dbSession.Repository.Add(agg.GetChange());
-                _dbSession.SaveChanges();
-                agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));
+                await _dbSession.SaveChangesAsync(cancellationToken);
+                
+                agg.GetEvents().ToImmutableList()
+                    .ForEach( ev => Publisher.Publish(ev));
                 isSucceed = true;
             }
             

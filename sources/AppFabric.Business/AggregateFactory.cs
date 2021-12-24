@@ -13,6 +13,7 @@ using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.BusinessObjects;
 using System;
+using System.Collections.Immutable;
 using AppFabric.Domain.BusinessObjects.Validations.ActivityRules;
 
 namespace AppFabric.Business
@@ -36,47 +37,47 @@ namespace AppFabric.Business
 
             if (activitySpec.IsSatisfiedBy(source))
             {
-                return new ActivityAggregationRoot(activitySpec, source);
+                return new ActivityAggregationRoot(source);
             }
             throw new Exception("Invalid Command");
         }
 
         public ActivityAggregationRoot Create(CreateActivityCommand source)
         {
-            var activity = Activity.From(EntityId.GetNext(), source.ProjectId, source.EstimatedHours, VersionId.New());
+            var activity = Activity.New(source.ProjectId, source.EstimatedHours);
             var newActivitySpec = new ActivityCreationSpecification();
-            var activitySpec = new ActivitySpecification();
 
-            if (newActivitySpec.IsSatisfiedBy(activity))
+            if (newActivitySpec.IsSatisfiedBy(activity) == false)
             {
-                return new ActivityAggregationRoot(activitySpec, activity);
+                throw new ArgumentException("Invalid Command");
             }
-            throw new Exception("Invalid Command");
+            
+            return new ActivityAggregationRoot(activity);
         }
 
         public BillingAggregationRoot Create(CreateBillingCommand source)
         {
-            var billing = Billing.From(EntityId.GetNext(), VersionId.New());
+            // TODO: cadê pelo menos uma release para faturar???
+            var billing = Billing.NewRequest(null);
 
             var newBillingSpec = new BillingCreationSpecification();
-            var billingSpec = new BillingSpecification();
 
-            if (newBillingSpec.IsSatisfiedBy(billing))
+            if (newBillingSpec.IsSatisfiedBy(billing) == false)
             {
-                return new BillingAggregationRoot(billingSpec, billing);
+                throw new ArgumentException("Invalid Command");
             }
-            throw new Exception("Invalid Command");
+            return new BillingAggregationRoot(billing);
         }
 
         public BillingAggregationRoot Create(Billing source)
         {
-            var billingSpec = new BillingSpecification();
+            var billingSpec = new BillingCreationSpecification();
 
-            if (billingSpec.IsSatisfiedBy(source))
+            if (billingSpec.IsSatisfiedBy(source) == false)
             {
-                return new BillingAggregationRoot(billingSpec, source);
+                throw new ArgumentException("Invalid Command");
             }
-            throw new Exception("Invalid Command");
+            return new BillingAggregationRoot(source);
         }
 
         public ReleaseAggregationRoot Create(CreateReleaseCommand source)

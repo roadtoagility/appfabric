@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,13 +17,16 @@
 //
 
 using System.Collections.Immutable;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
+using AppFabric.Domain.AggregationProject.Specifications;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
+using DFlow.Business.Cqrs;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.CommandHandlers
@@ -32,33 +35,32 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IProjectRepository> _projectDb;
         private readonly IDbSession<IUserRepository> _userDb;
-        private readonly ILogger<RemoveProjectCommandHandler> _logger;
         private readonly AggregateFactory _factory;
         
-        public RemoveProjectCommandHandler(ILogger<RemoveProjectCommandHandler> logger, IMediator publisher, IDbSession<IProjectRepository> projectDb,
+        public RemoveProjectCommandHandler(IDomainEventBus publisher, IDbSession<IProjectRepository> projectDb,
             IDbSession<IUserRepository> userDb, AggregateFactory factory)
-            :base(logger, publisher)
+            :base(publisher)
         {
             _projectDb = projectDb;
             _userDb = userDb;
-            _logger = logger;
             _factory = factory;
         }
         
-        protected override ExecutionResult ExecuteCommand(RemoveProjectCommand command)
+        protected override async Task<ExecutionResult> ExecuteCommand(RemoveProjectCommand command, CancellationToken cancellationToken)
         {
-            var project = _projectDb.Repository.Get(EntityId.From(command.Id));
-            
-            var agg = _factory.Create(new LoadProjectCommand(project));
             var isSucceed = false;
-      
+
+            var project = _projectDb.Repository.Get(EntityId.From(command.Id));
+            var agg = _factory.Create(project);
+            agg.Remove(new ProjectSpecification());
+
             if (agg.IsValid)
             {
-                agg.Remove();
-                
                 _projectDb.Repository.Remove(agg.GetChange());
-                _projectDb.SaveChanges();
-                agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));
+                await _projectDb.SaveChangesAsync(cancellationToken);
+                
+                agg.GetEvents().ToImmutableList()
+                    .ForEach( ev => Publisher.Publish(ev));
                 isSucceed = true;
             }
             

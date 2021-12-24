@@ -31,33 +31,27 @@ namespace AppFabric.Domain.BusinessObjects
             return $"[Billing]:[ID: {Identity}]";
         }
 
-        private Billing(EntityId id, VersionId version)
+        private Billing(EntityId id, IReadOnlyList<Release> release, VersionId version)
             : base(id, version)
         {
-            this.Releases = new List<Release>();
+            Releases = new List<Release>();
+            Releases.AddRange(release);
         }
 
-        public static Billing From(EntityId id, VersionId version)
+        public static Billing From(EntityId id, IReadOnlyList<Release> releases, VersionId version)
         {
-            var billing = new Billing(id, version);
-            //var validator = new BillingValidator();
-            //billing.SetValidationResult(validator.Validate(billing));
+            var billing = new Billing(id, releases, version);
             return billing;
         }
 
-        public static Billing NewRequest(EntityId id)
+        public static Billing NewRequest(IReadOnlyList<Release> releases)
         {
-            return From(id, VersionId.New());
+            return From(EntityId.GetNext(), releases, VersionId.New());
         }
 
         public Billing AddRelease(Release release)
         {
             Releases.Add(release);
-
-            //var validator = new BillingValidator();
-            //var result = validator.Validate(this);
-            //this.ValidationResults = result;
-
             return this;
         }
 

@@ -28,7 +28,7 @@ namespace AppFabric.Persistence.ExtensionMethods
     public static class BusinessObjectsExtensions
     {
         public static ProjectState ToProjectState(this Project project)
-            => new ProjectState(project.Id.Value,
+            => new ProjectState(project.Identity.Value,
                 project.Name.Value, 
                 project.Code.Value, 
                 project.Budget.Value,

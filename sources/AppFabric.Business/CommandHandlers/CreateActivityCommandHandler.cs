@@ -17,62 +17,53 @@
 //
 
 using System.Collections.Immutable;
-using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.CommandHandlers.ExtensionMethods;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
 using System;
 using AppFabric.Domain.AggregationActivity;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using DFlow.Business.Cqrs;
+using DFlow.Business.Cqrs.CommandHandlers;
 using DFlow.Domain.Aggregates;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public class CreateActivityCommandHandler : CommandHandler<CreateActivityCommand, CommandResult<Guid>>
     {
         private readonly IDbSession<IActivityRepository> _dbSession;
-        private readonly ILogger<CreateActivityCommandHandler> _logger;
         private readonly IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand> _factory;
 
 
-        public CreateActivityCommandHandler(ILogger<CreateActivityCommandHandler> logger, IMediator publisher, 
+        public CreateActivityCommandHandler(IDomainEventBus publisher, 
             IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand> factory,
             IDbSession<IActivityRepository> dbSession)
-            : base(logger, publisher)
+            : base(publisher)
         {
             _factory = factory;
             _dbSession = dbSession;
-            _logger = logger;
         }
 
-        protected override CommandResult<Guid> ExecuteCommand(CreateActivityCommand command)
+        protected override async Task<CommandResult<Guid>> ExecuteCommand(
+            CreateActivityCommand command, 
+            CancellationToken cancellationToken )
         {
             var isSucceed = false;
             var aggregationId = Guid.Empty;
-
-            _logger.LogDebug("Criada agregação a partir do comando {CommandName} com valores {Valores}",
-                nameof(command), command);
-            
+ 
             var agg = _factory.Create(command);
 
-            if (!agg.Failures.Any())
+            if (agg.IsValid)
             {
-                using (_logger.BeginScope("Persistencia"))
-                {
-                    _dbSession.Repository.Add(agg.GetChange());
-                    _dbSession.SaveChanges();
-                }
-
-                using (_logger.BeginScope("Publicacão de Eventos"))
-                {
-                    agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
-                }
-
+                _dbSession.Repository.Add(agg.GetChange());
+                await _dbSession.SaveChangesAsync(cancellationToken);
+            
+                agg.GetEvents().ToImmutableList()
+                    .ForEach(ev => 
+                        Publisher.Publish(ev, cancellationToken));
+            
                 isSucceed = true;
                 aggregationId = agg.GetChange().Identity.Value;
             }

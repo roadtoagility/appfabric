@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,48 +17,50 @@
 //
 
 using System.Collections.Immutable;
-using FluentMediator;
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
-using AppFabric.Domain.AggregationUser;
+using AppFabric.Domain.AggregationUser.Specifications;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
+using DFlow.Business.Cqrs;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public sealed class RemoveUserCommandHandler : CommandHandler<RemoveUserCommand, ExecutionResult>
     {
         private readonly IDbSession<IUserRepository> _userDb;
-        private readonly ILogger<RemoveUserCommandHandler> _logger;
         private readonly AggregateFactory _factory;
 
-        public RemoveUserCommandHandler(ILogger<RemoveUserCommandHandler> logger, 
-            IMediator publisher, 
+        public RemoveUserCommandHandler(
+            IDomainEventBus publisher, 
             IDbSession<IUserRepository> userDb,
             AggregateFactory factory)
-            :base(logger,publisher)
+            :base(publisher)
         {
             _userDb = userDb;
-            _logger = logger;
             _factory = factory;
         }
         
-        protected override ExecutionResult ExecuteCommand(RemoveUserCommand command)
+        protected override async Task<ExecutionResult> ExecuteCommand(
+            RemoveUserCommand command, 
+            CancellationToken cancellationToken)
         {
-            var user = _userDb.Repository.Get(EntityId.From(command.Id));
-            var agg = _factory.Create(new LoadUserCommand(user));//UserAggregationRoot.ReconstructFrom(user);
+            var user = _userDb.Repository.Get(command.Id);
+            var agg = _factory.Create(user);
+            agg.Remove(null);
+            
             var isSucceed = false;
       
             if (agg.IsValid)
             {
-                agg.Remove();
-                
                 _userDb.Repository.Remove(agg.GetChange());
-                _userDb.SaveChanges();
-                agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));
+                await _userDb.SaveChangesAsync(cancellationToken);
+                
+                agg.GetEvents().ToImmutableList()
+                    .ForEach( ev => Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }
             

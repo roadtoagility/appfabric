@@ -18,31 +18,33 @@
 
 using System;
 using System.Collections.Immutable;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
-using AppFabric.Domain.AggregationUser;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
+using DFlow.Business.Cqrs;
+using DFlow.Business.Cqrs.CommandHandlers;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public sealed class AddUserCommandHandler : CommandHandler<AddUserCommand, CommandResult<Guid>>
     {
         private readonly IDbSession<IUserRepository> _dbSession;
-        private readonly ILogger<AddUserCommandHandler> _logger;
         
-        public AddUserCommandHandler(ILogger<AddUserCommandHandler> logger,IMediator publisher, IDbSession<IUserRepository> dbSession)
-            :base(logger, publisher)
+        public AddUserCommandHandler(
+            IDomainEventBus publisher, 
+            IDbSession<IUserRepository> dbSession)
+            :base(publisher)
         {
-            _logger = logger;
             _dbSession = dbSession;
         }
         
-        protected override CommandResult<Guid> ExecuteCommand(AddUserCommand command)
+        protected override async Task<CommandResult<Guid>> ExecuteCommand(
+            AddUserCommand command, 
+            CancellationToken cancellationToken)
         {
             var aggFactory = new AggregateFactory();
             var agg = aggFactory.Create(command);
@@ -53,10 +55,10 @@ namespace AppFabric.Business.CommandHandlers
             if (agg.IsValid)
             {
                 _dbSession.Repository.Add(agg.GetChange());
-                _dbSession.SaveChanges();
+                await _dbSession.SaveChangesAsync(cancellationToken);
                 
                 agg.GetEvents().ToImmutableList()
-                    .ForEach( ev => Publisher.Publish(ev));
+                    .ForEach( ev => Publisher.Publish(ev, cancellationToken));
                 
                 isSucceed = true;
                 okId = agg.GetChange().Id.Value;

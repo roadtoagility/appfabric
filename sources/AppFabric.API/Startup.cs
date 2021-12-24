@@ -159,7 +159,7 @@ namespace AppFabric.API
                     .Return<ExecutionResult, CloseActivityCommandHandler>(
                         (handler, request) => handler.Execute(request));
 
-                builder.On<AsignResponsibleCommand>().Pipeline()
+                builder.On<AssignResponsibleCommand>().Pipeline()
                     .Return<ExecutionResult, AsignResponsibleCommandHandler>(
                         (handler, request) => handler.Execute(request));
 

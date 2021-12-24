@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,18 +17,14 @@
 //
 
 using System.Collections.Immutable;
-using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.CommandHandlers.ExtensionMethods;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
-using System;
-using AppFabric.Domain.AggregationBilling;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using DFlow.Business.Cqrs;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
@@ -36,35 +32,39 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IBillingRepository> _dbSession;
         private readonly IDbSession<IReleaseRepository> _dbReleaseSession;
-        private readonly ILogger<AddReleaseCommandHandler> _logger;
         private readonly AggregateFactory _factory;
 
         public AddReleaseCommandHandler(ILogger<AddReleaseCommandHandler> logger, 
-            IMediator publisher, IDbSession<IBillingRepository> dbSession, 
+            IDomainEventBus publisher, IDbSession<IBillingRepository> dbSession, 
             IDbSession<IReleaseRepository> dbReleaseSession,
             AggregateFactory factory)
-            : base(logger, publisher)
+            : base(publisher)
         {
             _dbSession = dbSession;
             _dbReleaseSession = dbReleaseSession;
-            _logger = logger;
             _factory = factory;
         }
 
-        protected override ExecutionResult ExecuteCommand(AddReleaseCommand command)
+        protected override async Task<ExecutionResult> ExecuteCommand(
+            AddReleaseCommand command, 
+            CancellationToken cancellationToken)
         {
-            var billing = _dbSession.Repository.Get(EntityId.From(command.Id));
-            var agg = _factory.Create(new LoadBillingCommand(billing));
             var isSucceed = false;
 
-            if (!agg.Failures.Any())
+            var billing = _dbSession.Repository.Get(command.Id);
+            var release = _dbReleaseSession.Repository.Get(command.ReleaseId);
+            
+            var agg = _factory.Create(billing);
+            agg.AddRelease(release, null);
+            
+            if (!agg.IsValid)
             {
-                var release = _dbReleaseSession.Repository.Get(EntityId.From(command.ReleaseId));
-                agg.AddRelease(release);
-
                 _dbSession.Repository.Add(agg.GetChange());
-                _dbSession.SaveChanges();
-                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
+                await _dbSession.SaveChangesAsync(cancellationToken);
+                
+                agg.GetEvents().ToImmutableList()
+                    .ForEach(ev => Publisher.Publish(ev));
+                
                 isSucceed = true;
             }
 

@@ -22,7 +22,7 @@ using AppFabric.Persistence.ReadModel.Repositories;
 
 namespace AppFabric.Business.Framework
 {
-    public abstract class QueryHandler<TFilter, TResult> : ICommandHandler<TFilter, TResult>
+    public abstract class QueryHandler<TFilter, TResult> : IQueryHandler<TFilter, TResult>
     {
       
         public TResult Execute(TFilter filter)

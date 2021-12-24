@@ -17,6 +17,7 @@
 //
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
 
@@ -36,31 +37,38 @@ namespace AppFabric.Domain.BusinessObjects
         private Release(EntityId id, EntityId clientId, VersionId version)
             : base(id, version)
         {
-            this.ClientId = clientId;
-            this.Activities = new List<Activity>();
+            ClientId = clientId;
+            Activities = new List<Activity>();
+            
+            AppendValidationResult(ClientId.ValidationStatus.Errors.ToImmutableList());
         }
 
         public static Release From(EntityId id, EntityId clientId, VersionId version)
         {
             var release = new Release(id, clientId, version);
-            //var validator = new ReleaseValidator();
-            //release.SetValidationResult(validator.Validate(release));
             return release;
         }
 
-        public static Release NewRequest(EntityId id, EntityId clientId)
+        public static Release NewRequest(EntityId clientId)
         {
-            return From(id, clientId, VersionId.New());
+            return From(EntityId.GetNext(), clientId, VersionId.New());
         }
 
         public Release AddActivity(Activity activity)
         {
+            Activities.Add(activity);
             return this;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Identity;
+        }
+
+        public Release RemoveActivity(Activity activity)
+        {
+            Activities.Remove(activity);
+            return this;
         }
     }
 }

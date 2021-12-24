@@ -54,7 +54,12 @@ namespace AppFabric.Domain.BusinessObjects
             activity.UpdateEffort(hours);
             return activity;
         }
-
+        
+        public static Activity New(EntityId projectId, Effort hours)
+        {
+            return From(EntityId.GetNext(), projectId, hours, VersionId.New());
+        }
+        
         public void AddMember(Member member)
         {
             Responsible.Update(member);

@@ -45,7 +45,7 @@ namespace AppFabric.Persistence.Model.Repositories
             var oldState = DbContext.Projects
                 .OrderByDescending(ob => ob.Id)
                 .ThenByDescending(ob => ob.RowVersion)
-                .FirstOrDefault(t => t.Id == entity.Id.Value);
+                .FirstOrDefault(t => t.Id == entity.Identity.Value);
 
             if (oldState == null)
             {
@@ -66,7 +66,7 @@ namespace AppFabric.Persistence.Model.Repositories
 
         public void Remove(Project entity)
         {
-            var oldState = Get(entity.Id);
+            var oldState = Get(entity.Identity);
 
             if (VersionId.Next(oldState.Version) > entity.Version)
             {

@@ -9,30 +9,21 @@ namespace AppFabric.Domain.AggregationRelease
 {
     public class ReleaseAggregationRoot : ObjectBasedAggregationRoot<Release, EntityId>
     {
-        private readonly ISpecification<Release> _spec;
-        public ReleaseAggregationRoot(ISpecification<Release> specification, Release release)
+        public ReleaseAggregationRoot(Release release)
         {
-            _spec = specification;
+            Apply(release);
 
-            if (_spec.IsSatisfiedBy(release))
+            if (release.IsNew())
             {
-                Apply(release);
-
-                if (release.IsNew())
-                {
-                    Raise(ReleaseCreatedEvent.For(release));
-                }
+                Raise(ReleaseCreatedEvent.For(release));
             }
-
-            AppendValidationResult(release.Failures);
         }
 
-        public void AddActivity(Activity activity)
+        public void AddActivity(Activity activity, ISpecification<Activity> spec)
         {
-            AggregateRootEntity.AddActivity(activity);
-
-            if (_spec.IsSatisfiedBy(AggregateRootEntity))
+            if (spec.IsSatisfiedBy(activity))
             {
+                AggregateRootEntity.AddActivity(activity);
                 Apply(AggregateRootEntity);
                 Raise(ActivityAddedEvent.For(AggregateRootEntity));
             }
@@ -40,11 +31,13 @@ namespace AppFabric.Domain.AggregationRelease
             AppendValidationResult(AggregateRootEntity.Failures);
         }
 
-        public void Remove()
-        {
-            //TODO: definir deleção
-            if (_spec.IsSatisfiedBy(AggregateRootEntity))
+        public void Remove(Activity activity, ISpecification<Release> spec)
+        {                
+            AggregateRootEntity.RemoveActivity(activity);
+            
+            if (spec.IsSatisfiedBy(AggregateRootEntity))
             {
+                Apply(AggregateRootEntity);
                 Raise(ReleaseRemovedEvent.For(AggregateRootEntity));
             }
         }

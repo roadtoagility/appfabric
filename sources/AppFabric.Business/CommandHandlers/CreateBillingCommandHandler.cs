@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,61 +17,50 @@
 //
 
 using System.Collections.Immutable;
-using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.CommandHandlers.ExtensionMethods;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
 using System;
-using AppFabric.Domain.AggregationBilling;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using DFlow.Business.Cqrs;
+using DFlow.Business.Cqrs.CommandHandlers;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public class CreateBillingCommandHandler : CommandHandler<CreateBillingCommand, CommandResult<Guid>>
     {
         private readonly IDbSession<IBillingRepository> _dbSession;
-        private readonly ILogger<CreateBillingCommandHandler> _logger;
         private readonly AggregateFactory _factory;
 
-
-        public CreateBillingCommandHandler(ILogger<CreateBillingCommandHandler> logger, 
-            IMediator publisher, 
+        public CreateBillingCommandHandler(
+            IDomainEventBus publisher, 
             IDbSession<IBillingRepository> dbSession,
             AggregateFactory factory)
-            : base(logger, publisher)
+            : base(publisher)
         {
             _dbSession = dbSession;
-            _logger = logger;
             _factory = factory;
         }
 
-        protected override CommandResult<Guid> ExecuteCommand(CreateBillingCommand command)
+        protected override async Task<CommandResult<Guid>> ExecuteCommand(
+            CreateBillingCommand command, 
+            CancellationToken cancellationToken )
         {
             var isSucceed = false;
             var aggregationId = Guid.Empty;
-
-            _logger.LogDebug("Criada agregação a partir do comando {CommandName} com valores {Valores}",
-                nameof(command), command);
-
+            
             var agg = _factory.Create(command);
 
-            if (!agg.Failures.Any())
+            if (agg.IsValid)
             {
-                using (_logger.BeginScope("Persistencia"))
-                {
-                    _dbSession.Repository.Add(agg.GetChange());
-                    _dbSession.SaveChanges();
-                }
+                _dbSession.Repository.Add(agg.GetChange());
+                await _dbSession.SaveChangesAsync(cancellationToken);
 
-                using (_logger.BeginScope("Publicacão de Eventos"))
-                {
-                    agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
-                }
+                agg.GetEvents().ToImmutableList()
+                    .ForEach(ev => 
+                        Publisher.Publish(ev,cancellationToken));
 
                 isSucceed = true;
                 aggregationId = agg.GetChange().Identity.Value;

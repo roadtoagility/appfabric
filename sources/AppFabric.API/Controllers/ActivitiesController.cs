@@ -76,7 +76,7 @@ namespace AppFabric.API.Controllers
         }
 
         [HttpPost("asign")]
-        public IActionResult Create([FromBody] AsignResponsibleCommand entity)
+        public IActionResult Create([FromBody] AssignResponsibleCommand entity)
         {
             var result = _mediator.Send<ExecutionResult>(entity);
 

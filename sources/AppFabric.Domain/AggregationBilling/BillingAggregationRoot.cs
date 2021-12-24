@@ -9,28 +9,21 @@ namespace AppFabric.Domain.AggregationBilling
 {
     public class BillingAggregationRoot : ObjectBasedAggregationRoot<Billing, EntityId>
     {
-        private readonly ISpecification<Billing> _spec;
-        public  BillingAggregationRoot(ISpecification<Billing> specification, Billing billing)
+        public BillingAggregationRoot(Billing billing)
         {
-            _spec = specification;
-            if (_spec.IsSatisfiedBy(billing))
+            if (billing.IsNew())
             {
                 Apply(billing);
-
-                if (billing.IsNew())
-                {
-                    Raise(BillingCreatedEvent.For(billing));
-                }
+                Raise(BillingCreatedEvent.For(billing));
             }
-
             AppendValidationResult(billing.Failures);
         }
 
-        public void AddRelease(Release release)
+        public void AddRelease(Release release, ISpecification<Billing> spec)
         {
             AggregateRootEntity.AddRelease(release);
 
-            if (_spec.IsSatisfiedBy(AggregateRootEntity))
+            if (spec.IsSatisfiedBy(AggregateRootEntity))
             {
                 Apply(AggregateRootEntity);
                 Raise(ReleaseAddedEvent.For(AggregateRootEntity));
@@ -39,13 +32,14 @@ namespace AppFabric.Domain.AggregationBilling
             AppendValidationResult(AggregateRootEntity.Failures);
         }
 
-        public void Remove()
+        public void Remove(ISpecification<Billing> spec)
         {
-            //TODO: definir deleção
-            if (_spec.IsSatisfiedBy(AggregateRootEntity))
+            if (spec.IsSatisfiedBy(AggregateRootEntity))
             {
+                Apply(AggregateRootEntity);
                 Raise(BillingRemovedEvent.For(AggregateRootEntity));
             }
+            AppendValidationResult(AggregateRootEntity.Failures);
         }
     }
 }

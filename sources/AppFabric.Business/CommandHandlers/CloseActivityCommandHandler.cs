@@ -17,65 +17,58 @@
 //
 
 using System.Collections.Immutable;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.CommandHandlers.ExtensionMethods;
-using AppFabric.Business.Framework;
 using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
-using System;
 using AppFabric.Domain.AggregationActivity;
-using System.Linq;
+using DFlow.Business.Cqrs;
 using DFlow.Domain.Aggregates;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public class CloseActivityCommandHandler : CommandHandler<CloseActivityCommand, ExecutionResult>
     {
         private readonly IDbSession<IActivityRepository> _dbSession;
-        private readonly ILogger<CloseActivityCommandHandler> _logger;
         private readonly IAggregateFactory<ActivityAggregationRoot, Activity> _factory;
 
 
-        public CloseActivityCommandHandler(ILogger<CloseActivityCommandHandler> logger, IMediator publisher, 
+        public CloseActivityCommandHandler(
+            IDomainEventBus publisher, 
             IAggregateFactory<ActivityAggregationRoot, Activity> factory,
             IDbSession<IActivityRepository> dbSession)
-            : base(logger, publisher)
+            : base(publisher)
         {
             _factory = factory;
             _dbSession = dbSession;
-            _logger = logger;
         }
 
-        protected override ExecutionResult ExecuteCommand(CloseActivityCommand command)
+        protected override async Task<ExecutionResult> ExecuteCommand(
+            CloseActivityCommand command, 
+            CancellationToken cancellationToken )
         {
             //TODO: errado o ProjectId, deveria ser o ID da atividade
-            var activity = _dbSession.Repository.Get(EntityId.From(command.ProjectId.Value));
-            //TODO: update
+            
+            var activity = _dbSession.Repository.Get(command.ProjectId);
             var agg = _factory.Create(activity);
+            agg.Close(null);
+
             var isSucceed = false;
 
-            if (!agg.Failures.Any())
+            if (agg.IsValid)
             {
-                // #TODO: qual a condição para o fechamento da atividade? 
-                // melhorar forma de lidar com o retorno de erros
-                // agg.Close(closeSpec);
-                //
-                agg.Close();
-
-                // não curti esse "aninhamento"
-                //
-                //if(!agg.Failures.Any()){
-                
                 _dbSession.Repository.Add(agg.GetChange());
-                _dbSession.SaveChanges();
+                await _dbSession.SaveChangesAsync(cancellationToken);
+                
                 agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
                 isSucceed = true;
-                
-                //}
             }
 
             return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());

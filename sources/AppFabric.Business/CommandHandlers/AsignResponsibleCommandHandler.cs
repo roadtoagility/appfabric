@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,54 +17,55 @@
 //
 
 using System.Collections.Immutable;
-using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.CommandHandlers.ExtensionMethods;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
-using System;
 using AppFabric.Domain.AggregationActivity;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using DFlow.Business.Cqrs;
 using DFlow.Domain.Aggregates;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
-    public class AsignResponsibleCommandHandler : CommandHandler<AsignResponsibleCommand, ExecutionResult>
+    public class AsignResponsibleCommandHandler : CommandHandler<AssignResponsibleCommand, ExecutionResult>
     {
         private readonly IDbSession<IActivityRepository> _dbSession;
         private readonly IDbSession<IMemberRepository> _dbMemberSession;
-        private readonly ILogger<AsignResponsibleCommandHandler> _logger;
         private readonly IAggregateFactory<ActivityAggregationRoot, Activity> _factory;
 
-        public AsignResponsibleCommandHandler(ILogger<AsignResponsibleCommandHandler> logger, IMediator publisher, 
+        public AsignResponsibleCommandHandler(IDomainEventBus publisher, 
             IAggregateFactory<ActivityAggregationRoot, Activity> factory,
             IDbSession<IActivityRepository> dbSession, IDbSession<IMemberRepository> dbMemberSession)
-            : base(logger, publisher)
+            : base(publisher)
         {
             _factory = factory;
             _dbSession = dbSession;
             _dbMemberSession = dbMemberSession;
-            _logger = logger;
         }
 
-        protected override ExecutionResult ExecuteCommand(AsignResponsibleCommand command)
+        protected override async Task<ExecutionResult> ExecuteCommand(
+            AssignResponsibleCommand command, 
+            CancellationToken cancellationToken )
         {
-            var activity = _dbSession.Repository.Get(EntityId.From(command.Id));
+            var activity = _dbSession.Repository.Get(command.Id);
+            var member = _dbMemberSession.Repository.Get(command.MemberId);
             var agg = _factory.Create(activity);
+            agg.Assign(member,null);
+
             var isSucceed = false;
 
-            if (!agg.Failures.Any())
+            if (agg.IsValid)
             {
-                var member = _dbMemberSession.Repository.Get(EntityId.From(command.MemberId));
-                agg.Assign(member);
-
                 _dbSession.Repository.Add(agg.GetChange());
-                _dbSession.SaveChanges();
-                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
+                await _dbSession.SaveChangesAsync(cancellationToken);
+                agg.GetEvents().ToImmutableList()
+                    .ForEach(ev => 
+                        Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }
 
