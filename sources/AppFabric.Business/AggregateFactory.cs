@@ -12,28 +12,27 @@ using AppFabric.Domain.AggregationUser.Specifications;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.BusinessObjects;
-using DFlow.Domain.Command;
-using DFlow.Domain.Specifications;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AppFabric.Domain.BusinessObjects.Validations.ActivityRules;
 
 namespace AppFabric.Business
 {
     public class AggregateFactory : IAggregateFactory<ActivityAggregationRoot, Activity>,
         IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand>,
         IAggregateFactory<BillingAggregationRoot, CreateBillingCommand>,
-        IAggregateFactory<BillingAggregationRoot, LoadBillingCommand>,
+        IAggregateFactory<BillingAggregationRoot, Billing>,
         IAggregateFactory<UserAggregationRoot, AddUserCommand>,
-        IAggregateFactory<UserAggregationRoot, LoadUserCommand>,
+        IAggregateFactory<UserAggregationRoot, User>,
         IAggregateFactory<ProjectAggregationRoot, AddProjectCommand>,
-        IAggregateFactory<ProjectAggregationRoot, LoadProjectCommand>
+        IAggregateFactory<ProjectAggregationRoot, Project>
     {
         public ActivityAggregationRoot Create(Activity source)
         {
-            var activitySpec = new ActivitySpecification();
+            var activitySpec = new ActivitySpecification()
+                .And(new ActivityClosedSpecification())
+                .And(new ActivityCloseWithoutEffortSpecification())
+                .And(new ActivityEffortSpecification())
+                .And(new ActivityResponsibleSpecification());
 
             if (activitySpec.IsSatisfiedBy(source))
             {
@@ -69,39 +68,40 @@ namespace AppFabric.Business
             throw new Exception("Invalid Command");
         }
 
-        public BillingAggregationRoot Create(LoadBillingCommand source)
+        public BillingAggregationRoot Create(Billing source)
         {
             var billingSpec = new BillingSpecification();
 
-            if (billingSpec.IsSatisfiedBy(source.Billing))
+            if (billingSpec.IsSatisfiedBy(source))
             {
-                return new BillingAggregationRoot(billingSpec, source.Billing);
+                return new BillingAggregationRoot(billingSpec, source);
             }
             throw new Exception("Invalid Command");
         }
 
         public ReleaseAggregationRoot Create(CreateReleaseCommand source)
         {
-            var release = Release.From(EntityId.GetNext(), EntityId.From(source.ClientId), VersionId.New());
+            var release = Release.NewRequest(EntityId.From(source.ClientId));
             var newReleaseSpec = new ReleaseCreationSpecification();
-            var releaseSpec = new ReleaseSpecification();
 
-            if (newReleaseSpec.IsSatisfiedBy(release))
+            if (newReleaseSpec.IsSatisfiedBy(release) == false)
             {
-                return new ReleaseAggregationRoot(releaseSpec, release);
+                throw new ArgumentException("Invalid Command");
             }
-            throw new Exception("Invalid Command");
+            
+            return new ReleaseAggregationRoot(release);
         }
 
-        public ReleaseAggregationRoot Create(LoadReleaseCommand source)
+        public ReleaseAggregationRoot Create(Release source)
         {
             var releaseSpec = new ReleaseSpecification();
 
-            if (releaseSpec.IsSatisfiedBy(source.Release))
+            if (releaseSpec.IsSatisfiedBy(source) == false)
             {
-                return new ReleaseAggregationRoot(releaseSpec, source.Release);
+                throw new ArgumentException("Invalid Command");
             }
-            throw new Exception("Invalid Command");
+            
+            return new ReleaseAggregationRoot(source);
         }
 
         public UserAggregationRoot Create(AddUserCommand source)
@@ -121,13 +121,13 @@ namespace AppFabric.Business
             throw new Exception("Invalid Command");
         }
 
-        public UserAggregationRoot Create(LoadUserCommand source)
+        public UserAggregationRoot Create(User source)
         {
             var userSpec = new UserSpecification();
 
-            if (userSpec.IsSatisfiedBy(source.User))
+            if (userSpec.IsSatisfiedBy(source))
             {
-                return new UserAggregationRoot(userSpec, source.User);
+                return new UserAggregationRoot(userSpec, source);
             }
             throw new Exception("Invalid Command");
         }
@@ -135,34 +135,35 @@ namespace AppFabric.Business
         public ProjectAggregationRoot Create(AddProjectCommand command)
         {
             var newProjectSpec = new ProjectCreationSpecification();
-            var projectSpec = new ProjectSpecification();
 
-            var project = Project.NewRequest(EntityId.GetNext(), 
-                ProjectName.From(command.Name),
-                ServiceOrder.From((command.ServiceOrderNumber, command.ServiceOrderStatus)),
-                ProjectStatus.From(command.Status),
-                ProjectCode.From(command.Code),
-                DateAndTime.From(command.StartDate),
-                Money.From(command.Budget),
-                EntityId.From(command.ClientId),
-                Email.From(command.Owner));
+            var project = Project.NewRequest(
+                command.Name,
+                command.ServiceOrderNumber,
+                command.Status,
+                command.Code,
+                command.StartDate,
+                command.Budget,
+                command.ClientId,
+                command.Owner);
 
-            if (newProjectSpec.IsSatisfiedBy(project))
+            if (newProjectSpec.IsSatisfiedBy(project) == false)
             {
-                return new ProjectAggregationRoot(projectSpec, project);
+                throw new ArgumentException("Invalid Command");
             }
-            throw new Exception("Invalid Command");
+            
+            return new ProjectAggregationRoot(project);
         }
 
-        public ProjectAggregationRoot Create(LoadProjectCommand source)
+        public ProjectAggregationRoot Create(Project source)
         {
             var projectSpec = new ProjectSpecification();
 
-            if (projectSpec.IsSatisfiedBy(source.Project))
+            if (projectSpec.IsSatisfiedBy(source) == false)
             {
-                return new ProjectAggregationRoot(projectSpec, source.Project);
+                throw new ArgumentException("Invalid Command");
             }
-            throw new Exception("Invalid Command");
+            
+            return new ProjectAggregationRoot(source);
         }
     }
 

@@ -1,31 +1,29 @@
-﻿using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using AppFabric.Domain.BusinessObjects;
+using DFlow.Domain.Specifications;
+using FluentValidation.Results;
 
-namespace AppFabric.Domain.BusinessObjects.Validations.ActivityRules
+namespace AppFabric.Domain.AggregationActivity.Specifications
 {
-    public class ActivityResponsibleValidation : ValidationRule<Activity>
+    public class ActivityResponsibleSpecification : CompositeSpecification<Activity>
     {
         private readonly ValidationFailure _responsibleFailure;
 
-        public ActivityResponsibleValidation()
+        public ActivityResponsibleSpecification()
         {
             _responsibleFailure = new ValidationFailure("CanHaveResponsible"
                 , "Só é possível adicionar como responsável membros do projeto");
         }
 
-        public override bool IsValid(Activity candidate)
+        public override bool IsSatisfiedBy(Activity candidate)
         {
             if (candidate.Responsible.ProjectId.Value != Guid.Empty && candidate.ProjectId != candidate.Responsible.ProjectId)
             {
                 candidate.AppendValidationResult(_responsibleFailure);
-                return NotValid;
+                return false;
             }
 
-            return Valid;
+            return true;
         }
     }
 }

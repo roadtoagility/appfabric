@@ -11,6 +11,7 @@ namespace AppFabric.Domain.AggregationActivity
         public ActivityAggregationRoot(ISpecification<Activity> specification, Activity activity)
         {
             _spec = specification;
+            
             Apply(activity);
 
             if (activity.IsNew())

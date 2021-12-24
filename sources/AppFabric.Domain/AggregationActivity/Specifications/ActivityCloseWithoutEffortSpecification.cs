@@ -1,31 +1,28 @@
-﻿using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AppFabric.Domain.BusinessObjects;
+using DFlow.Domain.Specifications;
+using FluentValidation.Results;
 
-namespace AppFabric.Domain.BusinessObjects.Validations.ActivityRules
+namespace AppFabric.Domain.AggregationActivity.Specifications
 {
-    public class ActivityCloseWithoutEffortValidation : ValidationRule<Activity>
+    public class ActivityCloseWithoutEffortSpecification : CompositeSpecification<Activity>
     {
         private readonly ValidationFailure _closedWithoutEffortFailure;
 
-        public ActivityCloseWithoutEffortValidation()
+        public ActivityCloseWithoutEffortSpecification()
         {
             _closedWithoutEffortFailure = new ValidationFailure("CanHaveResponsible"
                 , "Não é possível fechar uma atividade com esforço pendente");
         }
 
-        public override bool IsValid(Activity candidate)
+        public override bool IsSatisfiedBy(Activity candidate)
         {
             if (candidate.ActivityStatus == ActivityStatus.Closed() && candidate.Effort == Effort.WithoutEffort())
             {
                 candidate.AppendValidationResult(_closedWithoutEffortFailure);
-                return NotValid;
+                return false;
             }
 
-            return Valid;
+            return true;
         }
     }
 }

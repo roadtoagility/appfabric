@@ -19,12 +19,16 @@
 using System.Collections.Immutable;
 using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AppFabric.Domain.BusinessObjects;
+using DFlow.Business.Cqrs;
+using DFlow.Domain.Events;
+using DFlow.Domain.Specifications;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
@@ -32,36 +36,38 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IReleaseRepository> _dbSession;
         private readonly IDbSession<IActivityRepository> _dbActivitySession;
-        private readonly ILogger<AddActivityCommandHandler> _logger;
+        private readonly ISpecification<Activity> _spec;
         private readonly AggregateFactory _factory;
 
-        public AddActivityCommandHandler(ILogger<AddActivityCommandHandler> logger, 
-            IMediator publisher, 
+        public AddActivityCommandHandler(
+            IDomainEventBus publisher, 
             IDbSession<IReleaseRepository> dbSession, 
             IDbSession<IActivityRepository> dbActivitySession,
+            ISpecification<Activity> spec,
             AggregateFactory factory)
-            : base(logger, publisher)
+            : base(publisher)
         {
+            _spec = spec;
             _dbSession = dbSession;
             _dbActivitySession = dbActivitySession;
-            _logger = logger;
             _factory = factory;
         }
 
-        protected override ExecutionResult ExecuteCommand(AddActivityCommand command)
+        protected override async Task<ExecutionResult> ExecuteCommand(AddActivityCommand command, CancellationToken cancellationToken )
         {
-            var release = _dbSession.Repository.Get(EntityId.From(command.Id));
-            var agg = _factory.Create(new LoadReleaseCommand(release));
+            var release = _dbSession.Repository.Get(command.Id);
+            var agg = _factory.Create(release);
             var isSucceed = false;
 
             if (!agg.Failures.Any())
             {
-                var activity = _dbActivitySession.Repository.Get(EntityId.From(command.ActivityId));
-                agg.AddActivity(activity);
+                var activity = _dbActivitySession.Repository.Get(command.ActivityId);
+                agg.AddActivity(activity, _spec);
 
                 _dbSession.Repository.Add(agg.GetChange());
-                _dbSession.SaveChanges();
-                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
+                await _dbSession.SaveChangesAsync(cancellationToken);
+                
+                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }
 
