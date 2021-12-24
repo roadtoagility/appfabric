@@ -34,7 +34,7 @@ namespace AppFabric.Domain.AggregationProject.Events
         
         public static ProjectRemovedEvent For(Project project)
         {
-            return new ProjectRemovedEvent(project.Id, project.Version);
+            return new ProjectRemovedEvent(project.Identity, project.Version);
         }
     }
 }

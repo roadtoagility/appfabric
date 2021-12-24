@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -18,13 +18,14 @@
 
 using System;
 using System.Collections.Immutable;
-using FluentMediator;
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
+using DFlow.Business.Cqrs;
+using DFlow.Business.Cqrs.CommandHandlers;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.CommandHandlers
@@ -33,53 +34,44 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IUserRepository> _dbUserSession;
         private readonly IDbSession<IProjectRepository> _dbSession;
-        private readonly ILogger<AddProjectCommandHandler> _logger;
         private readonly AggregateFactory _factory;
 
-        public AddProjectCommandHandler(ILogger<AddProjectCommandHandler> logger, IMediator publisher,
-            IDbSession<IProjectRepository> dbSession
-            , IDbSession<IUserRepository> dbUserSession,
-            AggregateFactory factory)
-            : base(logger, publisher)
+        public AddProjectCommandHandler(
+            ILogger<AddProjectCommandHandler> logger
+            , IDomainEventBus publisher
+            , IDbSession<IProjectRepository> dbSession
+            , IDbSession<IUserRepository> dbUserSession
+            , AggregateFactory factory)
+            : base(publisher)
         {
-            _logger = logger;
             _dbSession = dbSession;
             _dbUserSession = dbUserSession;
             _factory = factory;
         }
 
-        protected override CommandResult<Guid> ExecuteCommand(AddProjectCommand command)
+        protected override async Task<CommandResult<Guid>> ExecuteCommand(
+            AddProjectCommand command, 
+            CancellationToken cancellationToken)
         {
             var isSucceed = false;
             var aggregationId = Guid.Empty;
 
-            _logger.LogDebug("Criada agregação a partir do comando {CommandName} com valores {Valores}",
-                nameof(command), command);
-
-            var client = _dbUserSession.Repository.Get(EntityId.From(command.ClientId));
+            var client = _dbUserSession.Repository.Get(command.ClientId);
 
             var agg = _factory.Create(command);
 
             if (agg.IsValid)
             {
-                // _logger.LogInformation($"Agregação Project valida id gerado", agg.GetChange().Id);
+                _dbSession.Repository.Add(agg.GetChange());
+                await _dbSession.SaveChangesAsync(cancellationToken);
 
-                using (_logger.BeginScope("Persistencia"))
-                {
-                    _dbSession.Repository.Add(agg.GetChange());
-                    _dbSession.SaveChanges();
-                }
-
-                // _logger.LogInformation($"Project persistido ID: {agg.GetChange().Id}");
-                using (_logger.BeginScope("Publicacão de Eventos"))
-                {
-                    agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
-                }
+                agg.GetEvents().ToImmutableList().ForEach(ev => 
+                    Publisher.Publish(ev,cancellationToken));
 
                 isSucceed = true;
-                aggregationId = agg.GetChange().Id.Value;
+                aggregationId = agg.GetChange().Identity.Value;
             }
-
+            
             return new CommandResult<Guid>(isSucceed, aggregationId, agg.Failures.ToImmutableList());
         }
     }

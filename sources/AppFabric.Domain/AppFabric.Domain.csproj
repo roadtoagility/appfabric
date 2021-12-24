@@ -9,6 +9,10 @@
       <PackageReference Include="FluentValidation" Version="9.3.0" />
       <PackageReference Include="ValueOf" Version="2.0.21" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="BusinessObjects\Validations\ActivityRules" />
+    </ItemGroup>
     <PropertyGroup>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
     </PropertyGroup>

@@ -55,7 +55,7 @@ namespace AppFabric.Domain.AggregationProject.Events
         public static ProjectAddedEvent For(Project project)
         {
             return new ProjectAddedEvent(
-                project.Id,
+                project.Identity,
                 project.Name,
                 project.Code,
                 project.StartDate, 

@@ -49,7 +49,7 @@ namespace AppFabric.Domain.AggregationProject.Events
         public static ProjectDetailUpdatedEvent For(Project project)
         {
             return new ProjectDetailUpdatedEvent(
-                project.Id,
+                project.Identity,
                 project.Name,
                 project.Owner,
                 project.Status, 

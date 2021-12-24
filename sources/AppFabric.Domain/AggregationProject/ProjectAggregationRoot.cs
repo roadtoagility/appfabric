@@ -20,47 +20,46 @@ using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Specifications;
+using FluentValidation.Results;
 
 namespace AppFabric.Domain.AggregationProject
 {
     public sealed class ProjectAggregationRoot : ObjectBasedAggregationRoot<Project, EntityId>
     {
-        private readonly ISpecification<Project> _spec;
-
-        public ProjectAggregationRoot(ISpecification<Project> specification, Project project)
+        public ProjectAggregationRoot(Project project)
         {
-            _spec = specification;
-            if (_spec.IsSatisfiedBy(project))
+            Apply(project);
+
+            if (project.IsNew())
             {
-                Apply(project);
-
-                if (project.IsNew())
-                {
-                    Raise(ProjectAddedEvent.For(project));
-                }
+                Raise(ProjectAddedEvent.For(project));
             }
-
-            AppendValidationResult(project.Failures);
         }
 
-        public void UpdateDetail(Project.ProjectDetail detail)
+        public void UpdateDetail(Project.ProjectDetail detail, ISpecification<Project> specUpdateProject)
         {
             var projUpdated = Project.CombineWith(AggregateRootEntity, detail);
 
-            if (_spec.IsSatisfiedBy(projUpdated))
+            if (specUpdateProject.IsSatisfiedBy(projUpdated) == false)
+            {
+                AppendValidationResult(projUpdated.Failures);
+            }
+            else
             {
                 Apply(projUpdated);
                 Raise(ProjectDetailUpdatedEvent.For(projUpdated));
             }
-
-            AppendValidationResult(projUpdated.Failures);
         }
         
-        public void Remove()
+        public void Remove(ISpecification<Project> specRemoveProject)
         {
-            if (IsValid)
+            if (specRemoveProject.IsSatisfiedBy(AggregateRootEntity) == false)
             {
                 Raise(ProjectRemovedEvent.For(AggregateRootEntity));
+            }
+            else
+            {
+                AppendValidationResult(new ValidationFailure("Project","Can´t be removed!"));
             }
         }
     }
