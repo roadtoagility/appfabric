@@ -21,9 +21,11 @@ using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Domain.AggregationProject;
 using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Business.Cqrs.CommandHandlers;
+using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
 using DFlow.Persistence;
 using Microsoft.Extensions.Logging;
@@ -34,14 +36,13 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IUserRepository> _dbUserSession;
         private readonly IDbSession<IProjectRepository> _dbSession;
-        private readonly AggregateFactory _factory;
+        private readonly IAggregateFactory<ProjectAggregationRoot, AddProjectCommand> _factory;
 
         public AddProjectCommandHandler(
-            ILogger<AddProjectCommandHandler> logger
-            , IDomainEventBus publisher
+            IDomainEventBus publisher
             , IDbSession<IProjectRepository> dbSession
             , IDbSession<IUserRepository> dbUserSession
-            , AggregateFactory factory)
+            , IAggregateFactory<ProjectAggregationRoot, AddProjectCommand> factory)
             : base(publisher)
         {
             _dbSession = dbSession;
@@ -60,13 +61,16 @@ namespace AppFabric.Business.CommandHandlers
 
             var agg = _factory.Create(command);
 
+            // agg.AddProject(client, spec);
+            
             if (agg.IsValid)
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
 
-                agg.GetEvents().ToImmutableList().ForEach(ev => 
-                    Publisher.Publish(ev,cancellationToken));
+                agg.GetEvents().ToImmutableList()
+                    .ForEach(ev => 
+                        Publisher.Publish(ev,cancellationToken));
 
                 isSucceed = true;
                 aggregationId = agg.GetChange().Identity.Value;

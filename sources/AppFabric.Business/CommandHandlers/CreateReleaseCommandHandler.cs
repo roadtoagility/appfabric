@@ -24,8 +24,11 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Business.CommandHandlers.Factories;
+using AppFabric.Domain.AggregationRelease;
 using DFlow.Business.Cqrs;
 using DFlow.Business.Cqrs.CommandHandlers;
+using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
 using DFlow.Persistence;
 
@@ -34,12 +37,12 @@ namespace AppFabric.Business.CommandHandlers
     public class CreateReleaseCommandHandler : CommandHandler<CreateReleaseCommand, CommandResult<Guid>>
     {
         private readonly IDbSession<IReleaseRepository> _dbSession;
-        private readonly AggregateFactory _factory;
+        private readonly IAggregateFactory<ReleaseAggregationRoot, CreateReleaseCommand> _factory;
 
         public CreateReleaseCommandHandler(
             IDomainEventBus publisher,
             IDbSession<IReleaseRepository> dbSession,
-            AggregateFactory factory)
+            IAggregateFactory<ReleaseAggregationRoot, CreateReleaseCommand> factory)
             : base(publisher)
         {
             _dbSession = dbSession;
@@ -60,7 +63,9 @@ namespace AppFabric.Business.CommandHandlers
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
                 
-                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev, cancellationToken));
+                agg.GetEvents().ToImmutableList()
+                    .ForEach(ev => 
+                        Publisher.Publish(ev, cancellationToken));
 
                 isSucceed = true;
                 aggregationId = agg.GetChange().Identity.Value;

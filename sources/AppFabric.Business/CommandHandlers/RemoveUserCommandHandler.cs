@@ -20,10 +20,13 @@ using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Business.CommandHandlers.Factories;
+using AppFabric.Domain.AggregationUser;
 using AppFabric.Domain.AggregationUser.Specifications;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
+using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
 using DFlow.Persistence;
 
@@ -32,12 +35,12 @@ namespace AppFabric.Business.CommandHandlers
     public sealed class RemoveUserCommandHandler : CommandHandler<RemoveUserCommand, ExecutionResult>
     {
         private readonly IDbSession<IUserRepository> _userDb;
-        private readonly AggregateFactory _factory;
+        private readonly IAggregateFactory<UserAggregationRoot, User> _factory;
 
         public RemoveUserCommandHandler(
             IDomainEventBus publisher, 
             IDbSession<IUserRepository> userDb,
-            AggregateFactory factory)
+            IAggregateFactory<UserAggregationRoot, User> factory)
             :base(publisher)
         {
             _userDb = userDb;

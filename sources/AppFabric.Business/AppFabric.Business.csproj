@@ -13,6 +13,8 @@
       <PackageReference Include="DFlow.Domain" Version="0.4.0-pre273" />
       <PackageReference Include="DFlow.Persistence" Version="0.4.0-pre273" />
       <PackageReference Include="FluentMediator" Version="0.4.7" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+      <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>

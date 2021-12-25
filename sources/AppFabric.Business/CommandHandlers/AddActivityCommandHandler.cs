@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,15 +17,14 @@
 //
 
 using System.Collections.Immutable;
-using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Domain.AggregationRelease;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Business.Cqrs;
+using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
 using DFlow.Domain.Specifications;
 using DFlow.Persistence;
@@ -37,14 +36,14 @@ namespace AppFabric.Business.CommandHandlers
         private readonly IDbSession<IReleaseRepository> _dbSession;
         private readonly IDbSession<IActivityRepository> _dbActivitySession;
         private readonly ISpecification<Activity> _spec;
-        private readonly AggregateFactory _factory;
+        private readonly IAggregateFactory<ReleaseAggregationRoot, Release> _factory;
 
         public AddActivityCommandHandler(
             IDomainEventBus publisher, 
             IDbSession<IReleaseRepository> dbSession, 
             IDbSession<IActivityRepository> dbActivitySession,
             ISpecification<Activity> spec,
-            AggregateFactory factory)
+            IAggregateFactory<ReleaseAggregationRoot, Release> factory)
             : base(publisher)
         {
             _spec = spec;
@@ -53,21 +52,30 @@ namespace AppFabric.Business.CommandHandlers
             _factory = factory;
         }
 
-        protected override async Task<ExecutionResult> ExecuteCommand(AddActivityCommand command, CancellationToken cancellationToken )
+        protected override async Task<ExecutionResult> ExecuteCommand(
+            AddActivityCommand command, 
+            CancellationToken cancellationToken)
         {
+            // pré-requisitos
             var release = _dbSession.Repository.Get(command.Id);
+            var activity = _dbActivitySession.Repository.Get(command.ActivityId);
+            
+            //criando agregação com Specificação passada para o factory
             var agg = _factory.Create(release);
+            
+            //referenciando outra agregação com base nas regras da especificação
+            agg.AddActivity(activity, _spec);
+
             var isSucceed = false;
 
-            if (!agg.Failures.Any())
+            if (agg.IsValid)
             {
-                var activity = _dbActivitySession.Repository.Get(command.ActivityId);
-                agg.AddActivity(activity, _spec);
-
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
                 
-                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev, cancellationToken));
+                agg.GetEvents().ToImmutableList()
+                    .ForEach(ev => 
+                        Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }
 

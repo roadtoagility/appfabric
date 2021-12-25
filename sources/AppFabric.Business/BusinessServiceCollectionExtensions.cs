@@ -16,19 +16,22 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using DFlow.Domain.Command;
 using System;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Business.CommandHandlers.Factories;
+using AppFabric.Domain.AggregationActivity;
+using AppFabric.Domain.AggregationActivity.Specifications;
 using AppFabric.Domain.BusinessObjects;
+using AppFabric.Domain.BusinessObjects.Validations.ActivityRules;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace AppFabric.Business.CommandHandlers.Commands
+namespace AppFabric.Business
 {
-    public class CreateReleaseCommand : BaseCommand
+    public static class BusinessServiceCollectionExtensions
     {
-        public EntityId ClientId { get; }
-
-        public CreateReleaseCommand(Guid clientId)
+        public static void AddAggregationFactories(this IServiceCollection services)
         {
-            ClientId = EntityId.From(clientId);
+            // services.AddTransient<>()
         }
     }
 }

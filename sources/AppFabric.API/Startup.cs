@@ -91,7 +91,7 @@ namespace AppFabric.API
 
             services.AddScoped<CreateActivityCommandHandler>();
             services.AddScoped<CloseActivityCommandHandler>();
-            services.AddScoped<AsignResponsibleCommandHandler>();
+            services.AddScoped<AssignResponsibleCommandHandler>();
             services.AddScoped<CreateBillingCommandHandler>();
             services.AddScoped<AddReleaseCommandHandler>();
             services.AddScoped<CreateProjectCommandHandler>();
@@ -160,7 +160,7 @@ namespace AppFabric.API
                         (handler, request) => handler.Execute(request));
 
                 builder.On<AssignResponsibleCommand>().Pipeline()
-                    .Return<ExecutionResult, AsignResponsibleCommandHandler>(
+                    .Return<ExecutionResult, AssignResponsibleCommandHandler>(
                         (handler, request) => handler.Execute(request));
 
                 builder.On<CreateBillingCommand>().Pipeline()

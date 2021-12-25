@@ -22,7 +22,12 @@ using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Business.CommandHandlers.Factories;
+using AppFabric.Domain.AggregationBilling;
+using AppFabric.Domain.AggregationRelease;
+using AppFabric.Domain.BusinessObjects;
 using DFlow.Business.Cqrs;
+using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
 using DFlow.Persistence;
 
@@ -32,12 +37,13 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IBillingRepository> _dbSession;
         private readonly IDbSession<IReleaseRepository> _dbReleaseSession;
-        private readonly AggregateFactory _factory;
+        private readonly IAggregateFactory<BillingAggregationRoot, Billing> _factory;
 
-        public AddReleaseCommandHandler(ILogger<AddReleaseCommandHandler> logger, 
-            IDomainEventBus publisher, IDbSession<IBillingRepository> dbSession, 
+        public AddReleaseCommandHandler( 
+            IDomainEventBus publisher, 
+            IDbSession<IBillingRepository> dbSession, 
             IDbSession<IReleaseRepository> dbReleaseSession,
-            AggregateFactory factory)
+            IAggregateFactory<BillingAggregationRoot, Billing> factory)
             : base(publisher)
         {
             _dbSession = dbSession;

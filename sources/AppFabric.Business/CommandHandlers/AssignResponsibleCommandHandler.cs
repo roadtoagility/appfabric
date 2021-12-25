@@ -32,13 +32,13 @@ using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
-    public class AsignResponsibleCommandHandler : CommandHandler<AssignResponsibleCommand, ExecutionResult>
+    public class AssignResponsibleCommandHandler : CommandHandler<AssignResponsibleCommand, ExecutionResult>
     {
         private readonly IDbSession<IActivityRepository> _dbSession;
         private readonly IDbSession<IMemberRepository> _dbMemberSession;
         private readonly IAggregateFactory<ActivityAggregationRoot, Activity> _factory;
 
-        public AsignResponsibleCommandHandler(IDomainEventBus publisher, 
+        public AssignResponsibleCommandHandler(IDomainEventBus publisher, 
             IAggregateFactory<ActivityAggregationRoot, Activity> factory,
             IDbSession<IActivityRepository> dbSession, IDbSession<IMemberRepository> dbMemberSession)
             : base(publisher)

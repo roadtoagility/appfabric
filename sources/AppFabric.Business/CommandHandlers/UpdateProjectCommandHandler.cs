@@ -21,10 +21,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.CommandHandlers.ExtensionMethods;
+using AppFabric.Business.CommandHandlers.Factories;
+using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.AggregationProject.Specifications;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
+using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
 using DFlow.Persistence;
 
@@ -33,12 +36,12 @@ namespace AppFabric.Business.CommandHandlers
     public sealed class UpdateProjectCommandHandler : CommandHandler<UpdateProjectCommand, ExecutionResult>
     {
         private readonly IDbSession<IProjectRepository> _dbSession;
-        private readonly AggregateFactory _factory;
+        private readonly IAggregateFactory<ProjectAggregationRoot, Project> _factory;
 
         public UpdateProjectCommandHandler(
             IDomainEventBus publisher, 
             IDbSession<IProjectRepository> dbSession, 
-            AggregateFactory factory)
+            IAggregateFactory<ProjectAggregationRoot, Project> factory)
             :base(publisher)
         {
             _dbSession = dbSession;

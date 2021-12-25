@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -20,11 +20,13 @@ using System;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Domain.AggregationUser;
+using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Business.Cqrs.CommandHandlers;
+using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
 using DFlow.Persistence;
 
@@ -33,21 +35,23 @@ namespace AppFabric.Business.CommandHandlers
     public sealed class AddUserCommandHandler : CommandHandler<AddUserCommand, CommandResult<Guid>>
     {
         private readonly IDbSession<IUserRepository> _dbSession;
-        
+        private readonly IAggregateFactory<UserAggregationRoot, AddUserCommand> _factory;
+
         public AddUserCommandHandler(
-            IDomainEventBus publisher, 
-            IDbSession<IUserRepository> dbSession)
-            :base(publisher)
+            IDomainEventBus publisher,
+            IDbSession<IUserRepository> dbSession,
+            IAggregateFactory<UserAggregationRoot, AddUserCommand> factory)
+            : base(publisher)
         {
             _dbSession = dbSession;
+            _factory = factory;
         }
-        
+
         protected override async Task<CommandResult<Guid>> ExecuteCommand(
             AddUserCommand command, 
             CancellationToken cancellationToken)
         {
-            var aggFactory = new AggregateFactory();
-            var agg = aggFactory.Create(command);
+            var agg = _factory.Create(command);
             
             var isSucceed = false;
             var okId = Guid.Empty;
@@ -58,7 +62,8 @@ namespace AppFabric.Business.CommandHandlers
                 await _dbSession.SaveChangesAsync(cancellationToken);
                 
                 agg.GetEvents().ToImmutableList()
-                    .ForEach( ev => Publisher.Publish(ev, cancellationToken));
+                    .ForEach( ev => 
+                        Publisher.Publish(ev, cancellationToken));
                 
                 isSucceed = true;
                 okId = agg.GetChange().Id.Value;

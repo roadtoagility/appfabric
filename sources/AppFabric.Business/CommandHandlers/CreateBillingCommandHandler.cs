@@ -22,8 +22,11 @@ using AppFabric.Persistence.Model.Repositories;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Business.CommandHandlers.Factories;
+using AppFabric.Domain.AggregationBilling;
 using DFlow.Business.Cqrs;
 using DFlow.Business.Cqrs.CommandHandlers;
+using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
 using DFlow.Persistence;
 
@@ -32,12 +35,12 @@ namespace AppFabric.Business.CommandHandlers
     public class CreateBillingCommandHandler : CommandHandler<CreateBillingCommand, CommandResult<Guid>>
     {
         private readonly IDbSession<IBillingRepository> _dbSession;
-        private readonly AggregateFactory _factory;
+        private readonly IAggregateFactory<BillingAggregationRoot, CreateBillingCommand> _factory;
 
         public CreateBillingCommandHandler(
             IDomainEventBus publisher, 
             IDbSession<IBillingRepository> dbSession,
-            AggregateFactory factory)
+            IAggregateFactory<BillingAggregationRoot, CreateBillingCommand> factory)
             : base(publisher)
         {
             _dbSession = dbSession;
