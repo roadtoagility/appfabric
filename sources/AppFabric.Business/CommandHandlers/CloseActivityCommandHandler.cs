@@ -27,6 +27,7 @@ using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.Model.Repositories;
 using Microsoft.Extensions.Logging;
 using AppFabric.Domain.AggregationActivity;
+using AppFabric.Domain.AggregationActivity.Specifications;
 using DFlow.Business.Cqrs;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
@@ -56,9 +57,13 @@ namespace AppFabric.Business.CommandHandlers
         {
             //TODO: errado o ProjectId, deveria ser o ID da atividade
             
-            var activity = _dbSession.Repository.Get(command.ProjectId);
+            var activity = _dbSession.Repository.Get(command.ActivityId);
+            
             var agg = _factory.Create(activity);
-            agg.Close(null);
+            agg.Close(new ActivityCanBeClosed());
+            
+            // aqui seria um exemplo de uma regra mais complexa como condição para o fechamento da atividade
+            //agg.Close(new ActivityCanBeClosed().And(new ActivityCanBeCLosedByMe()));
 
             var isSucceed = false;
 
@@ -67,7 +72,7 @@ namespace AppFabric.Business.CommandHandlers
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
                 
-                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev));
+                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev,cancellationToken));
                 isSucceed = true;
             }
 

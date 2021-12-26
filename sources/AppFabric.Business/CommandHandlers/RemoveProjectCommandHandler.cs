@@ -58,7 +58,7 @@ namespace AppFabric.Business.CommandHandlers
             var project = _projectDb.Repository.Get(command.Id);
             
             var agg = _factory.Create(project);
-            agg.Remove(null);
+            agg.Remove(new ProjectCanBeRemoved());
 
             if (agg.IsValid)
             {

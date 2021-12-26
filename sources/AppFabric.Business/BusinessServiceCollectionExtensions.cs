@@ -87,5 +87,7 @@ namespace AppFabric.Business
             services.AddScoped<RemoveUserCommandHandler>();
 
         }
+        
+        
     }
 }

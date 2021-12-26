@@ -53,9 +53,9 @@ namespace AppFabric.Business.CommandHandlers
             CancellationToken cancellationToken)
         {
             var project = _dbSession.Repository.Get(EntityId.From(command.Id));
+            
             var agg = _factory.Create(project);
-
-            agg.UpdateDetail(command.ToProjectDetail(), null);
+            agg.UpdateDetail(command.ToProjectDetail(), new ProjectDetailsCanBeUpdated());
 
             var isSucceed = false;
       

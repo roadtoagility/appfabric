@@ -24,6 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Factories;
 using AppFabric.Domain.AggregationBilling;
+using AppFabric.Domain.AggregationBilling.Specifications;
 using AppFabric.Domain.AggregationRelease;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Business.Cqrs;
@@ -61,7 +62,7 @@ namespace AppFabric.Business.CommandHandlers
             var release = _dbReleaseSession.Repository.Get(command.ReleaseId);
             
             var agg = _factory.Create(billing);
-            agg.AddRelease(release, null);
+            agg.AddRelease(release, new ReleaseCanBeBilled(release.ClientId));
             
             if (!agg.IsValid)
             {

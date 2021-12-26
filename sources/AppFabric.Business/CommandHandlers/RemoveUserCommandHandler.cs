@@ -52,6 +52,13 @@ namespace AppFabric.Business.CommandHandlers
             CancellationToken cancellationToken)
         {
             var user = _userDb.Repository.Get(command.Id);
+
+            
+            // user associado a um projeto não pode ser removido
+            // no caso precisamos de uma pesquisa ou uma flag, acho 
+            // que uma flag mantida pela associação aos projetos mais interessante
+            // acho uma técnica mais "event-based" consistent dentro do modelo
+            // que estamos desenvolvendo
             var agg = _factory.Create(user);
             agg.Remove(null);
             
@@ -63,7 +70,8 @@ namespace AppFabric.Business.CommandHandlers
                 await _userDb.SaveChangesAsync(cancellationToken);
                 
                 agg.GetEvents().ToImmutableList()
-                    .ForEach( ev => Publisher.Publish(ev, cancellationToken));
+                    .ForEach( ev => 
+                        Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }
             

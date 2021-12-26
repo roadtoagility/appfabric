@@ -25,6 +25,7 @@ using AppFabric.Domain.AggregationActivity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Domain.AggregationActivity.Specifications;
 using DFlow.Business.Cqrs;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
@@ -54,8 +55,9 @@ namespace AppFabric.Business.CommandHandlers
         {
             var activity = _dbSession.Repository.Get(command.Id);
             var member = _dbMemberSession.Repository.Get(command.MemberId);
+            
             var agg = _factory.Create(activity);
-            agg.Assign(member,null);
+            agg.Assign(member,new ActivityResponsibleSpecification());
 
             var isSucceed = false;
 
