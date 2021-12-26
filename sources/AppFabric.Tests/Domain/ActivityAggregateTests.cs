@@ -1,10 +1,7 @@
 ﻿using System;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.CommandHandlers.Factories;
 using AppFabric.Domain.AggregationActivity.Events;
-using AppFabric.Domain.AggregationActivity.Specifications;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Tests.Domain.Data;
 using DFlow.Domain.BusinessObjects;
 using Xunit;
 
@@ -13,49 +10,64 @@ namespace AppFabric.Tests.Domain
     public class ActivityAggregateTests
     {
         //O esforço não pode ser superior a 8 horas
-        [Theory]
-        [InlineData("d3a70308-b2cd-4b86-ae13-5d9e2f515177",9)]
-        public void ShouldNotAllowEffortBiggerThan8Hours(Guid projectId, int effortHours)
+        [Fact]
+        public void ShouldNotAllowEffortBiggerThan8hours()
         {
-            var aggFactory = new ActivityCreateAggregateFactory();
-            Assert.Throws<ArgumentException>(()=> aggFactory.Create(new CreateActivityCommand(projectId, effortHours)));
+            var projectId = EntityId.From(Guid.NewGuid());
+            var aggFactory = new AggregateFactory();
+            var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
+
+            Assert.False(activityAgg.Failures.Any());
+            Assert.DoesNotContain(activityAgg.GetEvents(), x => x.GetType() == typeof(EffortIncreasedEvent));
         }
-        
+
         //Não é possível concluir uma atividade com esforço pendente
-        [Theory]
-        [ClassData(typeof(GenerateValidActivityTestingData))]
-        public void ShouldNotAllowCloseActivityWithPendingEffort(Activity activity)
+        [Fact]
+        public void ShouldNotAllowCloseActivityWithPendingEffort()
         {
-            var aggFactory = new ActivityReconstructAggregateFactory();
-            var activityAgg = aggFactory.Create(activity);
-            activityAgg.Close(new ActivityCanBeClosed());
-        
-            Assert.False(activityAgg.IsValid);
+            var projectId = EntityId.From(Guid.NewGuid());
+            var aggFactory = new AggregateFactory();
+            var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
+            activityAgg.UpdateRemaining(Effort.From(7));
+            activityAgg.Close();
+
+            Assert.True(activityAgg.Failures.Any());
+            Assert.DoesNotContain(activityAgg.GetEvents(), x => x.GetType() == typeof(EffortIncreasedEvent));
         }
-        
+
         //Só é possível associar atividades a membros do projeto
-        [Theory]
-        [ClassData(typeof(GenerateValidActivityAndMemberTestingData))]
-        public void ShouldAssignActivityToMember(Activity activity, Member projectMember)
+        [Fact]
+        public void ShouldAsignActivityToMember()
         {
-            var aggFactory = new ActivityReconstructAggregateFactory();
-            var activityAgg = aggFactory.Create(activity);
-            activityAgg.Assign(projectMember, new ActivityResponsibleSpecification());
-        
-            Assert.True(activityAgg.IsValid);
-            Assert.Contains(activityAgg.GetEvents(), x => x is MemberAssignedEvent);
+            var estimatedHours = 8;
+            var projectId = EntityId.From(Guid.NewGuid());
+            var aggFactory = new AggregateFactory();
+            var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, estimatedHours));
+
+            var memberId = EntityId.From(Guid.NewGuid());
+            var member = Member.From(memberId, projectId, Name.From("Douglas"), VersionId.Empty());
+            activityAgg.Assign(member);
+
+            Assert.False(activityAgg.Failures.Any());
+            Assert.Contains(activityAgg.GetEvents(), x => x.GetType() == typeof(MemberAssignedEvent));
         }
-        //
-        [Theory]
-        [ClassData(typeof(GenerateInvalidActivityAndMemberTestingData))]
-        public void ShouldNotAssignActivity(Activity activity, Member projectMember)
+
+        [Fact]
+        public void ShouldNotAsignActivity()
         {
-            var aggFactory = new ActivityReconstructAggregateFactory();
-            var activityAgg = aggFactory.Create(activity);
-            activityAgg.Assign(projectMember, new ActivityResponsibleSpecification());
-            
-            Assert.False(activityAgg.IsValid);
-            Assert.DoesNotContain(activityAgg.GetEvents(), x => x is MemberAssignedEvent);
+            var activityId = EntityId.From(Guid.NewGuid());
+            var projectId = EntityId.From(Guid.NewGuid());
+            var aggFactory = new AggregateFactory();
+            var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
+
+            var memberId = EntityId.From(Guid.NewGuid());
+
+            projectId = EntityId.From(Guid.NewGuid());
+            var member = Member.From(memberId, projectId, Name.From("Douglas"), VersionId.Empty());
+            activityAgg.Assign(member);
+
+            Assert.True(activityAgg.Failures.Any());
+            Assert.DoesNotContain(activityAgg.GetEvents(), x => x.GetType() == typeof(MemberAssignedEvent));
         }
     }
 }

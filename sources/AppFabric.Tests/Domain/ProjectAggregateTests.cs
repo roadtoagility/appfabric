@@ -1,61 +1,54 @@
-﻿using AppFabric.Domain.AggregationProject;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Domain.AggregationProject.Events;
+using AppFabric.Domain.BusinessObjects;
 using Xunit;
 
 namespace AppFabric.Tests.Domain
 {
     public class ProjectAggregateTests
     {
-
+        //Um projeto só pode ser cadastrado com uma Ordem de Serviço aprovada
         [Fact]
         public void ShouldCreateProjectWithServiceOrder()
         {
-            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
-           
-            Assert.True(projAgg.ValidationResults.IsValid);
+            var orderService = ServiceOrder.From(("S20210209O125478593", true));
+            var projectId = EntityId.From(Guid.NewGuid());
+            var status = ProjectStatus.From("NotApproved");
+            AggregateFactory factory = new AggregateFactory();
+            var projAgg = factory.Create(new AddProjectCommand
+            {
+                ServiceOrderNumber = "S20210209O125478593",
+                Owner = "doug.ramalho@gma.com",
+                Code = "PojectFake",
+                Name = "NameFake",
+                ServiceOrderStatus = true
+            });
+
+            Assert.True(projAgg.IsValid);
+            Assert.Contains(projAgg.GetEvents(), x => x is ProjectAddedEvent);
         }
 
         [Fact]
-        public void ShouldNotAllowEffortBiggerThan8minutes()
+        public void ShouldNotCreateProjectWithServiceOrderNotApproved()
         {
-            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
+            var orderService = ServiceOrder.From(("S20210209O125478593", false));
+            var projectId = EntityId.From(Guid.NewGuid());
+            var status = ProjectStatus.From("NotApproved");
+            AggregateFactory factory = new AggregateFactory();
 
-            Assert.True(projAgg.ValidationResults.IsValid);
-        }
-
-        [Fact]
-        public void ShouldNotAllowCloseActivityWithPendingEffort()
-        {
-            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
-
-            Assert.True(projAgg.ValidationResults.IsValid);
-        }
-
-        [Fact]
-        public void ShouldAsignActivityToMember()
-        {
-            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
-
-            Assert.True(projAgg.ValidationResults.IsValid);
-        }
-
-        [Fact]
-        public void ShouldNotAsignActivity()
-        {
-            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
-
-            Assert.True(projAgg.ValidationResults.IsValid);
-        }
-
-        [Fact]
-        public void ShouldCreateReleaseWithActivities()
-        {
-            var projAgg = ProjectAggregationRoot.CreateFrom(null, null, null, null, null);
-
-            Assert.True(projAgg.ValidationResults.IsValid);
+            var ex = Assert.Throws<Exception>(() =>
+            {
+                var projAgg = factory.Create(new AddProjectCommand
+                {
+                    ServiceOrderNumber = "S20210209O125478593",
+                    Owner = "doug.ramalho@gma.com",
+                    Code = "PojectFake",
+                    Name = "NameFake",
+                    Status = "NotApproved",
+                    ServiceOrderStatus = false
+                });
+            });
         }
     }
 }

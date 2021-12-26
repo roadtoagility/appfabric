@@ -30,12 +30,14 @@ namespace AppFabric.Business.CommandHandlers.Factories
     {
         public ActivityAggregationRoot Create(Activity source)
         {
-            var spec = new ActivitySpecification();
+            // mostra reuso de specifications
+            var spec = new ActivitySpecification()
+                .And(new ActivityCanBeClosed())
+                .And(new ActivityCloseWithoutEffortSpecification())
+                .And(new ActivityEffortSpecification())
+                .And(new ActivityResponsibleSpecification());
 
-            if (spec.IsSatisfiedBy(source) == false)
-            {
-                throw new ArgumentException("Invalid Command");
-            }
+            if (spec.IsSatisfiedBy(source)) throw new ArgumentException("Invalid Command");
 
             return new ActivityAggregationRoot(source);
         }

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using AppFabric.Domain.AggregationBilling.Events;
+﻿using AppFabric.Domain.AggregationBilling.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Specifications;
@@ -10,11 +9,9 @@ namespace AppFabric.Domain.AggregationBilling
     {
         public BillingAggregationRoot(Billing billing)
         {
-            Debug.Assert(billing.IsValid);
-            Apply(billing);
-            
             if (billing.IsNew())
             {
+                Apply(billing);
                 Raise(BillingCreatedEvent.For(billing));
             }
 

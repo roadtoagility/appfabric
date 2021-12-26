@@ -38,20 +38,17 @@ namespace AppFabric.Domain.BusinessObjects
 
         public Email CommercialEmail { get; }
 
-        public static User From(EntityId entityId, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
+
+        public static User NewRequest(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail,
+            VersionId version)
         {
-            var user = new User(entityId, name, cnpj, commercialEmail, version);
+            var user = new User(clientId, name, cnpj, commercialEmail, version);
             return user;
-        }
-        
-        public static User NewRequest(Name name, SocialSecurityId cnpj, Email commercialEmail)
-        {
-            return From(EntityId.GetNext(), name, cnpj, commercialEmail, VersionId.New());
         }
 
         public static User Empty()
         {
-            return From(EntityId.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty(),
+            return NewRequest(EntityId.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty(),
                 VersionId.Empty());
         }
 

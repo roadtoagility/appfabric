@@ -1,14 +1,13 @@
-﻿using System;
-using AppFabric.Domain.BusinessObjects;
+﻿using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Command;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class CreateActivityCommand : BaseCommand
     {
-        public CreateActivityCommand(Guid projectId, int estimatedHours)
+        public CreateActivityCommand(EntityId projectId, int estimatedHours)
         {
-            ProjectId = EntityId.From(projectId);
+            ProjectId = projectId;
             EstimatedHours = Effort.From(estimatedHours);
         }
 

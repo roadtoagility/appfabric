@@ -31,12 +31,9 @@ namespace AppFabric.Business.CommandHandlers.Factories
         public ActivityAggregationRoot Create(CreateActivityCommand source)
         {
             var activity = Activity.New(source.ProjectId, source.EstimatedHours);
-            var newActivitySpec = new ActivityCreationSpecification(Effort.MaxEffort());
+            var newActivitySpec = new ActivityCreationSpecification();
 
-            if (newActivitySpec.IsSatisfiedBy(activity) == false)
-            {
-                throw new ArgumentException("Invalid Command");
-            }
+            if (newActivitySpec.IsSatisfiedBy(activity) == false) throw new ArgumentException("Invalid Command");
 
             return new ActivityAggregationRoot(activity);
         }

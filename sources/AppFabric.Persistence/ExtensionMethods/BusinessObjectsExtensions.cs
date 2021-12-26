@@ -66,7 +66,7 @@ namespace AppFabric.Persistence.ExtensionMethods
 
         public static User ToUser(this UserState state)
         {
-            return User.From(
+            return User.NewRequest(
                 EntityId.From(state.Id),
                 Name.From(state.Name),
                 SocialSecurityId.From(state.Cnpj),

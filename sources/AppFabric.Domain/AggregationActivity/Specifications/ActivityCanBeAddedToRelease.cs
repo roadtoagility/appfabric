@@ -8,7 +8,7 @@ namespace AppFabric.Domain.AggregationActivity.Specifications
         public override bool IsSatisfiedBy(Activity candidate)
         {
             if (candidate.ActivityStatus.Equals(ActivityStatus.Closed()) ||
-                candidate.Effort.Equals(Effort.Zero()))
+                candidate.Effort.Equals(Effort.WithoutEffort()))
                 return false;
 
             return true;

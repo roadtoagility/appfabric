@@ -24,7 +24,11 @@ namespace AppFabric.Domain.BusinessObjects.Validations
     {
         public ServiceOrderNumberValidator()
         {
-            RuleFor(item => !item.Equals(ServiceOrder.Empty()));
+            RuleFor(item => item.Value.Number).NotNull()
+                .When(item => !item.Equals(ServiceOrder.Empty()));
+            RuleFor(item => item.Value.Number).NotEmpty()
+                .When(item => !item.Equals(ServiceOrder.Empty()));
+            ;
         }
     }
 }
