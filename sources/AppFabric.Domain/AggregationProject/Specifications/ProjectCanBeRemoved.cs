@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace AppFabric.Domain.AggregationProject.Specifications
 {
 
-    public class ProjectCanBeRemovedSpecification : CompositeSpecification<Project>
+    public class ProjectCanBeRemoved : CompositeSpecification<Project>
     {
         public override bool IsSatisfiedBy(Project candidate)
         {

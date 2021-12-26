@@ -21,6 +21,7 @@ using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Persistence.Model.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Domain.AggregationActivity.Specifications;
 using AppFabric.Domain.AggregationRelease;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Business.Cqrs;
@@ -35,18 +36,15 @@ namespace AppFabric.Business.CommandHandlers
     {
         private readonly IDbSession<IReleaseRepository> _dbSession;
         private readonly IDbSession<IActivityRepository> _dbActivitySession;
-        private readonly ISpecification<Activity> _spec;
         private readonly IAggregateFactory<ReleaseAggregationRoot, Release> _factory;
 
         public AddActivityCommandHandler(
             IDomainEventBus publisher, 
             IDbSession<IReleaseRepository> dbSession, 
             IDbSession<IActivityRepository> dbActivitySession,
-            ISpecification<Activity> spec,
             IAggregateFactory<ReleaseAggregationRoot, Release> factory)
             : base(publisher)
         {
-            _spec = spec;
             _dbSession = dbSession;
             _dbActivitySession = dbActivitySession;
             _factory = factory;
@@ -64,7 +62,7 @@ namespace AppFabric.Business.CommandHandlers
             var agg = _factory.Create(release);
             
             //referenciando outra agregação com base nas regras da especificação
-            agg.AddActivity(activity, _spec);
+            agg.AddActivity(activity, new ActivityCanBeAddedToRelease());
 
             var isSucceed = false;
 

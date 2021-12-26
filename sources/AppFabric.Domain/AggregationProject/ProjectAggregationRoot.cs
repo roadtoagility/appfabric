@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -28,10 +28,9 @@ namespace AppFabric.Domain.AggregationProject
     {
         public ProjectAggregationRoot(Project project)
         {
-            Apply(project);
-
             if (project.IsNew())
             {
+                Apply(project);
                 Raise(ProjectAddedEvent.For(project));
             }
         }
@@ -55,11 +54,25 @@ namespace AppFabric.Domain.AggregationProject
         {
             if (specRemoveProject.IsSatisfiedBy(AggregateRootEntity) == false)
             {
+                Apply(AggregateRootEntity);
                 Raise(ProjectRemovedEvent.For(AggregateRootEntity));
             }
             else
             {
                 AppendValidationResult(new ValidationFailure("Project","Can´t be removed!"));
+            }
+        }
+
+        public void AddProject(User client, ISpecification<Project> spec)
+        {
+            if (spec.IsSatisfiedBy(AggregateRootEntity) == false)
+            {
+                Apply(AggregateRootEntity);
+                Raise(ProjectAddedEvent.For(AggregateRootEntity));
+            }
+            else
+            {
+                AppendValidationResult(new ValidationFailure("Project","Can´t be added to client!"));
             }
         }
     }

@@ -22,6 +22,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Domain.AggregationProject;
+using AppFabric.Domain.AggregationProject.Specifications;
 using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Business.Cqrs.CommandHandlers;
@@ -61,7 +62,7 @@ namespace AppFabric.Business.CommandHandlers
 
             var agg = _factory.Create(command);
 
-            // agg.AddProject(client, spec);
+            agg.AddProject(client, new ProjectCanBeAddedToClient());
             
             if (agg.IsValid)
             {
