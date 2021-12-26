@@ -17,13 +17,11 @@
 //
 
 using System;
-using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Specifications;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.BusinessObjects.Validations.ActivityRules;
 using DFlow.Domain.Aggregates;
-using DFlow.Domain.Specifications;
 
 namespace AppFabric.Business.CommandHandlers.Factories
 {
@@ -32,8 +30,9 @@ namespace AppFabric.Business.CommandHandlers.Factories
     {
         public ActivityAggregationRoot Create(Activity source)
         {
+            // mostra reuso de specifications
             var spec = new ActivitySpecification()
-                .And(new ActivityClosedSpecification())
+                .And(new ActivityCanBeClosed())
                 .And(new ActivityCloseWithoutEffortSpecification())
                 .And(new ActivityEffortSpecification())
                 .And(new ActivityResponsibleSpecification());
