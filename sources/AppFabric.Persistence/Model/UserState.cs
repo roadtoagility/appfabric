@@ -18,14 +18,14 @@
 
 
 using System;
-using AppFabric.Persistence.Framework.Model;
+using DFlow.Persistence.Model;
 
 namespace AppFabric.Persistence.Model
 {
     public class UserState : PersistentState
     {
         public UserState(Guid id, string name, string cnpj, string commercialEmail, byte[] rowVersion)
-        :base(DateTime.Now, rowVersion)
+            : base(DateTime.Now, rowVersion)
         {
             Id = id;
             Name = name;
@@ -33,9 +33,9 @@ namespace AppFabric.Persistence.Model
             CommercialEmail = commercialEmail;
         }
 
-        public Guid Id { get; set;}
-        public string Name { get; set;}
-        public string Cnpj { get; set;}
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Cnpj { get; set; }
         public string CommercialEmail { get; set; }
     }
 }

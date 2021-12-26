@@ -29,14 +29,13 @@ using DFlow.Business.Cqrs.CommandHandlers;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
 using DFlow.Persistence;
-using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public sealed class AddProjectCommandHandler : CommandHandler<AddProjectCommand, CommandResult<Guid>>
     {
-        private readonly IDbSession<IUserRepository> _dbUserSession;
         private readonly IDbSession<IProjectRepository> _dbSession;
+        private readonly IDbSession<IUserRepository> _dbUserSession;
         private readonly IAggregateFactory<ProjectAggregationRoot, AddProjectCommand> _factory;
 
         public AddProjectCommandHandler(
@@ -52,7 +51,7 @@ namespace AppFabric.Business.CommandHandlers
         }
 
         protected override async Task<CommandResult<Guid>> ExecuteCommand(
-            AddProjectCommand command, 
+            AddProjectCommand command,
             CancellationToken cancellationToken)
         {
             var isSucceed = false;
@@ -63,20 +62,20 @@ namespace AppFabric.Business.CommandHandlers
             var agg = _factory.Create(command);
 
             agg.AddProject(client, new ProjectCanBeAddedToClient());
-            
+
             if (agg.IsValid)
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
 
                 agg.GetEvents().ToImmutableList()
-                    .ForEach(ev => 
-                        Publisher.Publish(ev,cancellationToken));
+                    .ForEach(ev =>
+                        Publisher.Publish(ev, cancellationToken));
 
                 isSucceed = true;
                 aggregationId = agg.GetChange().Identity.Value;
             }
-            
+
             return new CommandResult<Guid>(isSucceed, aggregationId, agg.Failures.ToImmutableList());
         }
     }

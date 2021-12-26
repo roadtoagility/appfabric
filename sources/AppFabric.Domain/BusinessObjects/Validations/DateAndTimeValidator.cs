@@ -21,7 +21,7 @@ using FluentValidation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class DateAndTimeValidator: AbstractValidator<DateAndTime>
+    public sealed class DateAndTimeValidator : AbstractValidator<DateAndTime>
     {
         public DateAndTimeValidator()
         {

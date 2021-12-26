@@ -21,10 +21,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.ExtensionMethods;
 using DFlow.Domain.BusinessObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
@@ -52,9 +54,7 @@ namespace AppFabric.Persistence.Model.Repositories
             else
             {
                 if (VersionId.Next(oldState.Version) > entity.Version)
-                {
                     throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
-                }
 
                 DbContext.Entry(oldState).CurrentValues.SetValues(entry);
             }
@@ -65,12 +65,10 @@ namespace AppFabric.Persistence.Model.Repositories
             var oldState = Get(entity.Id);
 
             if (VersionId.Next(oldState.Version) > entity.Version)
-            {
                 throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
-            }
-            
+
             var entry = entity.ToUserState();
-            
+
             DbContext.Users.Remove(entry);
         }
 
@@ -79,21 +77,29 @@ namespace AppFabric.Persistence.Model.Repositories
             var user = DbContext.Users.AsNoTracking()
                 .OrderByDescending(ob => ob.Id)
                 .ThenByDescending(ob => ob.RowVersion)
-                .FirstOrDefault(t =>t.Id.Equals(id.Value));
-            
-            if (user == null)
-            {
-                return User.Empty();
-            }
-            
+                .FirstOrDefault(t => t.Id.Equals(id.Value));
+
+            if (user == null) return User.Empty();
+
             return user.ToUser();
         }
 
         public IEnumerable<User> Find(Expression<Func<UserState, bool>> predicate)
         {
             return DbContext.Users.Where(predicate).AsNoTracking()
-                .Select(t =>  t.ToUser());
+                .Select(t => t.ToUser());
             ;
+        }
+
+        public Task<IEnumerable<User>> FindAsync(Expression<Func<UserState, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<User>> FindAsync(Expression<Func<UserState, bool>> predicate,
+            CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

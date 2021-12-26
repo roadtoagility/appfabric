@@ -30,6 +30,7 @@ namespace AppFabric.Domain.AggregationActivity.Events
         {
             Id = id;
         }
+
         public EntityId Id { get; }
 
         public static ActivityCreatedEvent For(Activity activity)
@@ -38,4 +39,3 @@ namespace AppFabric.Domain.AggregationActivity.Events
         }
     }
 }
-

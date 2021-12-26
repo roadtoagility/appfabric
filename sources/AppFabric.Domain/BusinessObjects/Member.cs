@@ -25,15 +25,15 @@ namespace AppFabric.Domain.BusinessObjects
 {
     public class Member : BaseEntity<EntityId>
     {
-        public EntityId ProjectId { get; private set; }
-        public Name Name { get; private set; }
-
         private Member(EntityId id, EntityId projectId, Name name, VersionId version)
             : base(id, version)
         {
             ProjectId = projectId;
             Name = name;
         }
+
+        public EntityId ProjectId { get; }
+        public Name Name { get; }
 
         public static Member From(EntityId id, EntityId projectId, Name name, VersionId version)
         {
@@ -47,7 +47,7 @@ namespace AppFabric.Domain.BusinessObjects
 
         public static Member Empty()
         {
-            var member = new Member(EntityId.From(Guid.Empty), EntityId.From(Guid.Empty), 
+            var member = new Member(EntityId.From(Guid.Empty), EntityId.From(Guid.Empty),
                 Name.Empty(), VersionId.Empty());
 
             var validator = new MemberValidator();
@@ -72,6 +72,7 @@ namespace AppFabric.Domain.BusinessObjects
         {
             yield return Identity;
         }
+
         #endregion
     }
 }

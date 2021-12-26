@@ -22,7 +22,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Domain.AggregationUser;
-using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Business.Cqrs.CommandHandlers;
@@ -48,28 +47,28 @@ namespace AppFabric.Business.CommandHandlers
         }
 
         protected override async Task<CommandResult<Guid>> ExecuteCommand(
-            AddUserCommand command, 
+            AddUserCommand command,
             CancellationToken cancellationToken)
         {
             var agg = _factory.Create(command);
-            
+
             var isSucceed = false;
             var okId = Guid.Empty;
-      
+
             if (agg.IsValid)
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
-                
+
                 agg.GetEvents().ToImmutableList()
-                    .ForEach( ev => 
+                    .ForEach(ev =>
                         Publisher.Publish(ev, cancellationToken));
-                
+
                 isSucceed = true;
                 okId = agg.GetChange().Id.Value;
             }
-            
-            return new CommandResult<Guid>(isSucceed, okId,agg.Failures.ToImmutableList());
+
+            return new CommandResult<Guid>(isSucceed, okId, agg.Failures.ToImmutableList());
         }
     }
 }

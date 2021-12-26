@@ -16,12 +16,12 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using DFlow.Domain.BusinessObjects;
 using AppFabric.Domain.BusinessObjects.Validations;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public class Effort : ValueOf<int,Effort, EffortValidator>
+    public class Effort : ValueOf<int, Effort, EffortValidator>
     {
         private const int UnEstimatedEffort = -1;
         private const int NoEffort = 0;
@@ -42,7 +42,7 @@ namespace AppFabric.Domain.BusinessObjects
             return From(MaximumEffort);
         }
 
-        
+
         public void Update(int hours)
         {
             Value = hours;
@@ -50,19 +50,26 @@ namespace AppFabric.Domain.BusinessObjects
 
         protected override void Validate()
         {
-            
         }
 
         public static bool operator >=(Effort a, Effort b)
-            => a.Value >= b.Value;
+        {
+            return a.Value >= b.Value;
+        }
 
         public static bool operator <=(Effort a, Effort b)
-            => a.Value <= b.Value;
-        
+        {
+            return a.Value <= b.Value;
+        }
+
         public static bool operator >(Effort a, Effort b)
-            => a.Value > b.Value;
+        {
+            return a.Value > b.Value;
+        }
 
         public static bool operator <(Effort a, Effort b)
-            => a.Value < b.Value;
+        {
+            return a.Value < b.Value;
+        }
     }
 }

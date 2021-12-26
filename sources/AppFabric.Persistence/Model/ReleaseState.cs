@@ -1,9 +1,5 @@
-﻿using AppFabric.Persistence.Framework.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using DFlow.Persistence.Model;
 
 namespace AppFabric.Persistence.Model
 {
@@ -12,7 +8,6 @@ namespace AppFabric.Persistence.Model
         public ReleaseState(byte[] rowVersion)
             : base(DateTime.Now, rowVersion)
         {
-
         }
     }
 }

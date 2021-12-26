@@ -17,7 +17,8 @@ namespace AppFabric.Domain.AggregationActivity.Specifications
 
         public override bool IsSatisfiedBy(Activity candidate)
         {
-            if (candidate.Responsible.ProjectId.Value != Guid.Empty && candidate.ProjectId != candidate.Responsible.ProjectId)
+            if (candidate.Responsible.ProjectId.Value != Guid.Empty &&
+                candidate.ProjectId != candidate.Responsible.ProjectId)
             {
                 candidate.AppendValidationResult(_responsibleFailure);
                 return false;

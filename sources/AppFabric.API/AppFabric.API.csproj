@@ -1,29 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <NoWin32Manifest>true</NoWin32Manifest>
-    <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
-  </PropertyGroup>
+    <PropertyGroup>
+        <NoWin32Manifest>true</NoWin32Manifest>
+        <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FluentMediator" Version="0.4.7" />
-    <PackageReference Include="FluentMediator.Microsoft.Extensions.DependencyInjection" Version="0.4.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentMediator" Version="0.4.7"/>
+        <PackageReference Include="FluentMediator.Microsoft.Extensions.DependencyInjection" Version="0.4.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\AppFabric.Business\AppFabric.Business.csproj" />
-    <ProjectReference Include="..\AppFabric.Domain\AppFabric.Domain.csproj" />
-    <ProjectReference Include="..\AppFabric.Persistence\AppFabric.Persistence.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\AppFabric.Business\AppFabric.Business.csproj"/>
+        <ProjectReference Include="..\AppFabric.Domain\AppFabric.Domain.csproj"/>
+        <ProjectReference Include="..\AppFabric.Persistence\AppFabric.Persistence.csproj"/>
+    </ItemGroup>
 
-  <PropertyGroup>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-  </PropertyGroup>
+    <PropertyGroup>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    </PropertyGroup>
 </Project>

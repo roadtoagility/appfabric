@@ -17,15 +17,13 @@
 //
 
 using System.Collections.Immutable;
-using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
-using AppFabric.Domain.AggregationActivity;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Specifications;
+using AppFabric.Domain.BusinessObjects;
+using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
@@ -35,13 +33,14 @@ namespace AppFabric.Business.CommandHandlers
 {
     public class AssignResponsibleCommandHandler : CommandHandler<AssignResponsibleCommand, ExecutionResult>
     {
-        private readonly IDbSession<IActivityRepository> _dbSession;
         private readonly IDbSession<IMemberRepository> _dbMemberSession;
+        private readonly IDbSession<IActivityRepository> _dbSession;
         private readonly IAggregateFactory<ActivityAggregationRoot, Activity> _factory;
 
-        public AssignResponsibleCommandHandler(IDomainEventBus publisher, 
+        public AssignResponsibleCommandHandler(IDomainEventBus publisher,
             IAggregateFactory<ActivityAggregationRoot, Activity> factory,
-            IDbSession<IActivityRepository> dbSession, IDbSession<IMemberRepository> dbMemberSession)
+            IDbSession<IActivityRepository> dbSession,
+            IDbSession<IMemberRepository> dbMemberSession)
             : base(publisher)
         {
             _factory = factory;
@@ -50,14 +49,14 @@ namespace AppFabric.Business.CommandHandlers
         }
 
         protected override async Task<ExecutionResult> ExecuteCommand(
-            AssignResponsibleCommand command, 
-            CancellationToken cancellationToken )
+            AssignResponsibleCommand command,
+            CancellationToken cancellationToken)
         {
             var activity = _dbSession.Repository.Get(command.Id);
             var member = _dbMemberSession.Repository.Get(command.MemberId);
-            
+
             var agg = _factory.Create(activity);
-            agg.Assign(member,new ActivityResponsibleSpecification());
+            agg.Assign(member, new ActivityResponsibleSpecification());
 
             var isSucceed = false;
 
@@ -66,7 +65,7 @@ namespace AppFabric.Business.CommandHandlers
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
                 agg.GetEvents().ToImmutableList()
-                    .ForEach(ev => 
+                    .ForEach(ev =>
                         Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }

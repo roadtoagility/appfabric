@@ -25,7 +25,8 @@ namespace AppFabric.Domain.AggregationProject.Events
 {
     public class ProjectAddedEvent : DomainEvent
     {
-        private ProjectAddedEvent(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, VersionId version)
+        private ProjectAddedEvent(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget,
+            EntityId clientId, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
@@ -38,28 +39,29 @@ namespace AppFabric.Domain.AggregationProject.Events
             Status = ProjectStatus.Default();
             OrderNumber = ServiceOrder.Empty();
         }
+
         public EntityId Id { get; }
         public ProjectName Name { get; }
         public ProjectCode Code { get; }
-        
+
         public Money Budget { get; }
-        
+
         public EntityId ClientId { get; }
 
         public DateAndTime StartDate { get; }
-        
+
         public Email Owner { get; }
         public ServiceOrder OrderNumber { get; }
         public ProjectStatus Status { get; }
-        
+
         public static ProjectAddedEvent For(Project project)
         {
             return new ProjectAddedEvent(
                 project.Identity,
                 project.Name,
                 project.Code,
-                project.StartDate, 
-                project.Budget, 
+                project.StartDate,
+                project.Budget,
                 project.ClientId,
                 project.Version);
         }

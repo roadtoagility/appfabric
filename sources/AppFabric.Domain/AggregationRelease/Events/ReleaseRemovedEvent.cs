@@ -30,6 +30,7 @@ namespace AppFabric.Domain.AggregationRelease.Events
         {
             Id = id;
         }
+
         public EntityId Id { get; }
 
         public static ReleaseRemovedEvent For(Release release)
@@ -38,5 +39,3 @@ namespace AppFabric.Domain.AggregationRelease.Events
         }
     }
 }
-
-

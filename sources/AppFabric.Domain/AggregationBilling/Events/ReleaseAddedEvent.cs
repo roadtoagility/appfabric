@@ -30,6 +30,7 @@ namespace AppFabric.Domain.AggregationBilling.Events
         {
             Id = id;
         }
+
         public EntityId Id { get; }
 
         public static ReleaseAddedEvent For(Billing billing)
@@ -38,6 +39,3 @@ namespace AppFabric.Domain.AggregationBilling.Events
         }
     }
 }
-
-
-

@@ -1,21 +1,8 @@
-﻿using AppFabric.Business;
+﻿using System;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Domain;
-using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Events;
-using AppFabric.Domain.AggregationBilling;
-using AppFabric.Domain.AggregationBilling.Events;
-using AppFabric.Domain.AggregationProject;
-using AppFabric.Domain.AggregationProject.Events;
-using AppFabric.Domain.AggregationRelease;
-using AppFabric.Domain.AggregationRelease.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.BusinessObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace AppFabric.Tests.Domain
@@ -41,7 +28,7 @@ namespace AppFabric.Tests.Domain
             var projectId = EntityId.From(Guid.NewGuid());
             var aggFactory = new AggregateFactory();
             var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 9));
-            activityAgg.UpdateRemaining( Effort.From(7));
+            activityAgg.UpdateRemaining(Effort.From(7));
             activityAgg.Close();
 
             Assert.True(activityAgg.Failures.Any());
@@ -58,7 +45,7 @@ namespace AppFabric.Tests.Domain
             var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, estimatedHours));
 
             var memberId = EntityId.From(Guid.NewGuid());
-            var member = Member.From(memberId, projectId,  Name.From("Douglas"), VersionId.Empty());
+            var member = Member.From(memberId, projectId, Name.From("Douglas"), VersionId.Empty());
             activityAgg.Assign(member);
 
             Assert.False(activityAgg.Failures.Any());

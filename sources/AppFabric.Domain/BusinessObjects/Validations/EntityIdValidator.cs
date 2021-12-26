@@ -21,7 +21,7 @@ using FluentValidation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class EntityIdValidator: AbstractValidator<EntityId>
+    public sealed class EntityIdValidator : AbstractValidator<EntityId>
     {
         public EntityIdValidator()
         {

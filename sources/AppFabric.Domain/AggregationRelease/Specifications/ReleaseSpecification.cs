@@ -1,11 +1,7 @@
-﻿using AppFabric.Domain.BusinessObjects;
+﻿using System.Linq;
+using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
 using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AppFabric.Domain.AggregationRelease.Specifications
 {

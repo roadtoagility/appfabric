@@ -16,12 +16,10 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.AggregationUser.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
-using DFlow.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationUser
@@ -38,15 +36,12 @@ namespace AppFabric.Domain.AggregationUser
             {
                 Apply(user);
 
-                if (user.IsNew())
-                {
-                    Raise(UserAddedEvent.For(user));
-                }
+                if (user.IsNew()) Raise(UserAddedEvent.For(user));
             }
-             
+
             AppendValidationResult(user.Failures);
         }
-        
+
         public void Remove(ISpecification<User> spec)
         {
             if (spec.IsSatisfiedBy(AggregateRootEntity))

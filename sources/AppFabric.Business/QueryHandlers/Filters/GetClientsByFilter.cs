@@ -26,13 +26,10 @@ namespace AppFabric.Business.QueryHandlers.Filters
         }
 
         public string Name { get; }
-        
+
         public static GetClientsByFilter From(string name)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                name = string.Empty;
-            }
+            if (string.IsNullOrEmpty(name)) name = string.Empty;
 
             return new GetClientsByFilter(name);
         }

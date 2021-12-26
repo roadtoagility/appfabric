@@ -19,15 +19,11 @@
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.CommandHandlers.ExtensionMethods;
-using AppFabric.Domain.AggregationProject;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
 using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Specifications;
+using AppFabric.Domain.BusinessObjects;
+using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
@@ -42,7 +38,7 @@ namespace AppFabric.Business.CommandHandlers
 
 
         public CloseActivityCommandHandler(
-            IDomainEventBus publisher, 
+            IDomainEventBus publisher,
             IAggregateFactory<ActivityAggregationRoot, Activity> factory,
             IDbSession<IActivityRepository> dbSession)
             : base(publisher)
@@ -52,16 +48,16 @@ namespace AppFabric.Business.CommandHandlers
         }
 
         protected override async Task<ExecutionResult> ExecuteCommand(
-            CloseActivityCommand command, 
-            CancellationToken cancellationToken )
+            CloseActivityCommand command,
+            CancellationToken cancellationToken)
         {
             //TODO: errado o ProjectId, deveria ser o ID da atividade
-            
+
             var activity = _dbSession.Repository.Get(command.ActivityId);
-            
+
             var agg = _factory.Create(activity);
             agg.Close(new ActivityCanBeClosed());
-            
+
             // aqui seria um exemplo de uma regra mais complexa como condição para o fechamento da atividade
             //agg.Close(new ActivityCanBeClosed().And(new ActivityCanBeCLosedByMe()));
 
@@ -71,8 +67,8 @@ namespace AppFabric.Business.CommandHandlers
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
-                
-                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev,cancellationToken));
+
+                agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }
 

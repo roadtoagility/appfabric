@@ -20,9 +20,7 @@ using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.CommandHandlers.Factories;
 using AppFabric.Domain.AggregationUser;
-using AppFabric.Domain.AggregationUser.Specifications;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
@@ -34,26 +32,26 @@ namespace AppFabric.Business.CommandHandlers
 {
     public sealed class RemoveUserCommandHandler : CommandHandler<RemoveUserCommand, ExecutionResult>
     {
-        private readonly IDbSession<IUserRepository> _userDb;
         private readonly IAggregateFactory<UserAggregationRoot, User> _factory;
+        private readonly IDbSession<IUserRepository> _userDb;
 
         public RemoveUserCommandHandler(
-            IDomainEventBus publisher, 
+            IDomainEventBus publisher,
             IDbSession<IUserRepository> userDb,
             IAggregateFactory<UserAggregationRoot, User> factory)
-            :base(publisher)
+            : base(publisher)
         {
             _userDb = userDb;
             _factory = factory;
         }
-        
+
         protected override async Task<ExecutionResult> ExecuteCommand(
-            RemoveUserCommand command, 
+            RemoveUserCommand command,
             CancellationToken cancellationToken)
         {
             var user = _userDb.Repository.Get(command.Id);
 
-            
+
             // user associado a um projeto não pode ser removido
             // no caso precisamos de uma pesquisa ou uma flag, acho 
             // que uma flag mantida pela associação aos projetos mais interessante
@@ -61,20 +59,20 @@ namespace AppFabric.Business.CommandHandlers
             // que estamos desenvolvendo
             var agg = _factory.Create(user);
             agg.Remove(null);
-            
+
             var isSucceed = false;
-      
+
             if (agg.IsValid)
             {
                 _userDb.Repository.Remove(agg.GetChange());
                 await _userDb.SaveChangesAsync(cancellationToken);
-                
+
                 agg.GetEvents().ToImmutableList()
-                    .ForEach( ev => 
+                    .ForEach(ev =>
                         Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }
-            
+
             return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
         }
     }

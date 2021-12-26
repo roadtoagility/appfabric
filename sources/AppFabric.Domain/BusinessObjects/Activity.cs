@@ -17,13 +17,25 @@
 //
 
 using System.Collections.Generic;
-using DFlow.Domain.BusinessObjects;
 using System.Collections.Immutable;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
     public sealed class Activity : BaseEntity<EntityId>
     {
+        private Activity(EntityId id, EntityId projectId, VersionId version)
+            : base(id, version)
+        {
+            ProjectId = projectId;
+            Effort = Effort.UnEstimated();
+            ActivityStatus = ActivityStatus.NotStarted();
+            Responsible = Member.Empty();
+
+            AppendValidationResult(Identity.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(projectId.ValidationStatus.Errors.ToImmutableList());
+        }
+
         public EntityId ProjectId { get; }
 
         public Effort Effort { get; private set; }
@@ -36,30 +48,18 @@ namespace AppFabric.Domain.BusinessObjects
             return $"[Activity]:[ID: {Identity}]";
         }
 
-        private Activity(EntityId id, EntityId projectId, VersionId version)
-            : base(id, version)
-        {
-            this.ProjectId = projectId;
-            this.Effort = Effort.UnEstimated();
-            this.ActivityStatus = ActivityStatus.NotStarted();
-            this.Responsible = Member.Empty();
-
-            AppendValidationResult(Identity.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(projectId.ValidationStatus.Errors.ToImmutableList());
-        }
-
         public static Activity From(EntityId id, EntityId projectId, Effort hours, VersionId version)
         {
             var activity = new Activity(id, projectId, version);
             activity.UpdateEffort(hours);
             return activity;
         }
-        
+
         public static Activity New(EntityId projectId, Effort hours)
         {
             return From(EntityId.GetNext(), projectId, hours, VersionId.New());
         }
-        
+
         public void AddMember(Member member)
         {
             Responsible.Update(member);

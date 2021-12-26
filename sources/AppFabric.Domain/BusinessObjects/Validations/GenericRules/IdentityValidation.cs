@@ -1,17 +1,12 @@
-﻿using DFlow.Domain.BusinessObjects;
+﻿using System;
+using DFlow.Domain.BusinessObjects;
 using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AppFabric.Domain.BusinessObjects.Validations.GenericRules
 {
-
     public class IdentityValidation : ValidationRule<BaseEntity<EntityId>>
     {
-        private ValidationFailure _invalidIdentityFailure;
+        private readonly ValidationFailure _invalidIdentityFailure;
 
         public IdentityValidation()
         {

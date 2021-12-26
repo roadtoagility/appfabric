@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Threading.Tasks;
-using FluentMediator;
-using Microsoft.AspNetCore.Mvc;
-using AppFabric.API.Mock;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
 using AppFabric.Business.QueryHandlers;
 using AppFabric.Business.QueryHandlers.Filters;
+using FluentMediator;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AppFabric.API.Controllers
 {
@@ -31,7 +29,7 @@ namespace AppFabric.API.Controllers
         [HttpGet("list/{clientId}/{name?}")]
         public IActionResult List(Guid clientId, string name)
         {
-            var result = _mediator.Send<GetProjectsResponse>(GetProjectsByClientAndNameFilter.From(name,clientId));
+            var result = _mediator.Send<GetProjectsResponse>(GetProjectsByClientAndNameFilter.From(name, clientId));
             return Ok(result);
         }
 
@@ -41,13 +39,14 @@ namespace AppFabric.API.Controllers
             var result = _mediator.Send<GetProjectResponse>(GetProjectByIdFilter.From(id));
             return Ok(result);
         }
+
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            var result = _mediator.Send<ExecutionResult>(new RemoveProjectCommand{Id = id});
+            var result = _mediator.Send<ExecutionResult>(new RemoveProjectCommand(id));
             return Ok(result);
         }
-        
+
         [HttpPost("save")]
         public IActionResult Save([FromBody] AddProjectCommand entity)
         {
@@ -55,7 +54,7 @@ namespace AppFabric.API.Controllers
 
             return Ok(result);
         }
-        
+
         [HttpPut("save/{id}")]
         public IActionResult Update(Guid id, [FromBody] UpdateProjectCommand entity)
         {

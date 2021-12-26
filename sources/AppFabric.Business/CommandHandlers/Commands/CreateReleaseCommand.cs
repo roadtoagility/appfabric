@@ -16,19 +16,19 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using DFlow.Domain.Command;
 using System;
 using AppFabric.Domain.BusinessObjects;
+using DFlow.Domain.Command;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class CreateReleaseCommand : BaseCommand
     {
-        public EntityId ClientId { get; }
-
         public CreateReleaseCommand(Guid clientId)
         {
             ClientId = EntityId.From(clientId);
         }
+
+        public EntityId ClientId { get; }
     }
 }

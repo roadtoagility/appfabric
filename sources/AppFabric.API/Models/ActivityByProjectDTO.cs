@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace AppFabric.API.Models
+﻿namespace AppFabric.API.Models
 {
     public class ActivityByProjectDTO
     {

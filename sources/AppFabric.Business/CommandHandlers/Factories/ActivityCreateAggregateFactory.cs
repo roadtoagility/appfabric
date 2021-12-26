@@ -21,7 +21,6 @@ using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Specifications;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.BusinessObjects.Validations.ActivityRules;
 using DFlow.Domain.Aggregates;
 
 namespace AppFabric.Business.CommandHandlers.Factories
@@ -34,14 +33,9 @@ namespace AppFabric.Business.CommandHandlers.Factories
             var activity = Activity.New(source.ProjectId, source.EstimatedHours);
             var newActivitySpec = new ActivityCreationSpecification();
 
-            if (newActivitySpec.IsSatisfiedBy(activity) == false)
-            {
-                throw new ArgumentException("Invalid Command");
-            }
-            
+            if (newActivitySpec.IsSatisfiedBy(activity) == false) throw new ArgumentException("Invalid Command");
+
             return new ActivityAggregationRoot(activity);
         }
-        
-        
     }
 }

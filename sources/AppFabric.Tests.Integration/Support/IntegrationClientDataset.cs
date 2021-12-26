@@ -9,30 +9,30 @@ namespace AppFabric.Tests.Integration.Support
 {
     public class IntegrationClientDataset
     {
-        public Fixture DatabaseFixture { get; }
-        public AppFabricDbContext DbContext { get; }
-
         public IntegrationClientDataset(AppFabricDbContext db)
         {
             DbContext = db;
 
             DatabaseFixture = new Fixture();
-            
-            DatabaseFixture.Register<UserState>(() => 
-                    new UserState(DatabaseFixture.Create<Guid>(), 
-                        DatabaseFixture.Create<string>(),
-                        DatabaseFixture.Create<string>(),
-                        string.Format($"{DatabaseFixture.Create<string>()}@teste.com"),
-                        BitConverter.GetBytes(DatabaseFixture.Create<int>())));
-            
-            DatabaseFixture.Register<UserProjection>(() => 
-                new UserProjection(DatabaseFixture.Create<Guid>(), 
+
+            DatabaseFixture.Register(() =>
+                new UserState(DatabaseFixture.Create<Guid>(),
+                    DatabaseFixture.Create<string>(),
+                    DatabaseFixture.Create<string>(),
+                    string.Format($"{DatabaseFixture.Create<string>()}@teste.com"),
+                    BitConverter.GetBytes(DatabaseFixture.Create<int>())));
+
+            DatabaseFixture.Register(() =>
+                new UserProjection(DatabaseFixture.Create<Guid>(),
                     DatabaseFixture.Create<string>(),
                     DatabaseFixture.Create<string>(),
                     string.Format($"{DatabaseFixture.Create<string>()}@teste.com"),
                     DatabaseFixture.Create<int>()));
-            
         }
+
+        public Fixture DatabaseFixture { get; }
+        public AppFabricDbContext DbContext { get; }
+
         public void InitializeDbForTests()
         {
             DbContext.Users.AddRange(GetSeedingUsersForDeletion());
@@ -51,7 +51,7 @@ namespace AppFabric.Tests.Integration.Support
 
         public List<UserProjection> GetSeedingUsersProjectionForListing()
         {
-            return new List<UserProjection>()
+            return new List<UserProjection>
             {
                 DatabaseFixture.Create<UserProjection>(),
                 DatabaseFixture.Create<UserProjection>(),
@@ -60,40 +60,40 @@ namespace AppFabric.Tests.Integration.Support
                 DatabaseFixture.Create<UserProjection>()
             };
         }
-        
+
         public List<UserProjection> GetSeedingUsersProjectionForFiltering()
         {
-            return new List<UserProjection>()
+            return new List<UserProjection>
             {
                 //para filtragem por id
                 DatabaseFixture.Build<UserProjection>()
-                    .With(up=> up.Id, Guid.Parse("81DC52BA-5D45-4E17-97EC-BEE71E459232")).Create(),
+                    .With(up => up.Id, Guid.Parse("81DC52BA-5D45-4E17-97EC-BEE71E459232")).Create(),
                 DatabaseFixture.Build<UserProjection>()
-                    .With(up=> up.Id, Guid.Parse("E2528E3F-601F-4B67-92BA-D9E27462006F")).Create()
+                    .With(up => up.Id, Guid.Parse("E2528E3F-601F-4B67-92BA-D9E27462006F")).Create()
             };
         }
 
         public List<UserState> GetSeedingUsersForDeletion()
         {
-            return new List<UserState>()
+            return new List<UserState>
             {
                 DatabaseFixture.Build<UserState>()
-                    .With(up=> up.Id, Guid.Parse("65CC91A2-267F-4FFE-8CE0-796AECD6AB4D"))
-                    .With(up=> up.RowVersion, BitConverter.GetBytes(1))
-                    .With(up=> up.CommercialEmail,string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
+                    .With(up => up.Id, Guid.Parse("65CC91A2-267F-4FFE-8CE0-796AECD6AB4D"))
+                    .With(up => up.RowVersion, BitConverter.GetBytes(1))
+                    .With(up => up.CommercialEmail, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
                     .Create()
             };
         }
-        
+
         public List<UserProjection> GetSeedingUsersProjectionForDeleting()
         {
-            return new List<UserProjection>()
+            return new List<UserProjection>
             {
                 //para filtragem por id
                 DatabaseFixture.Build<UserProjection>()
-                    .With(up=> up.Id, Guid.Parse("65CC91A2-267F-4FFE-8CE0-796AECD6AB4D"))
-                    .With(up=> up.RowVersion, 1)
-                    .With(up=> up.CommercialEmail,string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
+                    .With(up => up.Id, Guid.Parse("65CC91A2-267F-4FFE-8CE0-796AECD6AB4D"))
+                    .With(up => up.RowVersion, 1)
+                    .With(up => up.CommercialEmail, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
                     .Create()
             };
         }

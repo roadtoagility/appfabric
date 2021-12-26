@@ -16,16 +16,13 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Immutable;
-using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Linq;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using AppFabric.Business.CommandHandlers.Factories;
+using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Domain.AggregationRelease;
+using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Business.Cqrs.CommandHandlers;
 using DFlow.Domain.Aggregates;
@@ -50,7 +47,7 @@ namespace AppFabric.Business.CommandHandlers
         }
 
         protected override async Task<CommandResult<Guid>> ExecuteCommand(
-            CreateReleaseCommand command, 
+            CreateReleaseCommand command,
             CancellationToken cancellationToken)
         {
             var isSucceed = false;
@@ -62,9 +59,9 @@ namespace AppFabric.Business.CommandHandlers
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
-                
+
                 agg.GetEvents().ToImmutableList()
-                    .ForEach(ev => 
+                    .ForEach(ev =>
                         Publisher.Publish(ev, cancellationToken));
 
                 isSucceed = true;

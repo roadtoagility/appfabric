@@ -1,21 +1,15 @@
-﻿using AppFabric.Domain.BusinessObjects;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.BusinessObjects.Validations;
 using AppFabric.Domain.BusinessObjects.Validations.ProjectRules;
 using DFlow.Domain.Specifications;
-using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace AppFabric.Domain.AggregationProject.Specifications
 {
-
     public class ProjectSpecification : CompositeSpecification<Project>
     {
-        List<ValidationRule<Project>> _rules;
+        private readonly List<ValidationRule<Project>> _rules;
 
         public ProjectSpecification()
         {

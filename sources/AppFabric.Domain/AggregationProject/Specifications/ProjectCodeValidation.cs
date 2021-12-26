@@ -4,7 +4,8 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
 {
     public class ProjectCodeValidation : ValidationRule<Project>
     {
-        private ValidationFailure _codeEmptyFailure;
+        private readonly ValidationFailure _codeEmptyFailure;
+
         public ProjectCodeValidation()
         {
             _codeEmptyFailure = new ValidationFailure("Project.Code", "O código do projeto não pode estar vazio");
@@ -17,6 +18,7 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
                 candidate.AppendValidationResult(_codeEmptyFailure);
                 return NotValid;
             }
+
             return Valid;
         }
     }

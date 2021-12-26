@@ -1,10 +1,5 @@
-﻿using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DFlow.Domain.Specifications;
+﻿using DFlow.Domain.Specifications;
+using FluentValidation.Results;
 
 namespace AppFabric.Domain.BusinessObjects.Validations.ActivityRules
 {

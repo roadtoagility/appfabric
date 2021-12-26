@@ -21,10 +21,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.ExtensionMethods;
 using DFlow.Domain.BusinessObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
@@ -54,11 +56,9 @@ namespace AppFabric.Persistence.Model.Repositories
             else
             {
                 var version = VersionId.From(BitConverter.ToInt32(oldState.RowVersion));
-                
+
                 if (VersionId.Next(version) > entity.Version)
-                {
                     throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
-                }
 
                 DbContext.Entry(oldState).CurrentValues.SetValues(entry);
             }
@@ -69,10 +69,8 @@ namespace AppFabric.Persistence.Model.Repositories
             var oldState = Get(entity.Identity);
 
             if (VersionId.Next(oldState.Version) > entity.Version)
-            {
                 throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
-            }
-            
+
             var entry = entity.ToProjectState();
 
             DbContext.Projects.Remove(entry);
@@ -84,20 +82,28 @@ namespace AppFabric.Persistence.Model.Repositories
                 .OrderByDescending(ob => ob.Id)
                 .ThenByDescending(ob => ob.RowVersion)
                 .FirstOrDefault(t => t.Id == id.Value);
-            
-            if (project == null)
-            {
-                return Project.Empty();
-            }
-            
+
+            if (project == null) return Project.Empty();
+
             return project.ToProject();
         }
 
         public IEnumerable<Project> Find(Expression<Func<ProjectState, bool>> predicate)
         {
             return DbContext.Projects.Where(predicate).AsNoTracking()
-                .Select(t =>  t.ToProject());
+                .Select(t => t.ToProject());
             ;
+        }
+
+        public Task<IEnumerable<Project>> FindAsync(Expression<Func<ProjectState, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Project>> FindAsync(Expression<Func<ProjectState, bool>> predicate,
+            CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Business.CommandHandlers.Commands
@@ -14,6 +10,7 @@ namespace AppFabric.Business.CommandHandlers.Commands
             Id = EntityId.From(id);
             ReleaseId = EntityId.From(releaseId);
         }
+
         public EntityId Id { get; set; }
         public EntityId ReleaseId { get; set; }
     }

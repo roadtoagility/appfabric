@@ -17,25 +17,24 @@
 //
 
 using System.Collections.Generic;
-using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
     public class Billing : BaseEntity<EntityId>
     {
-        public List<Release> Releases { get; private set; }
-
-        public override string ToString()
-        {
-            return $"[Billing]:[ID: {Identity}]";
-        }
-
         private Billing(EntityId id, IReadOnlyList<Release> release, VersionId version)
             : base(id, version)
         {
             Releases = new List<Release>();
             Releases.AddRange(release);
+        }
+
+        public List<Release> Releases { get; }
+
+        public override string ToString()
+        {
+            return $"[Billing]:[ID: {Identity}]";
         }
 
         public static Billing From(EntityId id, IReadOnlyList<Release> releases, VersionId version)
@@ -61,5 +60,3 @@ namespace AppFabric.Domain.BusinessObjects
         }
     }
 }
-
-

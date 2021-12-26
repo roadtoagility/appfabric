@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AppFabric.API.Mock;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Business.Framework;
 using FluentMediator;
 using Microsoft.AspNetCore.Mvc;
-using AppFabric.API.Mock;
-using AppFabric.Business.Framework;
-using AppFabric.Business.CommandHandlers.Commands;
 
 namespace AppFabric.API.Controllers
 {
@@ -37,7 +36,8 @@ namespace AppFabric.API.Controllers
         {
             var activities = ActivitiesMock.GetActivities();
 
-            activities = activities.Where(x => x.Id == projectId && x.Titulo.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
+            activities = activities
+                .Where(x => x.Id == projectId && x.Titulo.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
 
             return await Task.FromResult(activities);
         }

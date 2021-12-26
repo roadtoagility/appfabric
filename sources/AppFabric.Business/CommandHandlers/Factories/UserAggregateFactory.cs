@@ -26,7 +26,7 @@ using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Business.CommandHandlers.Factories
 {
-    public class UserAggregateFactory : 
+    public class UserAggregateFactory :
         IAggregateFactory<UserAggregationRoot, AddUserCommand>,
         IAggregateFactory<UserAggregationRoot, User>
     {
@@ -40,10 +40,7 @@ namespace AppFabric.Business.CommandHandlers.Factories
             var email = Email.From(source.CommercialEmail);
             var user = User.NewRequest(EntityId.GetNext(), name, cnpj, email, VersionId.New());
 
-            if (newUserSpec.IsSatisfiedBy(user))
-            {
-                return new UserAggregationRoot(userSpec, user);
-            }
+            if (newUserSpec.IsSatisfiedBy(user)) return new UserAggregationRoot(userSpec, user);
             throw new Exception("Invalid Command");
         }
 
@@ -51,10 +48,7 @@ namespace AppFabric.Business.CommandHandlers.Factories
         {
             var userSpec = new UserSpecification();
 
-            if (userSpec.IsSatisfiedBy(source))
-            {
-                return new UserAggregationRoot(userSpec, source);
-            }
+            if (userSpec.IsSatisfiedBy(source)) return new UserAggregationRoot(userSpec, source);
             throw new Exception("Invalid Command");
         }
     }

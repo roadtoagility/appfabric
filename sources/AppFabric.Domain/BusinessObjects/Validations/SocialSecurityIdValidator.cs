@@ -20,9 +20,8 @@ using FluentValidation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class SocialSecurityIdValidator: AbstractValidator<SocialSecurityId>
+    public sealed class SocialSecurityIdValidator : AbstractValidator<SocialSecurityId>
     {
-        
         public SocialSecurityIdValidator()
         {
             RuleFor(code => code.Value).NotNull();

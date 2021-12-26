@@ -16,14 +16,13 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Immutable;
-using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Persistence.Model.Repositories;
 using System;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using AppFabric.Business.CommandHandlers.Factories;
+using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Domain.AggregationBilling;
+using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Business.Cqrs.CommandHandlers;
 using DFlow.Domain.Aggregates;
@@ -38,7 +37,7 @@ namespace AppFabric.Business.CommandHandlers
         private readonly IAggregateFactory<BillingAggregationRoot, CreateBillingCommand> _factory;
 
         public CreateBillingCommandHandler(
-            IDomainEventBus publisher, 
+            IDomainEventBus publisher,
             IDbSession<IBillingRepository> dbSession,
             IAggregateFactory<BillingAggregationRoot, CreateBillingCommand> factory)
             : base(publisher)
@@ -48,12 +47,12 @@ namespace AppFabric.Business.CommandHandlers
         }
 
         protected override async Task<CommandResult<Guid>> ExecuteCommand(
-            CreateBillingCommand command, 
-            CancellationToken cancellationToken )
+            CreateBillingCommand command,
+            CancellationToken cancellationToken)
         {
             var isSucceed = false;
             var aggregationId = Guid.Empty;
-            
+
             var agg = _factory.Create(command);
 
             if (agg.IsValid)
@@ -62,8 +61,8 @@ namespace AppFabric.Business.CommandHandlers
                 await _dbSession.SaveChangesAsync(cancellationToken);
 
                 agg.GetEvents().ToImmutableList()
-                    .ForEach(ev => 
-                        Publisher.Publish(ev,cancellationToken));
+                    .ForEach(ev =>
+                        Publisher.Publish(ev, cancellationToken));
 
                 isSucceed = true;
                 aggregationId = agg.GetChange().Identity.Value;

@@ -18,12 +18,12 @@
 
 
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework.Repositories;
+using DFlow.Persistence.Repositories;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
     public interface IProjectRepository : IRepository<ProjectState, Project>
     {
-
+        Project Get(EntityId entityId);
     }
 }

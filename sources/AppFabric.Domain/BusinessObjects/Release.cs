@@ -18,13 +18,21 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
     public class Release : BaseEntity<EntityId>
     {
+        private Release(EntityId id, EntityId clientId, VersionId version)
+            : base(id, version)
+        {
+            ClientId = clientId;
+            Activities = new List<Activity>();
+
+            AppendValidationResult(ClientId.ValidationStatus.Errors.ToImmutableList());
+        }
+
         public EntityId ClientId { get; }
 
         public List<Activity> Activities { get; }
@@ -32,15 +40,6 @@ namespace AppFabric.Domain.BusinessObjects
         public override string ToString()
         {
             return $"[Release]:[ID: {Identity}]";
-        }
-
-        private Release(EntityId id, EntityId clientId, VersionId version)
-            : base(id, version)
-        {
-            ClientId = clientId;
-            Activities = new List<Activity>();
-            
-            AppendValidationResult(ClientId.ValidationStatus.Errors.ToImmutableList());
         }
 
         public static Release From(EntityId id, EntityId clientId, VersionId version)
@@ -72,4 +71,3 @@ namespace AppFabric.Domain.BusinessObjects
         }
     }
 }
-

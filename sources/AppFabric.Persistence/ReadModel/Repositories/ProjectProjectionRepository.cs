@@ -28,6 +28,7 @@ namespace AppFabric.Persistence.ReadModel.Repositories
     public sealed class ProjectProjectionRepository : IProjectProjectionRepository
     {
         private readonly AppFabricDbContext _context;
+
         public ProjectProjectionRepository(AppFabricDbContext context)
         {
             _context = context;
@@ -37,12 +38,9 @@ namespace AppFabric.Persistence.ReadModel.Repositories
         {
             var project = _context.ProjectsProjection
                 .FirstOrDefault(ac => ac.Id.Equals(id.Value));
-            
-            if (project == null)
-            {
-                ProjectProjection.Empty();
-            }
-            
+
+            if (project == null) ProjectProjection.Empty();
+
             return project;
         }
 
@@ -53,13 +51,9 @@ namespace AppFabric.Persistence.ReadModel.Repositories
                     .FirstOrDefault(b => b.Id == entity.Id);
 
             if (oldState == null)
-            {
                 _context.ProjectsProjection.Add(entity);
-            }
             else
-            {
                 _context.Entry(oldState).CurrentValues.SetValues(entity);
-            }
         }
 
         public void Remove(ProjectProjection entity)

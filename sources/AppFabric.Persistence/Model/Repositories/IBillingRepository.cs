@@ -1,15 +1,10 @@
 ﻿using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DFlow.Persistence.Repositories;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
     public interface IBillingRepository : IRepository<BillingState, Billing>
     {
-
+        Billing Get(EntityId entityId);
     }
 }

@@ -30,6 +30,7 @@ namespace AppFabric.Domain.AggregationActivity.Events
         {
             Id = id;
         }
+
         public EntityId Id { get; }
 
         public static EffortDecreasedEvent For(Activity activity)

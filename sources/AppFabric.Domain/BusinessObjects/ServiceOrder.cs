@@ -16,18 +16,17 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
-using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ServiceOrder : ValueOf<(string Number, bool IsApproved), ServiceOrder, ServiceOrderNumberValidator>
+    public sealed class
+        ServiceOrder : ValueOf<(string Number, bool IsApproved), ServiceOrder, ServiceOrderNumberValidator>
     {
         public static ServiceOrder Empty()
         {
-            return From((String.Empty,false));
+            return From((string.Empty, false));
         }
     }
 }

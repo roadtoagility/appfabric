@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace AppFabric.API.Mock
 {
@@ -9,32 +6,36 @@ namespace AppFabric.API.Mock
     {
         public static List<dynamic> GetBillings()
         {
-            var billings = new List<dynamic>()
+            var billings = new List<dynamic>
             {
-                new {
+                new
+                {
                     Id = 1,
-                    Client= "Locamais",
-                    Amout= 150000m,
-                    Status= "Billed"
+                    Client = "Locamais",
+                    Amout = 150000m,
+                    Status = "Billed"
                 },
-                new {
+                new
+                {
                     Id = 2,
-                    Client= "D&G Seguradora",
-                    Amout= 400000m,
-                    Status= "Not Billed"
+                    Client = "D&G Seguradora",
+                    Amout = 400000m,
+                    Status = "Not Billed"
                 },
-                new {
+                new
+                {
                     Id = 3,
-                    Client= "Tribunal Superior de Contas da União",
-                    Amout= 1000000m,
-                    Status= "Billed"
+                    Client = "Tribunal Superior de Contas da União",
+                    Amout = 1000000m,
+                    Status = "Billed"
                 },
-                new {
+                new
+                {
                     Id = 4,
-                    Client= "Fiat do Brasil LTDA.",
-                    Amout= 575000m,
-                    Status= "Billed"
-                },
+                    Client = "Fiat do Brasil LTDA.",
+                    Amout = 575000m,
+                    Status = "Billed"
+                }
             };
 
             return billings;

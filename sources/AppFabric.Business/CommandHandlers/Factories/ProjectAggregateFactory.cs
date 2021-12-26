@@ -25,7 +25,7 @@ using DFlow.Domain.Aggregates;
 
 namespace AppFabric.Business.CommandHandlers.Factories
 {
-    public class ProjectAggregateFactory : 
+    public class ProjectAggregateFactory :
         IAggregateFactory<ProjectAggregationRoot, AddProjectCommand>,
         IAggregateFactory<ProjectAggregationRoot, Project>
     {
@@ -43,11 +43,8 @@ namespace AppFabric.Business.CommandHandlers.Factories
                 command.ClientId,
                 command.Owner);
 
-            if (newProjectSpec.IsSatisfiedBy(project) == false)
-            {
-                throw new ArgumentException("Invalid Command");
-            }
-            
+            if (newProjectSpec.IsSatisfiedBy(project) == false) throw new ArgumentException("Invalid Command");
+
             return new ProjectAggregationRoot(project);
         }
 
@@ -55,16 +52,9 @@ namespace AppFabric.Business.CommandHandlers.Factories
         {
             var projectSpec = new ProjectSpecification();
 
-            if (projectSpec.IsSatisfiedBy(source) == false)
-            {
-                throw new ArgumentException("Invalid Command");
-            }
-            
+            if (projectSpec.IsSatisfiedBy(source) == false) throw new ArgumentException("Invalid Command");
+
             return new ProjectAggregationRoot(source);
         }
     }
-
-    
-
-    
 }

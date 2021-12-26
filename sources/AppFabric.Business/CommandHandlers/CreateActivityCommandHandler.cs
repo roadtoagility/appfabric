@@ -16,13 +16,13 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Immutable;
-using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Persistence.Model.Repositories;
 using System;
-using AppFabric.Domain.AggregationActivity;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Domain.AggregationActivity;
+using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Business.Cqrs.CommandHandlers;
 using DFlow.Domain.Aggregates;
@@ -37,7 +37,7 @@ namespace AppFabric.Business.CommandHandlers
         private readonly IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand> _factory;
 
 
-        public CreateActivityCommandHandler(IDomainEventBus publisher, 
+        public CreateActivityCommandHandler(IDomainEventBus publisher,
             IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand> factory,
             IDbSession<IActivityRepository> dbSession)
             : base(publisher)
@@ -47,23 +47,23 @@ namespace AppFabric.Business.CommandHandlers
         }
 
         protected override async Task<CommandResult<Guid>> ExecuteCommand(
-            CreateActivityCommand command, 
-            CancellationToken cancellationToken )
+            CreateActivityCommand command,
+            CancellationToken cancellationToken)
         {
             var isSucceed = false;
             var aggregationId = Guid.Empty;
- 
+
             var agg = _factory.Create(command);
 
             if (agg.IsValid)
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
-            
+
                 agg.GetEvents().ToImmutableList()
-                    .ForEach(ev => 
+                    .ForEach(ev =>
                         Publisher.Publish(ev, cancellationToken));
-            
+
                 isSucceed = true;
                 aggregationId = agg.GetChange().Identity.Value;
             }

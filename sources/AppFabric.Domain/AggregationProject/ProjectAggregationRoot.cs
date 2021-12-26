@@ -49,7 +49,7 @@ namespace AppFabric.Domain.AggregationProject
                 Raise(ProjectDetailUpdatedEvent.For(projUpdated));
             }
         }
-        
+
         public void Remove(ISpecification<Project> specRemoveProject)
         {
             if (specRemoveProject.IsSatisfiedBy(AggregateRootEntity) == false)
@@ -59,7 +59,7 @@ namespace AppFabric.Domain.AggregationProject
             }
             else
             {
-                AppendValidationResult(new ValidationFailure("Project","Can´t be removed!"));
+                AppendValidationResult(new ValidationFailure("Project", "Can´t be removed!"));
             }
         }
 
@@ -72,7 +72,7 @@ namespace AppFabric.Domain.AggregationProject
             }
             else
             {
-                AppendValidationResult(new ValidationFailure("Project","Can´t be added to client!"));
+                AppendValidationResult(new ValidationFailure("Project", "Can´t be added to client!"));
             }
         }
     }

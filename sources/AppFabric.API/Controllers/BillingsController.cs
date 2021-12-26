@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentMediator;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using AppFabric.API.Mock;
-using AppFabric.API.Models;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
+using FluentMediator;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AppFabric.API.Controllers
 {
@@ -29,7 +26,8 @@ namespace AppFabric.API.Controllers
             var releases = BillingMock.GetBillings();
 
             if (!string.IsNullOrEmpty(clientName))
-                releases = releases.Where(x => x.Client.Contains(clientName, StringComparison.OrdinalIgnoreCase)).ToList();
+                releases = releases.Where(x => x.Client.Contains(clientName, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
 
             return await Task.FromResult(releases);
         }
@@ -49,7 +47,6 @@ namespace AppFabric.API.Controllers
             //return result;
             return await Task.FromResult("");
         }
-
 
 
         [HttpPost("create")]

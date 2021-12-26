@@ -1,16 +1,16 @@
-﻿using AppFabric.Domain.BusinessObjects;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.BusinessObjects.Validations;
 using AppFabric.Domain.BusinessObjects.Validations.GenericRules;
 using DFlow.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace AppFabric.Domain.AggregationActivity.Specifications
 {
     public class ActivityCreationSpecification : CompositeSpecification<Activity>
     {
-        List<ValidationRule<BaseEntity<EntityId>>> _rules;
+        private readonly List<ValidationRule<BaseEntity<EntityId>>> _rules;
 
         public ActivityCreationSpecification()
         {

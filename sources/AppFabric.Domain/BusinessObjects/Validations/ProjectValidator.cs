@@ -20,7 +20,7 @@ using FluentValidation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class ProjectValidator: AbstractValidator<Project>
+    public sealed class ProjectValidator : AbstractValidator<Project>
     {
         public ProjectValidator()
         {
@@ -39,17 +39,15 @@ namespace AppFabric.Domain.BusinessObjects.Validations
                             var changedProject = context.ParentContext.RootContextData["project"] as Project;
 
                             if (code.Equals(changedProject?.Code))
-                            {
                                 context.AddFailure("O código do novo projeto não pode ser igual ao atual.");
-                            }
                         }
                     });
                 });
-            
+
             RuleFor(project => project.Budget).SetValidator(new MoneyValidator());
             RuleFor(project => project.Status).SetValidator(new ProjectStatusValidator())
-                .When(status=> !status.Equals(ProjectStatus.Default()));
-            
+                .When(status => !status.Equals(ProjectStatus.Default()));
+
             RuleFor(project => project.Owner).SetValidator(new EmailValidator())
                 .When(project => !project.Owner.Equals(Email.Empty()));
 
@@ -59,12 +57,9 @@ namespace AppFabric.Domain.BusinessObjects.Validations
                     RuleFor(current => current.OrderNumber).Custom((serviceOrder, context) =>
                     {
                         if (!serviceOrder.Value.IsApproved)
-                        {
                             context.AddFailure("A ordem de serviço precisa estar aprovada");
-                        }
                     });
                 });
-
         }
     }
 }

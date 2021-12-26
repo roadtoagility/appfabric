@@ -1,8 +1,6 @@
 ﻿using AppFabric.Domain.AggregationBilling.Events;
-using AppFabric.Domain.AggregationBilling.Specifications;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
-using DFlow.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationBilling
@@ -16,6 +14,7 @@ namespace AppFabric.Domain.AggregationBilling
                 Apply(billing);
                 Raise(BillingCreatedEvent.For(billing));
             }
+
             AppendValidationResult(billing.Failures);
         }
 
@@ -39,8 +38,8 @@ namespace AppFabric.Domain.AggregationBilling
                 Apply(AggregateRootEntity);
                 Raise(BillingRemovedEvent.For(AggregateRootEntity));
             }
+
             AppendValidationResult(AggregateRootEntity.Failures);
         }
     }
 }
-

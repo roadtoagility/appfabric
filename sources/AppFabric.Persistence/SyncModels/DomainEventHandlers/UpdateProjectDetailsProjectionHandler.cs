@@ -17,13 +17,13 @@
 //
 
 
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Domain.AggregationProject.Events;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.ReadModel;
 using AppFabric.Persistence.ReadModel.Repositories;
 using DFlow.Domain.Events;
-using System.Threading;
-using System.Threading.Tasks;
+using DFlow.Persistence;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {

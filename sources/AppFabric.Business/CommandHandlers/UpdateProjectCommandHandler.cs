@@ -21,7 +21,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.CommandHandlers.ExtensionMethods;
-using AppFabric.Business.CommandHandlers.Factories;
 using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.AggregationProject.Specifications;
 using AppFabric.Domain.BusinessObjects;
@@ -39,36 +38,36 @@ namespace AppFabric.Business.CommandHandlers
         private readonly IAggregateFactory<ProjectAggregationRoot, Project> _factory;
 
         public UpdateProjectCommandHandler(
-            IDomainEventBus publisher, 
-            IDbSession<IProjectRepository> dbSession, 
+            IDomainEventBus publisher,
+            IDbSession<IProjectRepository> dbSession,
             IAggregateFactory<ProjectAggregationRoot, Project> factory)
-            :base(publisher)
+            : base(publisher)
         {
             _dbSession = dbSession;
             _factory = factory;
         }
-        
+
         protected override async Task<ExecutionResult> ExecuteCommand(
-            UpdateProjectCommand command, 
+            UpdateProjectCommand command,
             CancellationToken cancellationToken)
         {
             var project = _dbSession.Repository.Get(EntityId.From(command.Id));
-            
+
             var agg = _factory.Create(project);
             agg.UpdateDetail(command.ToProjectDetail(), new ProjectDetailsCanBeUpdated());
 
             var isSucceed = false;
-      
+
             if (agg.IsValid)
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
-                
+
                 agg.GetEvents().ToImmutableList()
-                    .ForEach( ev => Publisher.Publish(ev));
+                    .ForEach(ev => Publisher.Publish(ev));
                 isSucceed = true;
             }
-            
+
             return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
         }
     }

@@ -1,21 +1,20 @@
-﻿using AppFabric.Domain.BusinessObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
     public class MemberRepository : IMemberRepository
     {
-        private AppFabricDbContext DbContext { get; }
-
         public MemberRepository(AppFabricDbContext context)
         {
             DbContext = context;
         }
+
+        private AppFabricDbContext DbContext { get; }
 
         public void Add(Member entity)
         {
@@ -28,6 +27,17 @@ namespace AppFabric.Persistence.Model.Repositories
         }
 
         public IEnumerable<Member> Find(Expression<Func<MemberState, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Member>> FindAsync(Expression<Func<MemberState, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Member>> FindAsync(Expression<Func<MemberState, bool>> predicate,
+            CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

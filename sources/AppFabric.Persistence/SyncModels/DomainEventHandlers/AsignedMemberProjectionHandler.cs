@@ -1,7 +1,8 @@
-﻿using AppFabric.Domain.AggregationActivity.Events;
-using DFlow.Domain.Events;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Domain.AggregationActivity.Events;
+using DFlow.Domain.Events;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {
@@ -9,7 +10,7 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
     {
         protected override Task ExecuteHandle(MemberAssignedEvent @event, CancellationToken cancellationToken)
         {
-            throw new System.Exception();
+            throw new Exception();
         }
     }
 }

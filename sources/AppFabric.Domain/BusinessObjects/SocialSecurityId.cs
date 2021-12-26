@@ -16,7 +16,6 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
 using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
 
@@ -26,7 +25,7 @@ namespace AppFabric.Domain.BusinessObjects
     {
         public static SocialSecurityId Empty()
         {
-            return From(String.Empty);
+            return From(string.Empty);
         }
     }
 }

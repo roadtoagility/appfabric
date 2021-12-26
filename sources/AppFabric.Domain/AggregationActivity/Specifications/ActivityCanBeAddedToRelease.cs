@@ -1,6 +1,5 @@
 ﻿using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
-using FluentValidation.Results;
 
 namespace AppFabric.Domain.AggregationActivity.Specifications
 {
@@ -10,9 +9,7 @@ namespace AppFabric.Domain.AggregationActivity.Specifications
         {
             if (candidate.ActivityStatus.Equals(ActivityStatus.Closed()) ||
                 candidate.Effort.Equals(Effort.WithoutEffort()))
-            {
                 return false;
-            }
 
             return true;
         }

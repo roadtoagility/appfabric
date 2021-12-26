@@ -17,30 +17,29 @@
 //
 
 using System.Collections.Immutable;
-using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Persistence.Model.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Domain.AggregationActivity.Specifications;
 using AppFabric.Domain.AggregationRelease;
 using AppFabric.Domain.BusinessObjects;
+using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
-using DFlow.Domain.Specifications;
 using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public class AddActivityCommandHandler : CommandHandler<AddActivityCommand, ExecutionResult>
     {
-        private readonly IDbSession<IReleaseRepository> _dbSession;
         private readonly IDbSession<IActivityRepository> _dbActivitySession;
+        private readonly IDbSession<IReleaseRepository> _dbSession;
         private readonly IAggregateFactory<ReleaseAggregationRoot, Release> _factory;
 
         public AddActivityCommandHandler(
-            IDomainEventBus publisher, 
-            IDbSession<IReleaseRepository> dbSession, 
+            IDomainEventBus publisher,
+            IDbSession<IReleaseRepository> dbSession,
             IDbSession<IActivityRepository> dbActivitySession,
             IAggregateFactory<ReleaseAggregationRoot, Release> factory)
             : base(publisher)
@@ -51,16 +50,16 @@ namespace AppFabric.Business.CommandHandlers
         }
 
         protected override async Task<ExecutionResult> ExecuteCommand(
-            AddActivityCommand command, 
+            AddActivityCommand command,
             CancellationToken cancellationToken)
         {
             // pré-requisitos
             var release = _dbSession.Repository.Get(command.Id);
             var activity = _dbActivitySession.Repository.Get(command.ActivityId);
-            
+
             //criando agregação com Specificação passada para o factory
             var agg = _factory.Create(release);
-            
+
             //referenciando outra agregação com base nas regras da especificação
             agg.AddActivity(activity, new ActivityCanBeAddedToRelease());
 
@@ -70,9 +69,9 @@ namespace AppFabric.Business.CommandHandlers
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
-                
+
                 agg.GetEvents().ToImmutableList()
-                    .ForEach(ev => 
+                    .ForEach(ev =>
                         Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }

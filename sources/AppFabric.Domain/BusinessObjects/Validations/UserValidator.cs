@@ -20,7 +20,7 @@ using FluentValidation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class UserValidator: AbstractValidator<User>
+    public sealed class UserValidator : AbstractValidator<User>
     {
         public UserValidator()
         {

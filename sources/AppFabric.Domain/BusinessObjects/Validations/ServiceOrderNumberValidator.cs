@@ -20,14 +20,15 @@ using FluentValidation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class ServiceOrderNumberValidator: AbstractValidator<ServiceOrder>
+    public sealed class ServiceOrderNumberValidator : AbstractValidator<ServiceOrder>
     {
         public ServiceOrderNumberValidator()
         {
             RuleFor(item => item.Value.Number).NotNull()
-                .When(item=> !item.Equals(ServiceOrder.Empty()));
+                .When(item => !item.Equals(ServiceOrder.Empty()));
             RuleFor(item => item.Value.Number).NotEmpty()
-                .When(item=> !item.Equals(ServiceOrder.Empty()));;
+                .When(item => !item.Equals(ServiceOrder.Empty()));
+            ;
         }
     }
 }

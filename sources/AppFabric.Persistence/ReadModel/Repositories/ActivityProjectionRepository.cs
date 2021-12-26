@@ -19,20 +19,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using AppFabric.Domain.BusinessObjects;
-using Microsoft.EntityFrameworkCore;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
 {
     public sealed class ActivityProjectionRepository : IActivityProjectionRepository
     {
-        private AppFabricDbContext Context { get; }
         public ActivityProjectionRepository(AppFabricDbContext context)
         {
             Context = context;
         }
+
+        private AppFabricDbContext Context { get; }
 
         public void Add(ActivityProjection entity)
         {

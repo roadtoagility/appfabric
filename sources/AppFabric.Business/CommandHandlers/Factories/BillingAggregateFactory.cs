@@ -25,10 +25,19 @@ using DFlow.Domain.Aggregates;
 
 namespace AppFabric.Business.CommandHandlers.Factories
 {
-    public class BillingAggregateFactory : 
+    public class BillingAggregateFactory :
         IAggregateFactory<BillingAggregationRoot, CreateBillingCommand>,
         IAggregateFactory<BillingAggregationRoot, Billing>
     {
+        public BillingAggregationRoot Create(Billing source)
+        {
+            var billingSpec = new BillingCreationSpecification();
+
+            if (billingSpec.IsSatisfiedBy(source) == false) throw new ArgumentException("Invalid Command");
+
+            return new BillingAggregationRoot(source);
+        }
+
         public BillingAggregationRoot Create(CreateBillingCommand source)
         {
             // TODO: cadê pelo menos uma release para faturar???
@@ -36,23 +45,8 @@ namespace AppFabric.Business.CommandHandlers.Factories
 
             var newBillingSpec = new BillingCreationSpecification();
 
-            if (newBillingSpec.IsSatisfiedBy(billing) == false)
-            {
-                throw new ArgumentException("Invalid Command");
-            }
+            if (newBillingSpec.IsSatisfiedBy(billing) == false) throw new ArgumentException("Invalid Command");
             return new BillingAggregationRoot(billing);
-        }
-
-        public BillingAggregationRoot Create(Billing source)
-        {
-            var billingSpec = new BillingCreationSpecification();
-
-            if (billingSpec.IsSatisfiedBy(source) == false)
-            {
-                throw new ArgumentException("Invalid Command");
-            }
-            
-            return new BillingAggregationRoot(source);
         }
     }
 }

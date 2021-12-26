@@ -24,7 +24,7 @@ namespace AppFabric.Domain.BusinessObjects
     public sealed class ProjectCode : ValueOf<string, ProjectCode, ProjectCodeValidator>
     {
         private static readonly string EmptyCode = string.Empty;
-        
+
         public static ProjectCode Empty()
         {
             return From(EmptyCode);

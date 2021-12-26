@@ -1,21 +1,20 @@
-﻿using AppFabric.Domain.BusinessObjects;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
     public class ReleaseRepository : IReleaseRepository
     {
-        private AppFabricDbContext DbContext { get; }
-
         public ReleaseRepository(AppFabricDbContext context)
         {
             DbContext = context;
         }
+
+        private AppFabricDbContext DbContext { get; }
 
         public void Add(Release entity)
         {
@@ -27,9 +26,20 @@ namespace AppFabric.Persistence.Model.Repositories
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<Release>> FindAsync(Expression<Func<ReleaseState, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Release>> FindAsync(Expression<Func<ReleaseState, bool>> predicate,
+            CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Remove(Release entity)
         {
-            throw new NotImplementedException(); 
+            throw new NotImplementedException();
         }
 
         public Release Get(EntityId id)

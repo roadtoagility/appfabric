@@ -25,7 +25,7 @@ using DFlow.Domain.Aggregates;
 
 namespace AppFabric.Business.CommandHandlers.Factories
 {
-    public class ActivityReconstructAggregateFactory : 
+    public class ActivityReconstructAggregateFactory :
         IAggregateFactory<ActivityAggregationRoot, Activity>
     {
         public ActivityAggregationRoot Create(Activity source)
@@ -37,11 +37,8 @@ namespace AppFabric.Business.CommandHandlers.Factories
                 .And(new ActivityEffortSpecification())
                 .And(new ActivityResponsibleSpecification());
 
-            if (spec.IsSatisfiedBy(source))
-            {
-                throw new ArgumentException("Invalid Command");
-            }
-            
+            if (spec.IsSatisfiedBy(source)) throw new ArgumentException("Invalid Command");
+
             return new ActivityAggregationRoot(source);
         }
     }

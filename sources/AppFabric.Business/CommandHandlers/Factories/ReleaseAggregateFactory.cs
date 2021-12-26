@@ -25,7 +25,7 @@ using DFlow.Domain.Aggregates;
 
 namespace AppFabric.Business.CommandHandlers.Factories
 {
-    public class ReleaseAggregateFactory : 
+    public class ReleaseAggregateFactory :
         IAggregateFactory<ReleaseAggregationRoot, CreateReleaseCommand>,
         IAggregateFactory<ReleaseAggregationRoot, Release>
     {
@@ -34,11 +34,8 @@ namespace AppFabric.Business.CommandHandlers.Factories
             var release = Release.NewRequest(source.ClientId);
             var newReleaseSpec = new ReleaseCreationSpecification();
 
-            if (newReleaseSpec.IsSatisfiedBy(release) == false)
-            {
-                throw new ArgumentException("Invalid Command");
-            }
-            
+            if (newReleaseSpec.IsSatisfiedBy(release) == false) throw new ArgumentException("Invalid Command");
+
             return new ReleaseAggregationRoot(release);
         }
 
@@ -46,11 +43,8 @@ namespace AppFabric.Business.CommandHandlers.Factories
         {
             var releaseSpec = new ReleaseSpecification();
 
-            if (releaseSpec.IsSatisfiedBy(source) == false)
-            {
-                throw new ArgumentException("Invalid Command");
-            }
-            
+            if (releaseSpec.IsSatisfiedBy(source) == false) throw new ArgumentException("Invalid Command");
+
             return new ReleaseAggregationRoot(source);
         }
     }

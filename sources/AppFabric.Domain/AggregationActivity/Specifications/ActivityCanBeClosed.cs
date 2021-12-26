@@ -18,9 +18,7 @@ namespace AppFabric.Domain.AggregationActivity.Specifications
         {
             if (candidate.ActivityStatus.Equals(ActivityStatus.Closed()) == false ||
                 candidate.Effort > Effort.WithoutEffort())
-            {
                 return true;
-            }
 
             candidate.AppendValidationResult(_cannotCloseFailure);
             return false;

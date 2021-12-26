@@ -17,16 +17,13 @@
 //
 
 using System.Collections.Immutable;
-using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
-using AppFabric.Business.CommandHandlers.Factories;
+using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Domain.AggregationBilling;
 using AppFabric.Domain.AggregationBilling.Specifications;
-using AppFabric.Domain.AggregationRelease;
 using AppFabric.Domain.BusinessObjects;
+using AppFabric.Persistence.Model.Repositories;
 using DFlow.Business.Cqrs;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
@@ -36,13 +33,13 @@ namespace AppFabric.Business.CommandHandlers
 {
     public class AddReleaseCommandHandler : CommandHandler<AddReleaseCommand, ExecutionResult>
     {
-        private readonly IDbSession<IBillingRepository> _dbSession;
         private readonly IDbSession<IReleaseRepository> _dbReleaseSession;
+        private readonly IDbSession<IBillingRepository> _dbSession;
         private readonly IAggregateFactory<BillingAggregationRoot, Billing> _factory;
 
-        public AddReleaseCommandHandler( 
-            IDomainEventBus publisher, 
-            IDbSession<IBillingRepository> dbSession, 
+        public AddReleaseCommandHandler(
+            IDomainEventBus publisher,
+            IDbSession<IBillingRepository> dbSession,
             IDbSession<IReleaseRepository> dbReleaseSession,
             IAggregateFactory<BillingAggregationRoot, Billing> factory)
             : base(publisher)
@@ -53,25 +50,25 @@ namespace AppFabric.Business.CommandHandlers
         }
 
         protected override async Task<ExecutionResult> ExecuteCommand(
-            AddReleaseCommand command, 
+            AddReleaseCommand command,
             CancellationToken cancellationToken)
         {
             var isSucceed = false;
 
             var billing = _dbSession.Repository.Get(command.Id);
             var release = _dbReleaseSession.Repository.Get(command.ReleaseId);
-            
+
             var agg = _factory.Create(billing);
             agg.AddRelease(release, new ReleaseCanBeBilled(release.ClientId));
-            
+
             if (!agg.IsValid)
             {
                 _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
-                
+
                 agg.GetEvents().ToImmutableList()
                     .ForEach(ev => Publisher.Publish(ev));
-                
+
                 isSucceed = true;
             }
 

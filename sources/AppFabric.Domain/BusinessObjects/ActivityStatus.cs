@@ -16,25 +16,17 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
+using ValueOf;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ActivityStatus : ValueOf.ValueOf<string,ActivityStatus>
+    public sealed class ActivityStatus : ValueOf<string, ActivityStatus>
     {
-        private enum Status
-        {
-            NotStarted,
-            Started,
-            Closed,
-            Blocked
-        }
-
         public static ActivityStatus NotStarted()
         {
             return From(Status.NotStarted.ToString());
         }
-        
+
         public static ActivityStatus Started()
         {
             return From(Status.Started.ToString());
@@ -53,6 +45,14 @@ namespace AppFabric.Domain.BusinessObjects
         protected override void Validate()
         {
             // var status = Enum.Parse<ActivityStatus>(Value);
+        }
+
+        private enum Status
+        {
+            NotStarted,
+            Started,
+            Closed,
+            Blocked
         }
     }
 }

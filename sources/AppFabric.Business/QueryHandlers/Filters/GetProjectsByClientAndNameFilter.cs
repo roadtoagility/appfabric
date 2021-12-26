@@ -31,7 +31,7 @@ namespace AppFabric.Business.QueryHandlers.Filters
 
         public EntityId ClientId { get; }
         public ProjectName Name { get; }
-        
+
         public static GetProjectsByClientAndNameFilter From(string name, Guid clientId)
         {
             return new GetProjectsByClientAndNameFilter(name, clientId);

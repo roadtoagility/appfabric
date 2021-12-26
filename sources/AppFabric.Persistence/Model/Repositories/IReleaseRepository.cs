@@ -1,14 +1,10 @@
 ﻿using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DFlow.Persistence.Repositories;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
     public interface IReleaseRepository : IRepository<ReleaseState, Release>
     {
+        Release Get(EntityId entityId);
     }
 }

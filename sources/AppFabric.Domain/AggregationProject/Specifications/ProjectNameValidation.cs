@@ -4,7 +4,8 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
 {
     public class ProjectNameValidation : ValidationRule<Project>
     {
-        private ValidationFailure _nameEmptyFailure;
+        private readonly ValidationFailure _nameEmptyFailure;
+
         public ProjectNameValidation()
         {
             _nameEmptyFailure = new ValidationFailure("Project.Name", "O nome do projeto não pode estar vazio");
@@ -17,6 +18,7 @@ namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
                 candidate.AppendValidationResult(_nameEmptyFailure);
                 return NotValid;
             }
+
             return Valid;
         }
     }

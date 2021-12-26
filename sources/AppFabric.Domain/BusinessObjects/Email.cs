@@ -25,6 +25,7 @@ namespace AppFabric.Domain.BusinessObjects
     public sealed class Email : ValueOf<string, Email, EmailValidator>
     {
         private static readonly string EmailEmpty = "empty@email.com";
+
         public static Email Empty()
         {
             return From(EmailEmpty);

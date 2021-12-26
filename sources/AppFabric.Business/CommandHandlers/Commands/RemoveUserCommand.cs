@@ -27,6 +27,7 @@ namespace AppFabric.Business.CommandHandlers.Commands
         {
             Id = EntityId.From(id);
         }
-        public EntityId Id { get; private set; }
+
+        public EntityId Id { get; }
     }
 }

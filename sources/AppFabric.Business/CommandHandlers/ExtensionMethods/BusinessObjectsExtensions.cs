@@ -26,12 +26,14 @@ namespace AppFabric.Business.CommandHandlers.ExtensionMethods
     public static class CommandExtensions
     {
         public static Project.ProjectDetail ToProjectDetail(this UpdateProjectCommand command)
-            => new Project.ProjectDetail(
+        {
+            return new Project.ProjectDetail(
                 ProjectName.From(command.Name),
                 Money.From(command.Budget),
                 Email.From(command.Owner),
                 ProjectStatus.From(command.Status),
                 ServiceOrder.From((command.OrderNumber, true))
-                );
+            );
+        }
     }
 }

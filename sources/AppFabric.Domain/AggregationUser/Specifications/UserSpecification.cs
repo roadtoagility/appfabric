@@ -1,12 +1,7 @@
-﻿using AppFabric.Domain.BusinessObjects;
+﻿using System.Text.RegularExpressions;
+using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
 using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace AppFabric.Domain.AggregationUser.Specifications
 {
@@ -40,12 +35,12 @@ namespace AppFabric.Domain.AggregationUser.Specifications
             else
             {
                 var pattern = @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
-                                   + "@"
-                                   + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))\z";
+                              + "@"
+                              + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))\z";
                 if (!Regex.IsMatch(candidate.CommercialEmail.Value, pattern))
                 {
                     candidate.AppendValidationResult(new ValidationFailure("InvalidEmail",
-                    "Endereço de e-mail inválido."));
+                        "Endereço de e-mail inválido."));
                     isValid = false;
                 }
             }

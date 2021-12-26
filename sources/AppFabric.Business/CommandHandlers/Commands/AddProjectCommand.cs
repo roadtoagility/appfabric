@@ -16,17 +16,17 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using DFlow.Domain.Command;
 using System;
 using System.Collections.Immutable;
 using AppFabric.Domain.BusinessObjects;
+using DFlow.Domain.Command;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class AddProjectCommand : BaseCommand
     {
-        public AddProjectCommand(string name,string owner,string code,DateTime startDate,decimal budget,
-            Guid clientId,string serviceOrderNumber,bool serviceOrderStatus,string status)
+        public AddProjectCommand(string name, string owner, string code, DateTime startDate, decimal budget,
+            Guid clientId, string serviceOrderNumber, bool serviceOrderStatus, string status)
         {
             Name = ProjectName.From(name);
             ServiceOrderNumber = ServiceOrder.From((serviceOrderNumber, serviceOrderStatus));
@@ -36,7 +36,7 @@ namespace AppFabric.Business.CommandHandlers.Commands
             Budget = Money.From(budget);
             ClientId = EntityId.From(clientId);
             Owner = Email.From(owner);
-            
+
             AppendValidationResult(Name.ValidationStatus.Errors.ToImmutableList());
             AppendValidationResult(ServiceOrderNumber.ValidationStatus.Errors.ToImmutableList());
             AppendValidationResult(Status.ValidationStatus.Errors.ToImmutableList());
@@ -46,7 +46,7 @@ namespace AppFabric.Business.CommandHandlers.Commands
             AppendValidationResult(ClientId.ValidationStatus.Errors.ToImmutableList());
             AppendValidationResult(Owner.ValidationStatus.Errors.ToImmutableList());
         }
-        
+
         public ProjectName Name { get; set; }
         public Email Owner { get; set; }
         public ProjectCode Code { get; set; }

@@ -16,13 +16,10 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
-using System.Linq.Expressions;
 using AppFabric.Business.Framework;
 using AppFabric.Business.QueryHandlers.Filters;
-using AppFabric.Domain.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.ReadModel.Repositories;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.QueryHandlers
 {
@@ -38,9 +35,9 @@ namespace AppFabric.Business.QueryHandlers
         protected override GetClientsResponse ExecuteQuery(GetClientsByFilter filter)
         {
             var clients = _dbSession.Repository
-                .Find(up=>  up.Name.Contains(filter.Name));
+                .Find(up => up.Name.Contains(filter.Name));
 
-            return GetClientsResponse.From(clients.Count>0, clients);
+            return GetClientsResponse.From(clients.Count > 0, clients);
         }
     }
 }

@@ -16,34 +16,33 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ProjectStatus :ValueOf<string, ProjectStatus, ProjectStatusValidator>
+    public sealed class ProjectStatus : ValueOf<string, ProjectStatus, ProjectStatusValidator>
     {
+        public static ProjectStatus Default()
+        {
+            return From(Status.ToApprove.ToString());
+        }
+
+        public static ProjectStatus Approved()
+        {
+            return From(Status.Approved.ToString());
+        }
+
+        public static ProjectStatus Finished()
+        {
+            return From(Status.Finished.ToString());
+        }
+
         private enum Status
         {
             ToApprove,
             Approved,
             Finished
-        }
-        
-        public static ProjectStatus Default()
-        {
-            return From(Status.ToApprove.ToString());
-        }
-        
-        public static ProjectStatus Approved()
-        {
-            return From(Status.Approved.ToString());
-        }
-        
-        public static ProjectStatus Finished()
-        {
-            return From(Status.Finished.ToString());
         }
     }
 }

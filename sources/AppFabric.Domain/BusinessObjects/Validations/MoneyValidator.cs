@@ -16,19 +16,17 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
 using FluentValidation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class MoneyValidator: AbstractValidator<Money>
+    public sealed class MoneyValidator : AbstractValidator<Money>
     {
-        
         public MoneyValidator()
         {
             RuleFor(quantity => quantity.Value).NotNull();
-            RuleFor(quantity => quantity.Value).GreaterThanOrEqualTo(Decimal.Zero);
-            RuleFor(quantity => quantity.Value).LessThanOrEqualTo(Decimal.MaxValue);
+            RuleFor(quantity => quantity.Value).GreaterThanOrEqualTo(decimal.Zero);
+            RuleFor(quantity => quantity.Value).LessThanOrEqualTo(decimal.MaxValue);
         }
     }
 }

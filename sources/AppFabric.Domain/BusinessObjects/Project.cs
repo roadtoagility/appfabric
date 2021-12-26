@@ -17,14 +17,14 @@
 //
 
 using System.Collections.Generic;
-using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
     public sealed class Project : BaseEntity<EntityId>
     {
-        public Project(EntityId id, ProjectName name, ServiceOrder orderNumber, ProjectStatus status, ProjectCode code, DateAndTime startDate
+        public Project(EntityId id, ProjectName name, ServiceOrder orderNumber, ProjectStatus status, ProjectCode code,
+            DateAndTime startDate
             , Money budget, EntityId clientId, Email owner, VersionId version)
             : base(id, version)
         {
@@ -37,55 +37,58 @@ namespace AppFabric.Domain.BusinessObjects
             OrderNumber = orderNumber;
             Owner = owner;
         }
+
         public ProjectName Name { get; }
         public ProjectCode Code { get; }
-        
+
         public EntityId ClientId { get; }
 
         public DateAndTime StartDate { get; }
-                
+
         public Money Budget { get; }
-                
+
         public Email Owner { get; }
-                
+
         public ProjectStatus Status { get; }
-        
+
         public ServiceOrder OrderNumber { get; }
-        
-        public static Project From(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, 
+
+        public static Project From(EntityId id, ProjectName name, ServiceOrder serviceOrder, ProjectStatus status,
             ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner, VersionId version)
         {
-            var project = new Project(id, name, serviceOrder, status, code, startDate, budget, clientId, owner, version);
-            return project;        
+            var project = new Project(id, name, serviceOrder, status, code, startDate, budget, clientId, owner,
+                version);
+            return project;
         }
 
 
-        public static Project NewRequest(ProjectName name, ServiceOrder serviceOrder, ProjectStatus status, 
+        public static Project NewRequest(ProjectName name, ServiceOrder serviceOrder, ProjectStatus status,
             ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Email owner)
         {
-            return From(EntityId.GetNext(), name, serviceOrder, status, code, startDate, 
+            return From(EntityId.GetNext(), name, serviceOrder, status, code, startDate,
                 budget, clientId, owner, VersionId.New());
         }
-        
+
         public static Project CombineWith(Project current, ProjectDetail detail)
         {
-            return From(current.Identity, detail.Name, current.OrderNumber, current.Status, 
-                current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner, 
+            return From(current.Identity, detail.Name, current.OrderNumber, current.Status,
+                current.Code, current.StartDate, detail.Budget, current.ClientId, detail.Owner,
                 VersionId.Next(current.Version));
         }
-        
-        
+
+
         public static Project Empty()
         {
-            return From(EntityId.Empty(), ProjectName.Empty(), ServiceOrder.Empty(), ProjectStatus.Default(), 
+            return From(EntityId.Empty(), ProjectName.Empty(), ServiceOrder.Empty(), ProjectStatus.Default(),
                 ProjectCode.Empty(), DateAndTime.Empty(), Money.Zero(),
                 EntityId.Empty(), Email.Empty(),
                 VersionId.Empty());
         }
-        
+
         public override string ToString()
         {
-            return $"[PROJECT]:[ID: {Identity} Code:{Code}, Name: {Name}, Budget: {Budget} Start date: {StartDate}, Owner: {Owner}, Status: {Status}, Order Number: {OrderNumber}]";
+            return
+                $"[PROJECT]:[ID: {Identity} Code:{Code}, Name: {Name}, Budget: {Budget} Start date: {StartDate}, Owner: {Owner}, Status: {Status}, Order Number: {OrderNumber}]";
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
@@ -112,15 +115,15 @@ namespace AppFabric.Domain.BusinessObjects
                 Status = status;
                 OrderNumber = orderNumber;
             }
-            
+
             public ProjectName Name { get; }
-        
+
             public Money Budget { get; }
-                
+
             public Email Owner { get; }
-                
+
             public ProjectStatus Status { get; }
-        
+
             public ServiceOrder OrderNumber { get; }
         }
     }

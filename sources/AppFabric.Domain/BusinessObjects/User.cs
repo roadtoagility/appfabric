@@ -17,7 +17,6 @@
 //
 
 using System.Collections.Generic;
-using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
@@ -25,7 +24,7 @@ namespace AppFabric.Domain.BusinessObjects
     public sealed class User : BaseEntity<EntityId>
     {
         private User(EntityId id, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
-             : base(id, version)
+            : base(id, version)
         {
             Name = name;
             Cnpj = cnpj;
@@ -33,24 +32,26 @@ namespace AppFabric.Domain.BusinessObjects
         }
 
         public EntityId Id { get; }
-        
+
         public Name Name { get; }
         public SocialSecurityId Cnpj { get; }
-        
+
         public Email CommercialEmail { get; }
 
-                
-        public static User NewRequest(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
+
+        public static User NewRequest(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail,
+            VersionId version)
         {
-            var user = new User(clientId,name,cnpj,commercialEmail, version);
-            return user;        
+            var user = new User(clientId, name, cnpj, commercialEmail, version);
+            return user;
         }
 
         public static User Empty()
         {
-            return NewRequest(EntityId.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty(), VersionId.Empty());
+            return NewRequest(EntityId.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty(),
+                VersionId.Empty());
         }
-        
+
         public override string ToString()
         {
             return $"[PROJECT]:[ID: {Id} Name: {Name}, Social Security: {Cnpj} Commercial Email: {CommercialEmail}]";

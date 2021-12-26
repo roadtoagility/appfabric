@@ -1,8 +1,7 @@
-﻿
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AppFabric.API.Mock;
 using FluentMediator;
 using Microsoft.AspNetCore.Mvc;
-using AppFabric.API.Mock;
 
 namespace AppFabric.API.Controllers
 {

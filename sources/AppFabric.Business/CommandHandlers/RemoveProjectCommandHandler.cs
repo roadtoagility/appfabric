@@ -19,9 +19,7 @@
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentMediator;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.CommandHandlers.Factories;
 using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.AggregationProject.Specifications;
 using AppFabric.Domain.BusinessObjects;
@@ -30,33 +28,32 @@ using DFlow.Business.Cqrs;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Events;
 using DFlow.Persistence;
-using Microsoft.Extensions.Logging;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public sealed class RemoveProjectCommandHandler : CommandHandler<RemoveProjectCommand, ExecutionResult>
     {
+        private readonly IAggregateFactory<ProjectAggregationRoot, Project> _factory;
         private readonly IDbSession<IProjectRepository> _projectDb;
         private readonly IDbSession<IUserRepository> _userDb;
-        private readonly IAggregateFactory<ProjectAggregationRoot, Project> _factory;
-        
+
         public RemoveProjectCommandHandler(IDomainEventBus publisher, IDbSession<IProjectRepository> projectDb,
             IDbSession<IUserRepository> userDb, IAggregateFactory<ProjectAggregationRoot, Project> factory)
-            :base(publisher)
+            : base(publisher)
         {
             _projectDb = projectDb;
             _userDb = userDb;
             _factory = factory;
         }
-        
+
         protected override async Task<ExecutionResult> ExecuteCommand(
-            RemoveProjectCommand command, 
+            RemoveProjectCommand command,
             CancellationToken cancellationToken)
         {
             var isSucceed = false;
 
             var project = _projectDb.Repository.Get(command.Id);
-            
+
             var agg = _factory.Create(project);
             agg.Remove(new ProjectCanBeRemoved());
 
@@ -64,13 +61,13 @@ namespace AppFabric.Business.CommandHandlers
             {
                 _projectDb.Repository.Remove(agg.GetChange());
                 await _projectDb.SaveChangesAsync(cancellationToken);
-                
+
                 agg.GetEvents().ToImmutableList()
-                    .ForEach( ev => 
+                    .ForEach(ev =>
                         Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }
-            
+
             return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
         }
     }

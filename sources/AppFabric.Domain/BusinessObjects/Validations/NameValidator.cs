@@ -20,7 +20,7 @@ using FluentValidation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class NameValidator: AbstractValidator<Name>
+    public sealed class NameValidator : AbstractValidator<Name>
     {
         public NameValidator()
         {

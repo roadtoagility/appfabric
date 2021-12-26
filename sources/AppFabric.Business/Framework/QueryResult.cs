@@ -21,13 +21,14 @@ using FluentValidation.Results;
 
 namespace AppFabric.Business.Framework
 {
-    public class QueryResult<TResult>: ExecutionResult
+    public class QueryResult<TResult> : ExecutionResult
     {
         public QueryResult(bool isSucceed, TResult data)
-            :base(isSucceed, ImmutableList<ValidationFailure>.Empty)
+            : base(isSucceed, ImmutableList<ValidationFailure>.Empty)
         {
             Data = data;
         }
-        public TResult Data { get;}
+
+        public TResult Data { get; }
     }
 }

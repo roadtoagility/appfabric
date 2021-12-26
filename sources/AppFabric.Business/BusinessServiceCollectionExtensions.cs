@@ -16,18 +16,15 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
 using AppFabric.Business.CommandHandlers;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.CommandHandlers.Factories;
 using AppFabric.Domain.AggregationActivity;
-using AppFabric.Domain.AggregationActivity.Specifications;
 using AppFabric.Domain.AggregationBilling;
 using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.AggregationRelease;
 using AppFabric.Domain.AggregationUser;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.BusinessObjects.Validations.ActivityRules;
 using DFlow.Domain.Aggregates;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,28 +36,29 @@ namespace AppFabric.Business
         {
             //activity
             services
-                .AddScoped<IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand>, ActivityCreateAggregateFactory>();
+                .AddScoped<IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand>,
+                    ActivityCreateAggregateFactory>();
             services
                 .AddScoped<IAggregateFactory<ActivityAggregationRoot, Activity>, ActivityReconstructAggregateFactory>();
-            
+
             //billing
             services
                 .AddScoped<IAggregateFactory<BillingAggregationRoot, CreateBillingCommand>, BillingAggregateFactory>();
             services
                 .AddScoped<IAggregateFactory<BillingAggregationRoot, Billing>, BillingAggregateFactory>();
-        
+
             //project
             services
                 .AddScoped<IAggregateFactory<ProjectAggregationRoot, AddProjectCommand>, ProjectAggregateFactory>();
             services
                 .AddScoped<IAggregateFactory<ProjectAggregationRoot, Project>, ProjectAggregateFactory>();
-            
+
             //release
             services
                 .AddScoped<IAggregateFactory<ReleaseAggregationRoot, CreateReleaseCommand>, ReleaseAggregateFactory>();
             services
                 .AddScoped<IAggregateFactory<ReleaseAggregationRoot, Release>, ReleaseAggregateFactory>();
-            
+
             //user
             services
                 .AddScoped<IAggregateFactory<UserAggregationRoot, AddUserCommand>, UserAggregateFactory>();
@@ -75,19 +73,19 @@ namespace AppFabric.Business
             services.AddScoped<AddActivityCommandHandler>();
 
             services.AddScoped<AssignResponsibleCommandHandler>();
-            
-            services.AddScoped<CreateBillingCommandHandler>();
 
-            services.AddScoped<CreateProjectCommandHandler>();
+            services.AddScoped<CreateBillingCommandHandler>();
 
             services.AddScoped<AddReleaseCommandHandler>();
             services.AddScoped<CreateReleaseCommandHandler>();
-            
+
             services.AddScoped<AddUserCommandHandler>();
             services.AddScoped<RemoveUserCommandHandler>();
 
+            services.AddScoped<CreateProjectCommandHandler>();
+            services.AddScoped<AddProjectCommandHandler>();
+            services.AddScoped<UpdateProjectCommandHandler>();
+            services.AddScoped<RemoveProjectCommandHandler>();
         }
-        
-        
     }
 }

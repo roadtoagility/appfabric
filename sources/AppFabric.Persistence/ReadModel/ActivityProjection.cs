@@ -26,6 +26,7 @@ namespace AppFabric.Persistence.ReadModel
         public ActivityProjection()
         {
         }
+
         public ActivityProjection(string status, string description, Guid activityId, Guid projectId)
         {
             ActivityId = activityId;
@@ -42,8 +43,7 @@ namespace AppFabric.Persistence.ReadModel
 
         public static ActivityProjection Empty()
         {
-            return new ActivityProjection(String.Empty, String.Empty, Guid.Empty, Guid.Empty);
+            return new ActivityProjection(string.Empty, string.Empty, Guid.Empty, Guid.Empty);
         }
-        
     }
 }

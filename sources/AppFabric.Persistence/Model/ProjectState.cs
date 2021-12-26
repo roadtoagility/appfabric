@@ -18,14 +18,15 @@
 
 
 using System;
-using AppFabric.Persistence.Framework.Model;
+using DFlow.Persistence.Model;
 
 namespace AppFabric.Persistence.Model
 {
     public class ProjectState : PersistentState
     {
-        public ProjectState(Guid id, string name, string code, decimal budget, DateTime startDate, Guid clientId, string owner, string orderNumber, string status, byte[] rowVersion)
-        :base(startDate, rowVersion)
+        public ProjectState(Guid id, string name, string code, decimal budget, DateTime startDate, Guid clientId,
+            string owner, string orderNumber, string status, byte[] rowVersion)
+            : base(startDate, rowVersion)
         {
             Id = id;
             ClientId = clientId;
@@ -39,16 +40,16 @@ namespace AppFabric.Persistence.Model
         }
 
         public Guid Id { get; set; }
-        public Guid ClientId { get; set;}
-        public string Name { get; set;}
-        public string Code { get; set;}
-        public DateTime StartDate { get; set;}
-        public decimal Budget { get; set;}
-        
-        public string Owner { get; set;}
-        
-        public string OrderNumber { get; set;}
-        
-        public string Status { get; set;}
+        public Guid ClientId { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public DateTime StartDate { get; set; }
+        public decimal Budget { get; set; }
+
+        public string Owner { get; set; }
+
+        public string OrderNumber { get; set; }
+
+        public string Status { get; set; }
     }
 }

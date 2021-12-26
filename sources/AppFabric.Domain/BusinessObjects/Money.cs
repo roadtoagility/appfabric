@@ -16,30 +16,38 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using DFlow.Domain.BusinessObjects;
 using AppFabric.Domain.BusinessObjects.Validations;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
     public sealed class Money : ValueOf<decimal, Money, MoneyValidator>
     {
         private const int MinimumMoneyAmount = 0;
-        
+
         public static Money Zero()
         {
             return From(MinimumMoneyAmount);
         }
-        
+
         public static bool operator >=(Money a, Money b)
-            => a.Value >= b.Value;
+        {
+            return a.Value >= b.Value;
+        }
 
         public static bool operator <=(Money a, Money b)
-            => a.Value <= b.Value;
-        
+        {
+            return a.Value <= b.Value;
+        }
+
         public static bool operator >(Money a, Money b)
-            => a.Value > b.Value;
+        {
+            return a.Value > b.Value;
+        }
 
         public static bool operator <(Money a, Money b)
-            => a.Value < b.Value;
+        {
+            return a.Value < b.Value;
+        }
     }
 }

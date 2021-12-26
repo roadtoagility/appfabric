@@ -30,8 +30,9 @@ namespace AppFabric.Domain.AggregationProject.Events
         {
             Id = id;
         }
+
         public EntityId Id { get; }
-        
+
         public static ProjectRemovedEvent For(Project project)
         {
             return new ProjectRemovedEvent(project.Identity, project.Version);

@@ -1,8 +1,6 @@
 ﻿using AppFabric.Domain.AggregationRelease.Events;
-using AppFabric.Domain.AggregationRelease.Specifications;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
-using DFlow.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationRelease
@@ -13,10 +11,7 @@ namespace AppFabric.Domain.AggregationRelease
         {
             Apply(release);
 
-            if (release.IsNew())
-            {
-                Raise(ReleaseCreatedEvent.For(release));
-            }
+            if (release.IsNew()) Raise(ReleaseCreatedEvent.For(release));
         }
 
         public void AddActivity(Activity activity, ISpecification<Activity> spec)
@@ -32,9 +27,9 @@ namespace AppFabric.Domain.AggregationRelease
         }
 
         public void Remove(Activity activity, ISpecification<Release> spec)
-        {                
+        {
             AggregateRootEntity.RemoveActivity(activity);
-            
+
             if (spec.IsSatisfiedBy(AggregateRootEntity))
             {
                 Apply(AggregateRootEntity);

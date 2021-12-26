@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace AppFabric.API.Mock
 {
@@ -9,9 +6,10 @@ namespace AppFabric.API.Mock
     {
         public static List<dynamic> GetReleases()
         {
-            var releases = new List<dynamic>()
+            var releases = new List<dynamic>
             {
-                new {
+                new
+                {
                     Id = 1,
                     ClientId = 1,
                     Client = "Locamais",
@@ -19,7 +17,8 @@ namespace AppFabric.API.Mock
                     TotalEffort = 24,
                     Resume = "Lorem Ipsum Dolor siamet"
                 },
-                new {
+                new
+                {
                     Id = 2,
                     ClientId = 2,
                     Client = "D&G Seguradora",
@@ -27,7 +26,8 @@ namespace AppFabric.API.Mock
                     TotalEffort = 80,
                     Resume = "Lorem Ipsum Dolor siamet"
                 },
-                new {
+                new
+                {
                     Id = 3,
                     ClientId = 3,
                     Client = "Fiat do Brasil LTDA.",
@@ -35,7 +35,8 @@ namespace AppFabric.API.Mock
                     TotalEffort = 44,
                     Resume = "Lorem Ipsum Dolor siamet"
                 },
-                new {
+                new
+                {
                     Id = 4,
                     ClientId = 4,
                     Client = "D&G Seguradora",
@@ -43,7 +44,8 @@ namespace AppFabric.API.Mock
                     TotalEffort = 120,
                     Resume = "Lorem Ipsum Dolor siamet"
                 },
-                new {
+                new
+                {
                     Id = 5,
                     ClientId = 1,
                     Client = "Tribunal Superior de Contas da União",
@@ -51,7 +53,8 @@ namespace AppFabric.API.Mock
                     TotalEffort = 36,
                     Resume = "Lorem Ipsum Dolor siamet"
                 },
-                new {
+                new
+                {
                     Id = 6,
                     ClientId = 1,
                     Client = "Locamais",
@@ -59,7 +62,8 @@ namespace AppFabric.API.Mock
                     TotalEffort = 210,
                     Resume = "Lorem Ipsum Dolor siamet"
                 },
-                new {
+                new
+                {
                     Id = 7,
                     ClientId = 3,
                     Client = "Tribunal Superior de Contas da União",
@@ -67,7 +71,8 @@ namespace AppFabric.API.Mock
                     TotalEffort = 300,
                     Resume = "Lorem Ipsum Dolor siamet"
                 },
-                new {
+                new
+                {
                     Id = 8,
                     ClientId = 3,
                     Client = "Granel",
@@ -83,6 +88,5 @@ namespace AppFabric.API.Mock
 
     public class ReleaseDto
     {
-
     }
 }

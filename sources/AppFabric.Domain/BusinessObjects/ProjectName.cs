@@ -16,7 +16,6 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
 
@@ -30,5 +29,5 @@ namespace AppFabric.Domain.BusinessObjects
         {
             return From(EmptyProjecName);
         }
-   }
+    }
 }

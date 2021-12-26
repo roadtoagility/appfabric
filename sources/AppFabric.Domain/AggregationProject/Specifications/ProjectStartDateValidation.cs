@@ -1,12 +1,12 @@
-﻿using FluentValidation.Results;
-using System;
+﻿using System;
+using FluentValidation.Results;
 
 namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
 {
     public class ProjectStartDateValidation : ValidationRule<Project>
     {
-        private ValidationFailure _dateNullFailure;
-        private ValidationFailure _invalidDateFailure;
+        private readonly ValidationFailure _dateNullFailure;
+        private readonly ValidationFailure _invalidDateFailure;
 
         public ProjectStartDateValidation()
         {

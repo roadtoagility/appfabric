@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentMediator;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using AppFabric.API.Mock;
-using AppFabric.API.Models;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
+using FluentMediator;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AppFabric.API.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class ReleasesController : ControllerBase
@@ -41,7 +37,8 @@ namespace AppFabric.API.Controllers
             var releases = ReleaseMock.GetReleases();
 
             if (!string.IsNullOrEmpty(status))
-                releases = releases.Where(x => x.Id == clientId && x.Status.Contains(status, StringComparison.OrdinalIgnoreCase)).ToList();
+                releases = releases.Where(x =>
+                    x.Id == clientId && x.Status.Contains(status, StringComparison.OrdinalIgnoreCase)).ToList();
 
             return await Task.FromResult(releases);
         }
