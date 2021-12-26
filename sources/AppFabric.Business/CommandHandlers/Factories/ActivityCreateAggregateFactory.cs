@@ -26,25 +26,9 @@ using DFlow.Domain.Aggregates;
 
 namespace AppFabric.Business.CommandHandlers.Factories
 {
-    public class ActivityAggregateFactory : 
-        IAggregateFactory<ActivityAggregationRoot, Activity>,
+    public class ActivityCreateAggregateFactory :
         IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand>
     {
-        public ActivityAggregationRoot Create(Activity source)
-        {
-            var activitySpec = new ActivitySpecification()
-                .And(new ActivityClosedSpecification())
-                .And(new ActivityCloseWithoutEffortSpecification())
-                .And(new ActivityEffortSpecification())
-                .And(new ActivityResponsibleSpecification());
-
-            if (activitySpec.IsSatisfiedBy(source))
-            {
-                return new ActivityAggregationRoot(source);
-            }
-            throw new Exception("Invalid Command");
-        }
-
         public ActivityAggregationRoot Create(CreateActivityCommand source)
         {
             var activity = Activity.New(source.ProjectId, source.EstimatedHours);

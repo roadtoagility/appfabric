@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using AppFabric.Business;
 using AppFabric.Business.CommandHandlers;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
@@ -82,22 +83,14 @@ namespace AppFabric.API
             services.AddScoped<DomainEventHandler<ProjectDetailUpdatedEvent>, UpdateProjectDetailsProjectionHandler>();
             services.AddScoped<DomainEventHandler<ProjectRemovedEvent>,RemoveProjectProjectionHandler>();
 
-            services.AddScoped<AddUserCommandHandler>();
-            services.AddScoped<RemoveUserCommandHandler>();
+            services.AddAggregationFactories();
+            
             
             services.AddScoped<GetClientsByQueryHandler>();
             services.AddScoped<GetClientByIdQueryHandler>();
             services.AddScoped<GetProjectsByClientAndNameQueryHandler>();
 
-            services.AddScoped<CreateActivityCommandHandler>();
-            services.AddScoped<CloseActivityCommandHandler>();
-            services.AddScoped<AssignResponsibleCommandHandler>();
-            services.AddScoped<CreateBillingCommandHandler>();
-            services.AddScoped<AddReleaseCommandHandler>();
-            services.AddScoped<CreateProjectCommandHandler>();
-            services.AddScoped<CreateReleaseCommandHandler>();
-            services.AddScoped<AddActivityCommandHandler>();
-
+            services.AddCommandHandlers();
 
             services.AddScoped<DomainEventHandler<ActivityCreatedEvent>, CreatedActivityProjectionHandler>();
             services.AddScoped<DomainEventHandler<MemberAssignedEvent>, AsignedMemberProjectionHandler>();

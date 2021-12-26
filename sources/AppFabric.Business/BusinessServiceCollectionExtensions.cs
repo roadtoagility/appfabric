@@ -17,12 +17,18 @@
 //
 
 using System;
+using AppFabric.Business.CommandHandlers;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.CommandHandlers.Factories;
 using AppFabric.Domain.AggregationActivity;
 using AppFabric.Domain.AggregationActivity.Specifications;
+using AppFabric.Domain.AggregationBilling;
+using AppFabric.Domain.AggregationProject;
+using AppFabric.Domain.AggregationRelease;
+using AppFabric.Domain.AggregationUser;
 using AppFabric.Domain.BusinessObjects;
 using AppFabric.Domain.BusinessObjects.Validations.ActivityRules;
+using DFlow.Domain.Aggregates;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AppFabric.Business
@@ -31,7 +37,55 @@ namespace AppFabric.Business
     {
         public static void AddAggregationFactories(this IServiceCollection services)
         {
-            // services.AddTransient<>()
+            //activity
+            services
+                .AddScoped<IAggregateFactory<ActivityAggregationRoot, CreateActivityCommand>, ActivityCreateAggregateFactory>();
+            services
+                .AddScoped<IAggregateFactory<ActivityAggregationRoot, Activity>, ActivityReconstructAggregateFactory>();
+            
+            //billing
+            services
+                .AddScoped<IAggregateFactory<BillingAggregationRoot, CreateBillingCommand>, BillingAggregateFactory>();
+            services
+                .AddScoped<IAggregateFactory<BillingAggregationRoot, Billing>, BillingAggregateFactory>();
+        
+            //project
+            services
+                .AddScoped<IAggregateFactory<ProjectAggregationRoot, AddProjectCommand>, ProjectAggregateFactory>();
+            services
+                .AddScoped<IAggregateFactory<ProjectAggregationRoot, Project>, ProjectAggregateFactory>();
+            
+            //release
+            services
+                .AddScoped<IAggregateFactory<ReleaseAggregationRoot, CreateReleaseCommand>, ReleaseAggregateFactory>();
+            services
+                .AddScoped<IAggregateFactory<ReleaseAggregationRoot, Release>, ReleaseAggregateFactory>();
+            
+            //user
+            services
+                .AddScoped<IAggregateFactory<UserAggregationRoot, AddUserCommand>, UserAggregateFactory>();
+            services
+                .AddScoped<IAggregateFactory<UserAggregationRoot, User>, UserAggregateFactory>();
+        }
+
+        public static void AddCommandHandlers(this IServiceCollection services)
+        {
+            services.AddScoped<CreateActivityCommandHandler>();
+            services.AddScoped<CloseActivityCommandHandler>();
+            services.AddScoped<AddActivityCommandHandler>();
+
+            services.AddScoped<AssignResponsibleCommandHandler>();
+            
+            services.AddScoped<CreateBillingCommandHandler>();
+
+            services.AddScoped<CreateProjectCommandHandler>();
+
+            services.AddScoped<AddReleaseCommandHandler>();
+            services.AddScoped<CreateReleaseCommandHandler>();
+            
+            services.AddScoped<AddUserCommandHandler>();
+            services.AddScoped<RemoveUserCommandHandler>();
+
         }
     }
 }
