@@ -16,6 +16,7 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System.Diagnostics;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
@@ -28,9 +29,11 @@ namespace AppFabric.Domain.AggregationProject
     {
         public ProjectAggregationRoot(Project project)
         {
+            Debug.Assert(project.IsValid == false);
+            Apply(project);
+            
             if (project.IsNew())
             {
-                Apply(project);
                 Raise(ProjectAddedEvent.For(project));
             }
         }

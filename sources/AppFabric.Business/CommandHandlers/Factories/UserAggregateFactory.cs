@@ -34,22 +34,27 @@ namespace AppFabric.Business.CommandHandlers.Factories
         {
             var newUserSpec = new UserCreationSpecification();
             var userSpec = new UserSpecification();
+            
+            var user = User.NewRequest(source.Name, source.Cnpj, source.CommercialEmail);
 
-            var name = Name.From(source.Name);
-            var cnpj = SocialSecurityId.From(source.Cnpj);
-            var email = Email.From(source.CommercialEmail);
-            var user = User.NewRequest(EntityId.GetNext(), name, cnpj, email, VersionId.New());
+            if (newUserSpec.IsSatisfiedBy(user))
+            {
+                throw new ArgumentException("Invalid Command");
+            }
 
-            if (newUserSpec.IsSatisfiedBy(user)) return new UserAggregationRoot(userSpec, user);
-            throw new Exception("Invalid Command");
+            return new UserAggregationRoot(user);
         }
 
         public UserAggregationRoot Create(User source)
         {
             var userSpec = new UserSpecification();
 
-            if (userSpec.IsSatisfiedBy(source)) return new UserAggregationRoot(userSpec, source);
-            throw new Exception("Invalid Command");
+            if (userSpec.IsSatisfiedBy(source))
+            {
+                throw new ArgumentException("Invalid Command");
+            }
+            
+            return new UserAggregationRoot(source);
         }
     }
 }

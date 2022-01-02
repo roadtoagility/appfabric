@@ -16,14 +16,21 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Command;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class AddUserCommand : BaseCommand
     {
-        public string Name { get; set; }
-        public string Cnpj { get; set; }
-        public string CommercialEmail { get; set; }
+        public AddUserCommand(string name, string cnpj, string commercialEmail)
+        {
+            Name = Name.From(name);
+            Cnpj = SocialSecurityId.From(cnpj);
+            CommercialEmail = Email.From(commercialEmail);
+        }
+        public Name Name { get;}
+        public SocialSecurityId Cnpj { get; }
+        public Email CommercialEmail { get;}
     }
 }

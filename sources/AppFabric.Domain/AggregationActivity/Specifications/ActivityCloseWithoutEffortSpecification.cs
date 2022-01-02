@@ -16,7 +16,7 @@ namespace AppFabric.Domain.AggregationActivity.Specifications
 
         public override bool IsSatisfiedBy(Activity candidate)
         {
-            if (candidate.ActivityStatus == ActivityStatus.Closed() && candidate.Effort == Effort.WithoutEffort())
+            if (candidate.ActivityStatus == ActivityStatus.Closed() && candidate.Effort == Effort.Zero())
             {
                 candidate.AppendValidationResult(_closedWithoutEffortFailure);
                 return false;

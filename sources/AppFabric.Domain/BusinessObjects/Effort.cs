@@ -32,7 +32,7 @@ namespace AppFabric.Domain.BusinessObjects
             return From(UnEstimatedEffort);
         }
 
-        public static Effort WithoutEffort()
+        public static Effort Zero()
         {
             return From(NoEffort);
         }

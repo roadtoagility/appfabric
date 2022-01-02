@@ -17,6 +17,7 @@
 //
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
@@ -43,9 +44,9 @@ namespace AppFabric.Domain.BusinessObjects
             return billing;
         }
 
-        public static Billing NewRequest(IReadOnlyList<Release> releases)
+        public static Billing NewRequest()
         {
-            return From(EntityId.GetNext(), releases, VersionId.New());
+            return From(EntityId.GetNext(), ImmutableList<Release>.Empty, VersionId.New());
         }
 
         public Billing AddRelease(Release release)

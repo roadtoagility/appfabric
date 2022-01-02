@@ -26,6 +26,11 @@ namespace AppFabric.Domain.BusinessObjects
     {
         private static readonly Guid EmptyId = Guid.Empty;
 
+        public static EntityId From(string id)
+        {
+            return From(Guid.Parse(id));
+        }
+        
         public static EntityId Empty()
         {
             return From(EmptyId);

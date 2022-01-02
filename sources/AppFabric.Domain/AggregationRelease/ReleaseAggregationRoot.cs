@@ -1,7 +1,9 @@
-﻿using AppFabric.Domain.AggregationRelease.Events;
+﻿using System.Diagnostics;
+using AppFabric.Domain.AggregationRelease.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Specifications;
+using Activity = AppFabric.Domain.BusinessObjects.Activity;
 
 namespace AppFabric.Domain.AggregationRelease
 {
@@ -9,9 +11,13 @@ namespace AppFabric.Domain.AggregationRelease
     {
         public ReleaseAggregationRoot(Release release)
         {
+            Debug.Assert(release.IsValid == false);
             Apply(release);
 
-            if (release.IsNew()) Raise(ReleaseCreatedEvent.For(release));
+            if (release.IsNew())
+            {
+                Raise(ReleaseCreatedEvent.For(release));
+            }
         }
 
         public void AddActivity(Activity activity, ISpecification<Activity> spec)

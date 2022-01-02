@@ -16,6 +16,7 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System.Diagnostics;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.AggregationUser.Events;
 using AppFabric.Domain.BusinessObjects;
@@ -26,20 +27,16 @@ namespace AppFabric.Domain.AggregationUser
 {
     public sealed class UserAggregationRoot : ObjectBasedAggregationRoot<User, EntityId>
     {
-        private readonly ISpecification<User> _spec;
 
-        public UserAggregationRoot(ISpecification<User> specification, User user)
+        public UserAggregationRoot(User user)
         {
-            _spec = specification;
+            Debug.Assert(user.IsValid == false);
+            Apply(user);
 
-            if (_spec.IsSatisfiedBy(user))
+            if (user.IsNew())
             {
-                Apply(user);
-
-                if (user.IsNew()) Raise(UserAddedEvent.For(user));
+                Raise(UserAddedEvent.For(user));
             }
-
-            AppendValidationResult(user.Failures);
         }
 
         public void Remove(ISpecification<User> spec)
