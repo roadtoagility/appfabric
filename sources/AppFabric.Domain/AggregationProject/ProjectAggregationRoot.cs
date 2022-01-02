@@ -29,8 +29,7 @@ namespace AppFabric.Domain.AggregationProject
     {
         public ProjectAggregationRoot(Project project)
         {
-            Debug.Assert(project.IsValid);
-            
+            Debug.Assert(project.IsValid == false);
             Apply(project);
             
             if (project.IsNew())

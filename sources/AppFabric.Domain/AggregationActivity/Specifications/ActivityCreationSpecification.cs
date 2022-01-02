@@ -10,18 +10,15 @@ namespace AppFabric.Domain.AggregationActivity.Specifications
 {
     public class ActivityCreationSpecification : CompositeSpecification<Activity>
     {
-        private readonly List<ValidationRule<BaseEntity<EntityId>>> _rules;
-
-        public ActivityCreationSpecification()
+        private readonly Effort _limitToCheck;
+        public ActivityCreationSpecification(Effort limitToCheck)
         {
-            _rules = new List<ValidationRule<BaseEntity<EntityId>>>();
-            _rules.Add(new IdentityValidation());
+            _limitToCheck = limitToCheck;
         }
 
         public override bool IsSatisfiedBy(Activity candidate)
         {
-            var isSatisfiedBy = _rules.All(rule => rule.IsValid(candidate));
-            return isSatisfiedBy;
+            return _limitToCheck >= candidate.Effort;
         }
     }
 }

@@ -1,19 +1,21 @@
-﻿using AppFabric.Domain.AggregationActivity.Events;
+﻿using System.Diagnostics;
+using AppFabric.Domain.AggregationActivity.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
 using DFlow.Domain.Specifications;
+using Activity = AppFabric.Domain.BusinessObjects.Activity;
 
 namespace AppFabric.Domain.AggregationActivity
 {
     public class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId>
     {
-        private readonly ISpecification<Activity> _spec;
-
         public ActivityAggregationRoot(Activity activity)
         {
+            Debug.Assert(activity.IsValid);
+            Apply(activity);
+            
             if (activity.IsNew())
             {
-                Apply(activity);
                 Raise(ActivityCreatedEvent.For(activity));
             }
         }
