@@ -32,7 +32,7 @@ namespace AppFabric.Domain.BusinessObjects
             Name = name;
         }
 
-        public EntityId ProjectId { get; }
+        public EntityId ProjectId { get; private set; }
         public Name Name { get; }
 
         public static Member From(EntityId id, EntityId projectId, Name name, VersionId version)
@@ -58,7 +58,7 @@ namespace AppFabric.Domain.BusinessObjects
 
         public void Update(Member member)
         {
-            //this.Identity = member.Id;
+            this.ProjectId = member.ProjectId;
         }
 
         public override string ToString()

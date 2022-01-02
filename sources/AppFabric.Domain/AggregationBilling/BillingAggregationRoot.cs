@@ -10,7 +10,7 @@ namespace AppFabric.Domain.AggregationBilling
     {
         public BillingAggregationRoot(Billing billing)
         {
-            Debug.Assert(billing.IsValid == false);
+            Debug.Assert(billing.IsValid);
             Apply(billing);
             
             if (billing.IsNew())

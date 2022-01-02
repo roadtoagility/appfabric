@@ -43,7 +43,10 @@ namespace AppFabric.Business.CommandHandlers.Factories
                 command.ClientId,
                 command.Owner);
 
-            if (newProjectSpec.IsSatisfiedBy(project) == false) throw new ArgumentException("Invalid Command");
+            if (newProjectSpec.IsSatisfiedBy(project) == false)
+            {
+                throw new ArgumentException("Invalid Command");
+            }
 
             return new ProjectAggregationRoot(project);
         }

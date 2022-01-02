@@ -30,7 +30,7 @@ namespace AppFabric.Domain.AggregationUser
 
         public UserAggregationRoot(User user)
         {
-            Debug.Assert(user.IsValid == false);
+            Debug.Assert(user.IsValid);
             Apply(user);
 
             if (user.IsNew())

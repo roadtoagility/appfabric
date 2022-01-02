@@ -36,7 +36,7 @@ namespace AppFabric.Tests.Domain
         //Só é possível associar atividades a membros do projeto
         [Theory]
         [ClassData(typeof(GenerateValidActivityAndMemberTestingData))]
-        public void ShouldAsignActivityToMember(Activity activity, Member projectMember)
+        public void ShouldAssignActivityToMember(Activity activity, Member projectMember)
         {
             var aggFactory = new ActivityReconstructAggregateFactory();
             var activityAgg = aggFactory.Create(activity);
@@ -48,7 +48,7 @@ namespace AppFabric.Tests.Domain
         //
         [Theory]
         [ClassData(typeof(GenerateInvalidActivityAndMemberTestingData))]
-        public void ShouldNotAsignActivity(Activity activity, Member projectMember)
+        public void ShouldNotAssignActivity(Activity activity, Member projectMember)
         {
             var aggFactory = new ActivityReconstructAggregateFactory();
             var activityAgg = aggFactory.Create(activity);
