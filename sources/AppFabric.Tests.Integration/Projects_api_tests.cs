@@ -5,8 +5,10 @@ using AppFabric.API;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
 using AppFabric.Business.QueryHandlers;
+using AppFabric.Domain.BusinessObjects;
 using AppFabric.Tests.Integration.Support;
 using AutoFixture;
+using DFlow.Business.Cqrs.CommandHandlers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using Xunit;
@@ -27,12 +29,16 @@ namespace AppFabric.Tests.Integration
         {
             // Arrange
             var url = "/api/projects/save";
-            var fixture = new Fixture();
-            fixture.Customizations.Add(new RandomNumericSequenceGenerator(0, long.MaxValue));
-
-            var command = fixture.Build<AddProjectCommand>()
-                .With(prj => prj.ClientId, Guid.Parse("232C32F1-5A69-43FF-8FFB-360E1EF6A08E"))
-                .Create();
+            var command =  new AddProjectCommand(
+                "S20210209O125478593",
+                "doug.ramalho@gma.com",
+                "PojectFake",
+                DateTime.Now,
+                134,
+                Guid.NewGuid(), 
+                "23234234",
+                true,
+                "ToApprove");
 
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
             {
@@ -56,14 +62,7 @@ namespace AppFabric.Tests.Integration
         public async Task Put_UpdateProjectDetails(string url, Guid id)
         {
             // Arrange
-            var fixture = new Fixture();
-            fixture.Customizations.Add(new RandomNumericSequenceGenerator(0, long.MaxValue));
-
-            var command = fixture.Build<UpdateProjectCommand>()
-                .With(prj => prj.Id, id)
-                .With(prj => prj.Owner, string.Format($"{fixture.Create<string>()}@teste.com"))
-                .With(prj => prj.Status, 1)
-                .Create();
+            var command = new UpdateProjectCommand();
 
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
             {

@@ -38,7 +38,6 @@ namespace AppFabric.Tests.Integration.Support
                     DatabaseFixture.Create<string>(),
                     string.Format($"{DatabaseFixture.Create<string>()}@teste.com"),
                     DatabaseFixture.Create<string>(),
-                    DatabaseFixture.Create<int>(),
                     DatabaseFixture.Create<string>(),
                     DatabaseFixture.Create<int>()));
         }
@@ -114,12 +113,10 @@ namespace AppFabric.Tests.Integration.Support
                 //para filtragem por id
                 DatabaseFixture.Build<ProjectProjection>()
                     .With(up => up.Id, Guid.Parse("DEF2A92E-A53E-4754-B811-2C0C7C7858FA"))
-                    .With(up => up.Status, 1)
                     .With(up => up.Owner, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
                     .Create(),
                 DatabaseFixture.Build<ProjectProjection>()
                     .With(up => up.Id, Guid.Parse("11263366-D54A-4E7A-B820-D8894B6C5362"))
-                    .With(up => up.Status, 1)
                     .With(up => up.Owner, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
                     .Create()
             };
@@ -132,12 +129,10 @@ namespace AppFabric.Tests.Integration.Support
                 //para filtragem por id
                 DatabaseFixture.Build<ProjectProjection>()
                     .With(up => up.ClientId, Guid.Parse("AA8CD061-B3C0-4931-9272-0D7A9014B616"))
-                    .With(up => up.Status, 1)
                     .With(up => up.Owner, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
                     .Create(),
                 DatabaseFixture.Build<ProjectProjection>()
                     .With(up => up.ClientId, Guid.Parse("AA8CD061-B3C0-4931-9272-0D7A9014B616"))
-                    .With(up => up.Status, 1)
                     .With(up => up.Owner, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
                     .With(up => up.Name, string.Format($"{DatabaseFixture.Create<string>()}my-project"))
                     .Create()
@@ -152,7 +147,7 @@ namespace AppFabric.Tests.Integration.Support
                 DatabaseFixture.Build<ProjectState>()
                     .With(up => up.Id, Guid.Parse("7D74E1C4-3C35-47B9-B17B-7D5F9D9DFCF6"))
                     .With(up => up.RowVersion, BitConverter.GetBytes(1))
-                    .With(up => up.Status, 1)
+                    .With(up => up.Status, "ToApprove")
                     .With(up => up.Owner, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
                     .Create()
             };
@@ -165,7 +160,6 @@ namespace AppFabric.Tests.Integration.Support
                 //para filtragem por id
                 DatabaseFixture.Build<ProjectProjection>()
                     .With(up => up.Id, Guid.Parse("7D74E1C4-3C35-47B9-B17B-7D5F9D9DFCF6"))
-                    .With(up => up.Status, 1)
                     .With(up => up.Owner, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
                     .Create()
             };
@@ -179,7 +173,7 @@ namespace AppFabric.Tests.Integration.Support
                 DatabaseFixture.Build<ProjectState>()
                     .With(up => up.Id, Guid.Parse("41557BC9-1809-4B0F-B8E7-4F61CC06D2C9"))
                     .With(up => up.RowVersion, BitConverter.GetBytes(1))
-                    .With(up => up.Status, 1)
+                    .With(up => up.Status, "ToApprove")
                     .With(up => up.Owner, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
                     .Create()
             };
@@ -192,7 +186,6 @@ namespace AppFabric.Tests.Integration.Support
                 //para filtragem por id
                 DatabaseFixture.Build<ProjectProjection>()
                     .With(up => up.Id, Guid.Parse("41557BC9-1809-4B0F-B8E7-4F61CC06D2C9"))
-                    .With(up => up.Status, 1)
                     .With(up => up.Owner, string.Format($"{DatabaseFixture.Create<string>()}@teste.com"))
                     .Create()
             };

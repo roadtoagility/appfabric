@@ -41,7 +41,7 @@ namespace AppFabric.Business.CommandHandlers.Factories
         public BillingAggregationRoot Create(CreateBillingCommand source)
         {
             // TODO: cadê pelo menos uma release para faturar???
-            var billing = Billing.NewRequest(null);
+            var billing = Billing.NewRequest();
 
             var newBillingSpec = new BillingCreationSpecification();
 

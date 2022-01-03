@@ -7,6 +7,7 @@ using AppFabric.Business.Framework;
 using AppFabric.Business.QueryHandlers;
 using AppFabric.Tests.Integration.Support;
 using AutoFixture;
+using DFlow.Business.Cqrs.CommandHandlers;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using Xunit;
@@ -27,12 +28,7 @@ namespace AppFabric.Tests.Integration
         {
             // Arrange
             var url = "/api/clients/save";
-            var fixture = new Fixture();
-            var command = fixture.Build<AddUserCommand>()
-                .With(usr => usr.CommercialEmail, string.Format($"{fixture.Create<string>()}@teste.com"))
-                .With(usr => usr.Cnpj, fixture.Create<string>())
-                .With(usr => usr.Name, fixture.Create<string>())
-                .Create();
+            var command = new AddUserCommand("First user","245345345","my@mail.com");
 
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
             {

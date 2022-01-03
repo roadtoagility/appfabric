@@ -1,21 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DFlow.Persistence.EntityFramework" Version="0.4.0-pre273"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="5.0.3"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3"/>
+        <PackageReference Include="DFlow.Persistence.EntityFramework" Version="0.4.0-pre273" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="5.0.3" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Framework\ReadModel"/>
+        <Folder Include="Framework\ReadModel" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AppFabric.Domain\AppFabric.Domain.csproj"/>
+        <ProjectReference Include="..\AppFabric.Domain\AppFabric.Domain.csproj" />
     </ItemGroup>
     <PropertyGroup>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
