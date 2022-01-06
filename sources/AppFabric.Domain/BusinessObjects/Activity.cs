@@ -62,7 +62,7 @@ namespace AppFabric.Domain.BusinessObjects
 
         public void AddMember(Member member)
         {
-            Responsible.Update(member);
+            Responsible.UpdateMembership(member.ProjectId);
         }
 
         public void UpdateEffort(Effort hours)

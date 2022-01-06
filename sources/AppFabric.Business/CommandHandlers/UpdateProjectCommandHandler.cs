@@ -54,8 +54,9 @@ namespace AppFabric.Business.CommandHandlers
             var project = _dbSession.Repository.Get(EntityId.From(command.Id));
 
             var agg = _factory.Create(project);
-            agg.UpdateDetail(command.ToProjectDetail(), new ProjectDetailsCanBeUpdated());
-
+            agg.UpdateDetail(command.ToProjectDetail(), 
+                new ProjectDetailsCanBeUpdated());
+            
             var isSucceed = false;
 
             if (agg.IsValid)
@@ -64,7 +65,7 @@ namespace AppFabric.Business.CommandHandlers
                 await _dbSession.SaveChangesAsync(cancellationToken);
 
                 agg.GetEvents().ToImmutableList()
-                    .ForEach(ev => Publisher.Publish(ev));
+                    .ForEach(ev => Publisher.Publish(ev,cancellationToken));
                 isSucceed = true;
             }
 

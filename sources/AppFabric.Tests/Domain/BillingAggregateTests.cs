@@ -1,7 +1,10 @@
 ﻿using System;
 using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Business.CommandHandlers.Factories;
 using AppFabric.Domain.AggregationBilling.Events;
+using AppFabric.Domain.AggregationBilling.Specifications;
 using AppFabric.Domain.BusinessObjects;
+using AppFabric.Tests.Domain.Data;
 using Xunit;
 
 namespace AppFabric.Tests.Domain
@@ -9,72 +12,33 @@ namespace AppFabric.Tests.Domain
     public class BillingAggregateTests
     {
         //Todas as releases devem ser do mesmo cliente
-        [Fact]
-        public void ShouldCreateBillingWithRelease()
+        [Theory]
+        [ClassData(typeof(GenerateReleaseValidTestingData))]
+        public void ShouldCreateBillingWithRelease(EntityId clientId, Release releaseOne, Release releaseTwo)
         {
-            var aggFactory = new AggregateFactory();
-            var clientId = Guid.NewGuid();
-
-            //release 1
-            var releaseAgg = aggFactory.Create(new CreateReleaseCommand(clientId));
-
-            var projectId = EntityId.From(Guid.NewGuid());
-
-            var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 3));
-
-
-            releaseAgg.AddActivity(activityAgg.GetChange());
-
-            //release 2
-            var release2Agg = aggFactory.Create(new CreateReleaseCommand(clientId));
-
-            var project2Id = EntityId.From(Guid.NewGuid());
-
-            var activity2Agg = aggFactory.Create(new CreateActivityCommand(project2Id, 8));
-
-            release2Agg.AddActivity(activity2Agg.GetChange());
-
+            var factory = new BillingAggregateFactory();
+            var spec = new ReleaseCanBeBilled(clientId);
             // Add client?
-            var billingAgg = aggFactory.Create(new CreateBillingCommand(Guid.NewGuid()));
-
-            billingAgg.AddRelease(releaseAgg.GetChange());
-            billingAgg.AddRelease(release2Agg.GetChange());
-            Assert.False(billingAgg.Failures.Any());
-            Assert.Contains(billingAgg.GetEvents(), x => x.GetType() == typeof(ReleaseAddedEvent));
+            var billingAgg = factory.Create(new CreateBillingCommand(Guid.NewGuid()));
+            billingAgg.AddRelease(releaseOne, spec);
+            billingAgg.AddRelease(releaseTwo, spec);
+            
+            Assert.False(billingAgg.IsValid);
+            Assert.Contains(billingAgg.GetEvents(), x => x is ReleaseAddedEvent);
         }
 
-        [Fact]
-        public void ShouldNotCreateBillingWithReleaseFromDifferentClient()
+        [Theory]
+        [ClassData(typeof(GenerateReleaseDifferentClientsTestingData))]
+        public void ShouldNotCreateBillingWithReleaseFromDifferentClient(EntityId clientId, Release releaseOne, Release releaseTwo)
         {
-            var aggFactory = new AggregateFactory();
-            var clientId = Guid.NewGuid();
-
-            //release 1
-            var releaseAgg = aggFactory.Create(new CreateReleaseCommand(clientId));
-
-            var projectId = EntityId.From(Guid.NewGuid());
-
-            var activityAgg = aggFactory.Create(new CreateActivityCommand(projectId, 8));
-
-
-            releaseAgg.AddActivity(activityAgg.GetChange());
-
-            //release 2
-            clientId = Guid.NewGuid();
-            var release2Agg = aggFactory.Create(new CreateReleaseCommand(clientId));
-
-            var project2Id = EntityId.From(Guid.NewGuid());
-
-            var activity2Agg = aggFactory.Create(new CreateActivityCommand(project2Id, 8));
-
-            release2Agg.AddActivity(activity2Agg.GetChange());
-
+            var factory = new BillingAggregateFactory();
+            var spec = new ReleaseCanBeBilled(clientId);
             // Add client?
-            var billingAgg = aggFactory.Create(new CreateBillingCommand(Guid.NewGuid()));
-
-            billingAgg.AddRelease(releaseAgg.GetChange());
-            billingAgg.AddRelease(release2Agg.GetChange());
-            Assert.True(billingAgg.Failures.Any());
+            var billingAgg = factory.Create(new CreateBillingCommand(Guid.NewGuid()));
+            billingAgg.AddRelease(releaseOne, spec);
+            billingAgg.AddRelease(releaseTwo, spec);
+            
+            Assert.False(billingAgg.IsValid);
         }
     }
 }

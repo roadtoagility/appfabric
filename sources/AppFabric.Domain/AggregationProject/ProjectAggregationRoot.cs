@@ -16,6 +16,7 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System;
 using System.Diagnostics;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
@@ -29,7 +30,7 @@ namespace AppFabric.Domain.AggregationProject
     {
         public ProjectAggregationRoot(Project project)
         {
-            Debug.Assert(project.IsValid == false);
+            Debug.Assert(project.IsValid);
             Apply(project);
             
             if (project.IsNew())
@@ -66,6 +67,16 @@ namespace AppFabric.Domain.AggregationProject
             }
         }
 
+        public void AddMember(Member member, ISpecification<Project> spec)
+        {
+            AppendValidationResult(new ValidationFailure("Member","Not implemented"));      
+        }
+        
+        public void RemoveMember(Member member, ISpecification<Project> spec)
+        {
+            AppendValidationResult(new ValidationFailure("Member","Not implemented"));
+        }
+        
         public void AddProject(User client, ISpecification<Project> spec)
         {
             if (spec.IsSatisfiedBy(AggregateRootEntity) == false)

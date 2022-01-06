@@ -32,33 +32,24 @@ namespace AppFabric.Domain.BusinessObjects
             Name = name;
         }
 
-        public EntityId ProjectId { get; }
+        public EntityId ProjectId { get; private set; }
         public Name Name { get; }
 
         public static Member From(EntityId id, EntityId projectId, Name name, VersionId version)
         {
             var member = new Member(id, projectId, name, version);
-            var validator = new MemberValidator();
-
-            //member.SetValidationResult(validator.Validate(member));
-
             return member;
         }
 
         public static Member Empty()
         {
-            var member = new Member(EntityId.From(Guid.Empty), EntityId.From(Guid.Empty),
+            return From(EntityId.From(Guid.Empty), EntityId.From(Guid.Empty),
                 Name.Empty(), VersionId.Empty());
-
-            var validator = new MemberValidator();
-
-            //member.SetValidationResult(validator.Validate(member));
-            return member;
         }
 
-        public void Update(Member member)
+        public void UpdateMembership(EntityId projectId)
         {
-            //this.Identity = member.Id;
+            ProjectId = projectId;
         }
 
         public override string ToString()

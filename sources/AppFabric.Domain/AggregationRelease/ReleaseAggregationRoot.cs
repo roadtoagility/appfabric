@@ -11,7 +11,7 @@ namespace AppFabric.Domain.AggregationRelease
     {
         public ReleaseAggregationRoot(Release release)
         {
-            Debug.Assert(release.IsValid == false);
+            Debug.Assert(release.IsValid);
             Apply(release);
 
             if (release.IsNew())
