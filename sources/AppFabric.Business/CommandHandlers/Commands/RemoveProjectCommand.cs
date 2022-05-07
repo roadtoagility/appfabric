@@ -17,12 +17,17 @@
 //
 
 using System;
+using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
     public class RemoveProjectCommand
     {
-        public Guid Id { get; set; }
-        public int Version { get; set; }
+        public RemoveProjectCommand(Guid id)
+        {
+            Id = EntityId.From(id);
+        }
+
+        public EntityId Id { get; set; }
     }
 }

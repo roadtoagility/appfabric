@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,50 +16,18 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
-using System.Collections.Generic;
 using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class ProjectName : ValidationStatus
+    public sealed class ProjectName : ValueOf<string, ProjectName, ProjectNameValidator>
     {
-        public string Value { get; }
-        
-        private ProjectName(string name)
-        {
-            Value = name;
-        }
+        private static readonly string EmptyProjecName = string.Empty;
 
-        public static ProjectName From(string name)
-        {
-            name = string.IsNullOrEmpty(name) ? string.Empty : name;
-            
-            var projectName = new ProjectName(name);
-            var validator = new ProjectNameValidator();
-
-            projectName.SetValidationResult(validator.Validate(projectName));
-            
-            return projectName;
-        }
-        
         public static ProjectName Empty()
         {
-            return From(string.Empty);
+            return From(EmptyProjecName);
         }
-        
-        public override string ToString()
-        {
-            return $"{Value}";
-        }
-
-        #region IEquatable
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
-        #endregion
     }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,48 +17,63 @@
 //
 
 using System.Collections.Immutable;
-using FluentMediator;
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.Framework;
-using AppFabric.Domain.AggregationProject;
 using AppFabric.Domain.AggregationUser;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
+using DFlow.Business.Cqrs;
+using DFlow.Domain.Aggregates;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public sealed class RemoveUserCommandHandler : CommandHandler<RemoveUserCommand, ExecutionResult>
     {
+        private readonly IAggregateFactory<UserAggregationRoot, User> _factory;
         private readonly IDbSession<IUserRepository> _userDb;
-        private readonly ILogger<RemoveUserCommandHandler> _logger;
-        
-        public RemoveUserCommandHandler(ILogger<RemoveUserCommandHandler> logger, IMediator publisher, IDbSession<IUserRepository> userDb)
-            :base(logger,publisher)
+
+        public RemoveUserCommandHandler(
+            IDomainEventBus publisher,
+            IDbSession<IUserRepository> userDb,
+            IAggregateFactory<UserAggregationRoot, User> factory)
+            : base(publisher)
         {
             _userDb = userDb;
-            _logger = logger;
+            _factory = factory;
         }
-        
-        protected override ExecutionResult ExecuteCommand(RemoveUserCommand command)
+
+        protected override async Task<ExecutionResult> ExecuteCommand(
+            RemoveUserCommand command,
+            CancellationToken cancellationToken)
         {
-            var user = _userDb.Repository.Get(EntityId.From(command.Id));
-            var agg = UserAggregationRoot.ReconstructFrom(user);
+            var user = _userDb.Repository.Get(command.Id);
+
+
+            // user associado a um projeto não pode ser removido
+            // no caso precisamos de uma pesquisa ou uma flag, acho 
+            // que uma flag mantida pela associação aos projetos mais interessante
+            // acho uma técnica mais "event-based" consistent dentro do modelo
+            // que estamos desenvolvendo
+            var agg = _factory.Create(user);
+            agg.Remove(null);
+
             var isSucceed = false;
-      
-            if (agg.ValidationResults.IsValid)
+
+            if (agg.IsValid)
             {
-                agg.Remove();
-                
                 _userDb.Repository.Remove(agg.GetChange());
-                _userDb.SaveChanges();
-                agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));
+                await _userDb.SaveChangesAsync(cancellationToken);
+
+                agg.GetEvents().ToImmutableList()
+                    .ForEach(ev =>
+                        Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }
-            
-            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
+
+            return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
         }
     }
 }

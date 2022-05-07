@@ -16,61 +16,35 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using AppFabric.Domain.AggregationProject;
+using System.Diagnostics;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.AggregationUser.Events;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.Aggregates;
-using AppFabric.Domain.Framework.BusinessObjects;
+using DFlow.Domain.Aggregates;
+using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationUser
 {
-    public sealed class UserAggregationRoot : AggregationRoot<User>
+    public sealed class UserAggregationRoot : ObjectBasedAggregationRoot<User, EntityId>
     {
 
-        private UserAggregationRoot(User user)
+        public UserAggregationRoot(User user)
         {
-            if (user.ValidationResults.IsValid)
+            Debug.Assert(user.IsValid);
+            Apply(user);
+
+            if (user.IsNew())
             {
-                Apply(user);
-                
-                if (user.IsNew())
-                {
-                    Raise(UserAddedEvent.For(user));
-                }
+                Raise(UserAddedEvent.For(user));
             }
-
-            ValidationResults = user.ValidationResults;
         }
 
-        #region Aggregation contruction
-
-        
-        public static UserAggregationRoot ReconstructFrom(User currentState)
+        public void Remove(ISpecification<User> spec)
         {
-            var nextVersion = currentState.ValidationResults.IsValid?
-                Version.Next(currentState.Version):currentState.Version;
-            var user = User.From(currentState.Id, currentState.Name, currentState.Cnpj,
-                currentState.CommercialEmail, nextVersion);
-            
-            return new UserAggregationRoot(user);
-
-        }
-
-        
-        public static UserAggregationRoot CreateFrom(Name name, SocialSecurityId cnpj, Email commercialEmail)
-        {
-            var user = User.From(EntityId.GetNext(), name, cnpj, commercialEmail, Version.New());
-            return new UserAggregationRoot(user);
-        }
-
-        #endregion
-
-        public void Remove()
-        {
-            if (ValidationResults.IsValid)
+            if (spec.IsSatisfiedBy(AggregateRootEntity))
             {
-                Raise(UserRemovedEvent.For(this.GetChange()));
+                Apply(AggregateRootEntity);
+                Raise(UserRemovedEvent.For(AggregateRootEntity));
             }
         }
     }

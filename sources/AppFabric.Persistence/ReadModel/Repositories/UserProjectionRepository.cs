@@ -21,14 +21,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using AppFabric.Domain.Framework.BusinessObjects;
-using Version = AppFabric.Domain.BusinessObjects.Version;
+using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
 {
     public sealed class UserProjectionRepository : IUserProjectionRepository
     {
         private readonly AppFabricDbContext _context;
+
         public UserProjectionRepository(AppFabricDbContext context)
         {
             _context = context;
@@ -38,12 +38,9 @@ namespace AppFabric.Persistence.ReadModel.Repositories
         {
             var user = _context.UsersProjection
                 .FirstOrDefault(ac => ac.Id.Equals(id.Value));
-            
-            if (user == null)
-            {
-                UserProjection.Empty();
-            }
-            
+
+            if (user == null) UserProjection.Empty();
+
             return user;
         }
 
@@ -53,13 +50,9 @@ namespace AppFabric.Persistence.ReadModel.Repositories
                 _context.UsersProjection.FirstOrDefault(b => b.Id == entity.Id);
 
             if (oldState == null)
-            {
                 _context.UsersProjection.Add(entity);
-            }
             else
-            {
                 _context.Entry(oldState).CurrentValues.SetValues(entity);
-            }
         }
 
         public void Remove(UserProjection entity)
@@ -69,7 +62,7 @@ namespace AppFabric.Persistence.ReadModel.Repositories
                     .OrderByDescending(or => or.RowVersion)
                     .FirstOrDefault(b => b.Id.Equals(entity.Id) &&
                                          b.RowVersion.Equals(entity.RowVersion));
-           
+
             _context.UsersProjection.Remove(entity);
         }
 

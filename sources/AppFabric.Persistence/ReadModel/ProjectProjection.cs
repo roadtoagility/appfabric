@@ -23,7 +23,8 @@ namespace AppFabric.Persistence.ReadModel
 {
     public class ProjectProjection
     {
-        public ProjectProjection(Guid id, string name, string code, decimal budget, DateTime startDate, Guid clientId, string clientName, string owner, string orderNumber, int status, string statusName, int rowVersion)
+        public ProjectProjection(Guid id, string name, string code, decimal budget, DateTime startDate,
+            Guid clientId, string clientName, string owner, string orderNumber, string statusName, int rowVersion)
         {
             Id = id;
             ClientId = clientId;
@@ -33,7 +34,6 @@ namespace AppFabric.Persistence.ReadModel
             StartDate = startDate;
             Budget = budget;
             Owner = owner;
-            Status = status;
             StatusName = statusName;
             OrderNumber = orderNumber;
             IsDeleted = false;
@@ -48,21 +48,20 @@ namespace AppFabric.Persistence.ReadModel
         public DateTime StartDate { get; set; }
         public decimal Budget { get; set; }
         public string Owner { get; set; }
-        
+
         public string OrderNumber { get; set; }
-        
-        public int Status { get; set; }
+
         public string StatusName { get; set; }
-        
+
         public bool IsDeleted { get; set; }
 
         public int RowVersion { get; set; }
-        
+
         public static ProjectProjection Empty()
         {
-            return new ProjectProjection(Guid.Empty, String.Empty, String.Empty, Decimal.Zero, 
-                DateTime.UnixEpoch,Guid.Empty, String.Empty, String.Empty, String.Empty, 
-                0, String.Empty, 0);
+            return new ProjectProjection(Guid.Empty, string.Empty, string.Empty, decimal.Zero,
+                DateTime.UnixEpoch, Guid.Empty, string.Empty, string.Empty, string.Empty,
+                string.Empty, 0);
         }
     }
 }

@@ -10,11 +10,10 @@ using Microsoft.Extensions.Logging;
 namespace AppFabric.Tests.Integration.Support
 {
     public class CustomWebApplicationFactory<TStartup>
-        : WebApplicationFactory<TStartup> where TStartup: class
+        : WebApplicationFactory<TStartup> where TStartup : class
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-
             builder.ConfigureServices(services =>
             {
                 var descriptor = services.SingleOrDefault(
@@ -47,7 +46,6 @@ namespace AppFabric.Tests.Integration.Support
                         dbClientInit.InitializeDbForTests();
                         var dbProjectInit = new IntegrationProjectDataset(db);
                         dbProjectInit.InitializeDbForTests();
-
                     }
                     catch (Exception ex)
                     {

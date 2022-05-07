@@ -16,22 +16,21 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.Collections.Generic;
 using AppFabric.Business.Framework;
 using AppFabric.Persistence.ReadModel;
 
 namespace AppFabric.Business.QueryHandlers
 {
-    public class GetProjectResponse:QueryResult<ProjectProjection>
+    public class GetProjectResponse : QueryResult<ProjectProjection>
     {
         public GetProjectResponse(bool isSucceed, ProjectProjection data)
-        :base(isSucceed, data)
+            : base(isSucceed, data)
         {
         }
 
         public static GetProjectResponse From(bool isSucceed, ProjectProjection item)
         {
-            return new GetProjectResponse(isSucceed,item);
+            return new GetProjectResponse(isSucceed, item);
         }
     }
 }

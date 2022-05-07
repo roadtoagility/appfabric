@@ -16,11 +16,12 @@
 // Boston, MA  02110-1301, USA.
 //
 
-
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Domain.AggregationProject.Events;
-using AppFabric.Domain.Framework.DomainEvents;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.ReadModel.Repositories;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {
@@ -33,13 +34,15 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
             _userSession = userSession;
         }
 
-        protected override void ExecuteHandle(UserRemovedEvent @event)
+        protected override Task ExecuteHandle(UserRemovedEvent @event, CancellationToken cancellationToken)
         {
             var user = _userSession.Repository.Get(@event.Id);
-          
+
             _userSession.Repository.Remove(user);
-            
+
             _userSession.SaveChanges();
+
+            return Task.CompletedTask;
         }
     }
 }

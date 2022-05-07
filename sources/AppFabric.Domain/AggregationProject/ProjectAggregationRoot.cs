@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,80 +16,77 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System.ComponentModel.DataAnnotations;
+using System;
+using System.Diagnostics;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.Aggregates;
-using AppFabric.Domain.Framework.BusinessObjects;
+using DFlow.Domain.Aggregates;
+using DFlow.Domain.Specifications;
+using FluentValidation.Results;
 
 namespace AppFabric.Domain.AggregationProject
 {
-    public sealed class ProjectAggregationRoot : AggregationRoot<Project>
+    public sealed class ProjectAggregationRoot : ObjectBasedAggregationRoot<Project, EntityId>
     {
-
-        private ProjectAggregationRoot(Project project)
+        public ProjectAggregationRoot(Project project)
         {
-            if (project.ValidationResults.IsValid)
+            Debug.Assert(project.IsValid);
+            Apply(project);
+            
+            if (project.IsNew())
             {
-                Apply(project);
-                
-                if (project.IsNew())
-                {
-                    Raise(ProjectAddedEvent.For(project));
-                }
+                Raise(ProjectAddedEvent.For(project));
             }
-
-            ValidationResults = project.ValidationResults;
-        }
-        
-        private ProjectAggregationRoot(EntityId id, ProjectName name, ProjectCode code, 
-            Money budget, DateAndTime startDate, EntityId clientId)
-            : this(Project.NewRequest(id, name,code,startDate,budget,clientId))
-        {
         }
 
-        public void UpdateDetail(Project.ProjectDetail detail)
+        public void UpdateDetail(Project.ProjectDetail detail, ISpecification<Project> specUpdateProject)
         {
-            var change = Project.CombineWith(GetChange(), detail);
-            if (change.ValidationResults.IsValid)
+            var projUpdated = Project.CombineWith(AggregateRootEntity, detail);
+
+            if (specUpdateProject.IsSatisfiedBy(projUpdated) == false)
             {
-                Apply(change);
-                Raise(ProjectDetailUpdatedEvent.For(change));
+                AppendValidationResult(projUpdated.Failures);
             }
-
-            ValidationResults = change.ValidationResults;
-        }
-
-        #region Aggregation contruction
-
-        
-        public static ProjectAggregationRoot ReconstructFrom(Project currentState)
-        {
-            return new ProjectAggregationRoot(Project.From(currentState.Id,
-                            currentState.Name,
-                            currentState.Code,
-                            currentState.StartDate,
-                            currentState.Budget,
-                            currentState.ClientId,
-                            currentState.Owner,
-                            currentState.Status,
-                            currentState.OrderNumber,
-                            Version.Next(currentState.Version)));
-        }
-
-        
-        public static ProjectAggregationRoot CreateFrom(ProjectName name, ProjectCode code, Money budget, DateAndTime startDate, EntityId clientId)
-        {
-            return new ProjectAggregationRoot(EntityId.GetNext(), name,code,budget,startDate,clientId);
-        }
-
-        #endregion
-
-        public void Remove()
-        {
-            if (ValidationResults.IsValid)
+            else
             {
-                Raise(ProjectRemovedEvent.For(this.GetChange()));
+                Apply(projUpdated);
+                Raise(ProjectDetailUpdatedEvent.For(projUpdated));
+            }
+        }
+
+        public void Remove(ISpecification<Project> specRemoveProject)
+        {
+            if (specRemoveProject.IsSatisfiedBy(AggregateRootEntity) == false)
+            {
+                Apply(AggregateRootEntity);
+                Raise(ProjectRemovedEvent.For(AggregateRootEntity));
+            }
+            else
+            {
+                AppendValidationResult(new ValidationFailure("Project", "Can´t be removed!"));
+            }
+        }
+
+        public void AddMember(Member member, ISpecification<Project> spec)
+        {
+            AppendValidationResult(new ValidationFailure("Member","Not implemented"));      
+        }
+        
+        public void RemoveMember(Member member, ISpecification<Project> spec)
+        {
+            AppendValidationResult(new ValidationFailure("Member","Not implemented"));
+        }
+        
+        public void AddProject(User client, ISpecification<Project> spec)
+        {
+            if (spec.IsSatisfiedBy(AggregateRootEntity) == false)
+            {
+                Apply(AggregateRootEntity);
+                Raise(ProjectAddedEvent.For(AggregateRootEntity));
+            }
+            else
+            {
+                AppendValidationResult(new ValidationFailure("Project", "Can´t be added to client!"));
             }
         }
     }

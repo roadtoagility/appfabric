@@ -18,7 +18,6 @@
 
 using System;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 
 namespace AppFabric.Business.QueryHandlers.Filters
 {
@@ -32,7 +31,7 @@ namespace AppFabric.Business.QueryHandlers.Filters
 
         public EntityId ClientId { get; }
         public ProjectName Name { get; }
-        
+
         public static GetProjectsByClientAndNameFilter From(string name, Guid clientId)
         {
             return new GetProjectsByClientAndNameFilter(name, clientId);

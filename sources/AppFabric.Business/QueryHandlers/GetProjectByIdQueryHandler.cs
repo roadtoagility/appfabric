@@ -16,12 +16,11 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
 using AppFabric.Business.Framework;
 using AppFabric.Business.QueryHandlers.Filters;
-using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Persistence.Framework;
+using AppFabric.Domain.BusinessObjects;
 using AppFabric.Persistence.ReadModel.Repositories;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.QueryHandlers
 {
@@ -37,10 +36,10 @@ namespace AppFabric.Business.QueryHandlers
         protected override GetProjectResponse ExecuteQuery(GetProjectByIdFilter filter)
         {
             //we need a validation like a commandhandler here
-            
+
             var project = _dbSession.Repository
                 .Get(EntityId.From(filter.ProjectId));
-           
+
             return GetProjectResponse.From(true, project);
         }
     }

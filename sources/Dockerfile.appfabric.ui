@@ -1,0 +1,23 @@
+FROM node:14-alpine as build
+
+WORKDIR /ui
+
+COPY AppFabric.UI/package.json /ui
+COPY AppFabric.UI/package-lock.json /ui
+
+RUN npm install
+
+COPY AppFabric.UI/. /ui
+
+RUN npm run build --prod
+
+
+FROM nginx:alpine
+
+RUN rm -rf /etc/nginx/conf.d/default.conf
+COPY ./config/nginx.conf /etc/nginx/conf.d
+COPY --from=build /ui/dist /usr/share/nginx/html
+
+EXPOSE 8080
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

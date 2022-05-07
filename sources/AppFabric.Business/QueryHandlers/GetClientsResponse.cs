@@ -22,16 +22,16 @@ using AppFabric.Persistence.ReadModel;
 
 namespace AppFabric.Business.QueryHandlers
 {
-    public class GetClientsResponse:QueryResult<IReadOnlyList<UserProjection>>
+    public class GetClientsResponse : QueryResult<IReadOnlyList<UserProjection>>
     {
         public GetClientsResponse(bool isSucceed, IReadOnlyList<UserProjection> data)
-        :base(isSucceed, data)
+            : base(isSucceed, data)
         {
         }
 
         public static GetClientsResponse From(bool isSucceed, IReadOnlyList<UserProjection> items)
         {
-            return new GetClientsResponse(isSucceed,items);
+            return new GetClientsResponse(isSucceed, items);
         }
     }
 }

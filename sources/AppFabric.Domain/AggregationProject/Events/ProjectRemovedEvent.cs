@@ -18,24 +18,24 @@
 
 using System;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Domain.Framework.DomainEvents;
-using Version = AppFabric.Domain.BusinessObjects.Version;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.DomainEvents;
 
 namespace AppFabric.Domain.AggregationProject.Events
 {
     public class ProjectRemovedEvent : DomainEvent
     {
-        private ProjectRemovedEvent(EntityId id, Version version)
+        private ProjectRemovedEvent(EntityId id, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
         }
+
         public EntityId Id { get; }
-        
+
         public static ProjectRemovedEvent For(Project project)
         {
-            return new ProjectRemovedEvent(project.Id, project.Version);
+            return new ProjectRemovedEvent(project.Identity, project.Version);
         }
     }
 }

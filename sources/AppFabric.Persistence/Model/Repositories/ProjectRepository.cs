@@ -21,11 +21,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.ExtensionMethods;
-using Version = AppFabric.Domain.BusinessObjects.Version;
+using DFlow.Domain.BusinessObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppFabric.Persistence.Model.Repositories
 {
@@ -46,7 +47,7 @@ namespace AppFabric.Persistence.Model.Repositories
             var oldState = DbContext.Projects
                 .OrderByDescending(ob => ob.Id)
                 .ThenByDescending(ob => ob.RowVersion)
-                .FirstOrDefault(t => t.Id == entity.Id.Value);
+                .FirstOrDefault(t => t.Id == entity.Identity.Value);
 
             if (oldState == null)
             {
@@ -54,12 +55,10 @@ namespace AppFabric.Persistence.Model.Repositories
             }
             else
             {
-                var version = Version.From(BitConverter.ToInt32(oldState.RowVersion));
-                
-                if (Version.Next(version) > entity.Version)
-                {
+                var version = VersionId.From(BitConverter.ToInt32(oldState.RowVersion));
+
+                if (VersionId.Next(version) > entity.Version)
                     throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
-                }
 
                 DbContext.Entry(oldState).CurrentValues.SetValues(entry);
             }
@@ -67,13 +66,11 @@ namespace AppFabric.Persistence.Model.Repositories
 
         public void Remove(Project entity)
         {
-            var oldState = Get(entity.Id);
+            var oldState = Get(entity.Identity);
 
-            if (Version.Next(oldState.Version) > entity.Version)
-            {
+            if (VersionId.Next(oldState.Version) > entity.Version)
                 throw new DbUpdateConcurrencyException("This version is not the most updated for this object.");
-            }
-            
+
             var entry = entity.ToProjectState();
 
             DbContext.Projects.Remove(entry);
@@ -85,20 +82,28 @@ namespace AppFabric.Persistence.Model.Repositories
                 .OrderByDescending(ob => ob.Id)
                 .ThenByDescending(ob => ob.RowVersion)
                 .FirstOrDefault(t => t.Id == id.Value);
-            
-            if (project == null)
-            {
-                return Project.Empty();
-            }
-            
+
+            if (project == null) return Project.Empty();
+
             return project.ToProject();
         }
 
         public IEnumerable<Project> Find(Expression<Func<ProjectState, bool>> predicate)
         {
             return DbContext.Projects.Where(predicate).AsNoTracking()
-                .Select(t =>  t.ToProject());
+                .Select(t => t.ToProject());
             ;
+        }
+
+        public Task<IEnumerable<Project>> FindAsync(Expression<Func<ProjectState, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Project>> FindAsync(Expression<Func<ProjectState, bool>> predicate,
+            CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -18,56 +18,60 @@
 
 
 using System;
-using System.Diagnostics;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
 using AppFabric.Persistence.Model;
-using Version = AppFabric.Domain.BusinessObjects.Version;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Persistence.ExtensionMethods
 {
     public static class BusinessObjectsExtensions
     {
         public static ProjectState ToProjectState(this Project project)
-            => new ProjectState(project.Id.Value,
-                project.Name.Value, 
-                project.Code.Value, 
+        {
+            return new ProjectState(project.Identity.Value,
+                project.Name.Value,
+                project.Code.Value,
                 project.Budget.Value,
-                project.StartDate.Value, 
+                project.StartDate.Value,
                 project.ClientId.Value,
                 project.Owner.Value,
-                project.OrderNumber.Value,
+                project.OrderNumber.Value.Number,
                 project.Status.Value,
                 BitConverter.GetBytes(project.Version.Value));
+        }
 
         public static Project ToProject(this ProjectState state)
-            => Project.From(
+        {
+            return Project.From(
                 EntityId.From(state.Id),
                 ProjectName.From(state.Name),
+                ServiceOrder.From((state.OrderNumber, true)),
+                ProjectStatus.From(state.Status),
                 ProjectCode.From(state.Code),
                 DateAndTime.From(state.StartDate),
                 Money.From(state.Budget),
                 EntityId.From(state.ClientId),
                 Email.From(state.Owner),
-                ProjectStatus.From(state.Status),
-                ServiceOrderNumber.From(state.OrderNumber),
-                Version.From(BitConverter.ToInt32(state.RowVersion)));
-        
+                VersionId.From(BitConverter.ToInt32(state.RowVersion)));
+        }
+
         public static UserState ToUserState(this User user)
-            => new UserState(user.Id.Value,
-                user.Name.Value, 
-                user.Cnpj.Value, 
+        {
+            return new UserState(user.Id.Value,
+                user.Name.Value,
+                user.Cnpj.Value,
                 user.CommercialEmail.Value,
                 BitConverter.GetBytes(user.Version.Value));
+        }
 
         public static User ToUser(this UserState state)
-            => User.From(
-                    EntityId.From(state.Id),
-                    Name.From(state.Name),
-                    SocialSecurityId.From(state.Cnpj),
-                    Email.From(state.CommercialEmail),
-                    Version.From(BitConverter.ToInt32(state.RowVersion)));
-
-
+        {
+            return User.From(
+                EntityId.From(state.Id),
+                Name.From(state.Name),
+                SocialSecurityId.From(state.Cnpj),
+                Email.From(state.CommercialEmail),
+                VersionId.From(BitConverter.ToInt32(state.RowVersion)));
+        }
     }
 }

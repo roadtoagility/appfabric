@@ -17,18 +17,17 @@
 //
 
 using FluentValidation;
-using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class ProjectValidator: AbstractValidator<Project>
+    public sealed class ProjectValidator : AbstractValidator<Project>
     {
         public ProjectValidator()
         {
-            RuleFor(project => project.Id).SetValidator(new EntityIdValidator());
+            //RuleFor(project => project.Id).SetValidator(new EntityIdValidator());
             RuleFor(project => project.Name).SetValidator(new ProjectNameValidator());
             RuleFor(project => project.StartDate).SetValidator(new DateAndTimeValidator());
-            RuleFor(project => project.ClientId).SetValidator(new EntityIdValidator());
+            //RuleFor(project => project.ClientId).SetValidator(new EntityIdValidator());
 
             RuleFor(project => project.Code).SetValidator(new ProjectCodeValidator())
                 .DependentRules(() =>
@@ -40,23 +39,27 @@ namespace AppFabric.Domain.BusinessObjects.Validations
                             var changedProject = context.ParentContext.RootContextData["project"] as Project;
 
                             if (code.Equals(changedProject?.Code))
-                            {
                                 context.AddFailure("O código do novo projeto não pode ser igual ao atual.");
-                            }
                         }
                     });
                 });
-            
+
             RuleFor(project => project.Budget).SetValidator(new MoneyValidator());
             RuleFor(project => project.Status).SetValidator(new ProjectStatusValidator())
-                .When(status=> !status.Equals(ProjectStatus.Default()));
-            
+                .When(status => !status.Equals(ProjectStatus.Default()));
+
             RuleFor(project => project.Owner).SetValidator(new EmailValidator())
                 .When(project => !project.Owner.Equals(Email.Empty()));
-            
-            RuleFor(project => project.OrderNumber).SetValidator(new ServiceOrderNumberValidator())
-                .When(order => !order.OrderNumber.Equals(ServiceOrderNumber.Empty()));
 
+            RuleFor(project => project.OrderNumber).SetValidator(new ServiceOrderNumberValidator())
+                .DependentRules(() =>
+                {
+                    RuleFor(current => current.OrderNumber).Custom((serviceOrder, context) =>
+                    {
+                        if (!serviceOrder.Value.IsApproved)
+                            context.AddFailure("A ordem de serviço precisa estar aprovada");
+                    });
+                });
         }
     }
 }

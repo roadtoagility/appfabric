@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2021  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -17,51 +17,58 @@
 //
 
 using System.Collections.Immutable;
-using FluentMediator;
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Business.Framework;
 using AppFabric.Domain.AggregationProject;
+using AppFabric.Domain.AggregationProject.Specifications;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.Model.Repositories;
-using Microsoft.Extensions.Logging;
+using DFlow.Business.Cqrs;
+using DFlow.Domain.Aggregates;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Business.CommandHandlers
 {
     public sealed class RemoveProjectCommandHandler : CommandHandler<RemoveProjectCommand, ExecutionResult>
     {
+        private readonly IAggregateFactory<ProjectAggregationRoot, Project> _factory;
         private readonly IDbSession<IProjectRepository> _projectDb;
         private readonly IDbSession<IUserRepository> _userDb;
-        private readonly ILogger<RemoveProjectCommandHandler> _logger;
-        
-        public RemoveProjectCommandHandler(ILogger<RemoveProjectCommandHandler> logger, IMediator publisher, IDbSession<IProjectRepository> projectDb,
-            IDbSession<IUserRepository> userDb)
-            :base(logger, publisher)
+
+        public RemoveProjectCommandHandler(IDomainEventBus publisher, IDbSession<IProjectRepository> projectDb,
+            IDbSession<IUserRepository> userDb, IAggregateFactory<ProjectAggregationRoot, Project> factory)
+            : base(publisher)
         {
             _projectDb = projectDb;
             _userDb = userDb;
-            _logger = logger;
+            _factory = factory;
         }
-        
-        protected override ExecutionResult ExecuteCommand(RemoveProjectCommand command)
+
+        protected override async Task<ExecutionResult> ExecuteCommand(
+            RemoveProjectCommand command,
+            CancellationToken cancellationToken)
         {
-            var project = _projectDb.Repository.Get(EntityId.From(command.Id));
-            
-            var agg = ProjectAggregationRoot.ReconstructFrom(project);
             var isSucceed = false;
-      
-            if (agg.ValidationResults.IsValid)
+
+            var project = _projectDb.Repository.Get(command.Id);
+
+            var agg = _factory.Create(project);
+            agg.Remove(new ProjectCanBeRemoved());
+
+            if (agg.IsValid)
             {
-                agg.Remove();
-                
                 _projectDb.Repository.Remove(agg.GetChange());
-                _projectDb.SaveChanges();
-                agg.GetEvents().ToImmutableList().ForEach( ev => Publisher.Publish(ev));
+                await _projectDb.SaveChangesAsync(cancellationToken);
+
+                agg.GetEvents().ToImmutableList()
+                    .ForEach(ev =>
+                        Publisher.Publish(ev, cancellationToken));
                 isSucceed = true;
             }
-            
-            return new ExecutionResult(isSucceed, agg.ValidationResults.Errors.ToImmutableList());
+
+            return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
         }
     }
 }

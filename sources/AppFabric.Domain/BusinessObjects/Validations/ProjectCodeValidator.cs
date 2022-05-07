@@ -20,9 +20,8 @@ using FluentValidation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class ProjectCodeValidator: AbstractValidator<ProjectCode>
+    public sealed class ProjectCodeValidator : AbstractValidator<ProjectCode>
     {
-        
         public ProjectCodeValidator()
         {
             RuleFor(code => code).NotNull();

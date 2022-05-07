@@ -1,11 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="9.3.0" />
+        <PackageReference Include="DFlow.Domain" Version="0.4.0-pre273"/>
+        <PackageReference Include="FluentValidation" Version="9.3.0"/>
+        <PackageReference Include="ValueOf" Version="2.0.21"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="BusinessObjects\Validations\ActivityRules"/>
+        <Folder Include="BusinessObjects\Validations\ProjectRules"/>
     </ItemGroup>
     <PropertyGroup>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>

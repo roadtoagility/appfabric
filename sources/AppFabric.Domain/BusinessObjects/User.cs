@@ -17,46 +17,44 @@
 //
 
 using System.Collections.Generic;
-using AppFabric.Domain.BusinessObjects.Validations;
-using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Domain.Framework.Validation;
+using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class User : ValidationStatus
+    public sealed class User : BaseEntity<EntityId>
     {
-        private User(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, Version version)
+        private User(EntityId id, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
+            : base(id, version)
         {
-            Id = clientId;
             Name = name;
             Cnpj = cnpj;
             CommercialEmail = commercialEmail;
-            Version = version;
         }
+
         public EntityId Id { get; }
-        
+
         public Name Name { get; }
         public SocialSecurityId Cnpj { get; }
-        
-        public Email CommercialEmail { get; }
-        
-        public Version Version { get; }
 
-        public bool IsNew() => Version.Value == 1;
-                
-        public static User From(EntityId clientId, Name name, SocialSecurityId cnpj, Email commercialEmail, Version version)
+        public Email CommercialEmail { get; }
+
+        public static User From(EntityId entityId, Name name, SocialSecurityId cnpj, Email commercialEmail, VersionId version)
         {
-            var user = new User(clientId,name,cnpj,commercialEmail, version);
-            var validator = new UserValidator();
-            user.SetValidationResult(validator.Validate(user));
-            return user;        
+            var user = new User(entityId, name, cnpj, commercialEmail, version);
+            return user;
+        }
+        
+        public static User NewRequest(Name name, SocialSecurityId cnpj, Email commercialEmail)
+        {
+            return From(EntityId.GetNext(), name, cnpj, commercialEmail, VersionId.New());
         }
 
         public static User Empty()
         {
-            return From(EntityId.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty(), Version.Empty());
+            return From(EntityId.Empty(), Name.Empty(), SocialSecurityId.Empty(), Email.Empty(),
+                VersionId.Empty());
         }
-        
+
         public override string ToString()
         {
             return $"[PROJECT]:[ID: {Id} Name: {Name}, Social Security: {Cnpj} Commercial Email: {CommercialEmail}]";

@@ -1,22 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentMediator" Version="0.4.7" />
+        <PackageReference Include="DFlow.Business.Cqrs" Version="0.4.0-pre273"/>
+        <PackageReference Include="DFlow.Domain" Version="0.4.0-pre273"/>
+        <PackageReference Include="DFlow.Persistence" Version="0.4.0-pre273"/>
+        <PackageReference Include="FluentMediator" Version="0.4.7"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0"/>
+        <PackageReference Include="System.Collections.Immutable" Version="5.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AppFabric.Domain\AppFabric.Domain.csproj" />
-      <ProjectReference Include="..\AppFabric.Persistence\AppFabric.Persistence.csproj" />
+        <ProjectReference Include="..\AppFabric.Domain\AppFabric.Domain.csproj"/>
+        <ProjectReference Include="..\AppFabric.Persistence\AppFabric.Persistence.csproj"/>
     </ItemGroup>
     <PropertyGroup>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     </PropertyGroup>
 </Project>

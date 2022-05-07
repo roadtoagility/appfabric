@@ -17,15 +17,14 @@
 //
 
 using FluentValidation;
-using AppFabric.Domain.Framework.Validation;
 
 namespace AppFabric.Domain.BusinessObjects.Validations
 {
-    public sealed class UserValidator: AbstractValidator<User>
+    public sealed class UserValidator : AbstractValidator<User>
     {
         public UserValidator()
         {
-            RuleFor(user => user.Id).SetValidator(new EntityIdValidator());
+            //RuleFor(user => user.Id).SetValidator(new EntityIdValidator());
             RuleFor(user => user.Name).SetValidator(new NameValidator());
             RuleFor(user => user.Cnpj).SetValidator(new SocialSecurityIdValidator());
             RuleFor(user => user.CommercialEmail).SetValidator(new EmailValidator());

@@ -16,15 +16,10 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using AppFabric.Persistence.Framework;
-using AppFabric.Persistence.Framework.ReadModel.Repositories;
-using AppFabric.Persistence.ReadModel.Repositories;
-
 namespace AppFabric.Business.Framework
 {
-    public abstract class QueryHandler<TFilter, TResult> : ICommandHandler<TFilter, TResult>
+    public abstract class QueryHandler<TFilter, TResult> : IQueryHandler<TFilter, TResult>
     {
-      
         public TResult Execute(TFilter filter)
         {
             return ExecuteQuery(filter);

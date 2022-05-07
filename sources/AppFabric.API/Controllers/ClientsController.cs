@@ -1,11 +1,10 @@
-﻿
-using FluentMediator;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
 using AppFabric.Business.QueryHandlers;
 using AppFabric.Business.QueryHandlers.Filters;
+using FluentMediator;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AppFabric.API.Controllers
 {
@@ -25,11 +24,8 @@ namespace AppFabric.API.Controllers
         {
             var result = _mediator.Send<GetClientsResponse>(GetClientsByFilter.From(name));
 
-            if (result.Data.Count.Equals(0))
-            {
-                return NotFound();
-            }
-            
+            if (result.Data.Count.Equals(0)) return NotFound();
+
             return Ok(result);
         }
 
@@ -37,27 +33,24 @@ namespace AppFabric.API.Controllers
         public IActionResult Get(Guid id)
         {
             var result = _mediator.Send<GetClientResponse>(GetClientByIdFilter.From(id));
-            
+
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid id)
         {
-            var result = _mediator.Send<ExecutionResult>(new RemoveUserCommand{Id = id});
+            var result = _mediator.Send<ExecutionResult>(new RemoveUserCommand(id));
             return Ok(result);
         }
-        
+
         [HttpPost("save")]
         public IActionResult Save([FromBody] AddUserCommand entity)
         {
             var result = _mediator.Send<ExecutionResult>(entity);
-            
-            if (!result.IsSucceed)
-            {
-                return BadRequest(result);
-            }
-            
+
+            if (!result.IsSucceed) return BadRequest(result);
+
             return Ok(result);
         }
     }

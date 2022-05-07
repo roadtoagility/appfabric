@@ -1,7 +1,7 @@
-using Microsoft.EntityFrameworkCore;
-using AppFabric.Persistence.Framework.Model;
 using AppFabric.Persistence.Model;
 using AppFabric.Persistence.ReadModel;
+using DFlow.Persistence.EntityFramework.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppFabric.Persistence
 {
@@ -10,13 +10,13 @@ namespace AppFabric.Persistence
         public AppFabricDbContext(DbContextOptions<AppFabricDbContext> options)
             : base(options)
         {
-
         }
 
         public DbSet<ProjectState> Projects { get; set; }
         public DbSet<ProjectProjection> ProjectsProjection { get; set; }
         public DbSet<UserState> Users { get; set; }
         public DbSet<UserProjection> UsersProjection { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -31,7 +31,7 @@ namespace AppFabric.Persistence
                     b.HasKey(e => e.Id);
                     b.Property(e => e.ClientId).IsRequired();
                     b.Property(e => e.StartDate).IsRequired();
-                    
+
                     b.Property(p => p.PersistenceId);
                     b.Property(q => q.IsDeleted);
                     b.HasQueryFilter(project => EF.Property<bool>(project, "IsDeleted") == false);
@@ -45,14 +45,14 @@ namespace AppFabric.Persistence
                     b.Property(e => e.Id).ValueGeneratedNever().IsRequired();
                     b.Property(e => e.Name).IsRequired();
                     b.Property(e => e.Cnpj).IsRequired();
-                    
+
                     b.Property(p => p.PersistenceId);
                     b.Property(e => e.IsDeleted);
                     b.HasQueryFilter(user => EF.Property<bool>(user, "IsDeleted") == false);
                     b.Property(e => e.CreateAt);
                     b.Property(e => e.RowVersion);
                 });
-            
+
             modelBuilder.Entity<ClientState>(
                 b =>
                 {
@@ -67,7 +67,7 @@ namespace AppFabric.Persistence
                 });
 
             #region projection
-            
+
             modelBuilder.Entity<ProjectProjection>(p =>
             {
                 p.Property(pr => pr.Id).ValueGeneratedNever();
@@ -79,7 +79,7 @@ namespace AppFabric.Persistence
                 p.Property(pr => pr.ClientId);
                 p.HasQueryFilter(proj => EF.Property<bool>(proj, "IsDeleted") == false);
             });
-            
+
             modelBuilder.Entity<UserProjection>(u =>
             {
                 u.Property(pr => pr.Id).ValueGeneratedNever();
@@ -89,7 +89,7 @@ namespace AppFabric.Persistence
                 u.Property(pr => pr.CommercialEmail);
                 u.HasQueryFilter(user => EF.Property<bool>(user, "IsDeleted") == false);
             });
-            
+
             #endregion
         }
     }

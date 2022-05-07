@@ -22,6 +22,5 @@ namespace AppFabric.Persistence.ReadModel.Repositories
 {
     public interface IProjectProjectionRepository : IProjectionRepository<ProjectProjection>
     {
-        
     }
 }

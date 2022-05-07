@@ -18,20 +18,20 @@
 
 
 using System;
-using AppFabric.Persistence.Framework.Model;
+using DFlow.Persistence.Model;
 
 namespace AppFabric.Persistence.Model
 {
     public class ClientState : PersistentState
     {
         public ClientState(long projectId, long clientId, byte[] rowVersion)
-        :base(DateTime.Now,rowVersion)
+            : base(DateTime.Now, rowVersion)
         {
             ProjectId = projectId;
             ClientId = clientId;
         }
 
-        public long ProjectId { get; set;}
-        public long ClientId { get; set;}
+        public long ProjectId { get; set; }
+        public long ClientId { get; set; }
     }
 }

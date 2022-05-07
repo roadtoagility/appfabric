@@ -18,7 +18,7 @@
 
 
 using System;
-using AppFabric.Persistence.Framework.Model;
+using DFlow.Persistence.Model;
 
 namespace AppFabric.Persistence.Model
 {
@@ -36,7 +36,7 @@ namespace AppFabric.Persistence.Model
         public uint ActivityId { get; set; }
         public int Status { get; set; }
         public string Description { get; set; }
-        
+
         public uint ProjectId { get; set; }
     }
 }

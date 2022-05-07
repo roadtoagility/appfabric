@@ -19,26 +19,19 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
-using AppFabric.Domain.Framework.BusinessObjects;
-using Version = AppFabric.Domain.BusinessObjects.Version;
+using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
 {
     public sealed class ActivityProjectionRepository : IActivityProjectionRepository
     {
-        private AppFabricDbContext Context { get; }
         public ActivityProjectionRepository(AppFabricDbContext context)
         {
             Context = context;
         }
 
-        public ActivityProjection Get(EntityId id)
-        {
-            throw new NotImplementedException();
-        }
+        private AppFabricDbContext Context { get; }
 
         public void Add(ActivityProjection entity)
         {
@@ -51,6 +44,11 @@ namespace AppFabric.Persistence.ReadModel.Repositories
         }
 
         public IReadOnlyList<ActivityProjection> Find(Expression<Func<ActivityProjection, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActivityProjection Get(EntityId id)
         {
             throw new NotImplementedException();
         }

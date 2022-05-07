@@ -18,15 +18,15 @@
 
 using System;
 using AppFabric.Domain.BusinessObjects;
-using AppFabric.Domain.Framework.BusinessObjects;
-using AppFabric.Domain.Framework.DomainEvents;
-using Version = AppFabric.Domain.BusinessObjects.Version;
+using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.DomainEvents;
 
 namespace AppFabric.Domain.AggregationProject.Events
 {
     public class ProjectAddedEvent : DomainEvent
     {
-        private ProjectAddedEvent(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget, EntityId clientId, Version version)
+        private ProjectAddedEvent(EntityId id, ProjectName name, ProjectCode code, DateAndTime startDate, Money budget,
+            EntityId clientId, VersionId version)
             : base(DateTime.Now, version)
         {
             Id = id;
@@ -37,30 +37,31 @@ namespace AppFabric.Domain.AggregationProject.Events
             ClientId = clientId;
             Owner = Email.Empty();
             Status = ProjectStatus.Default();
-            OrderNumber = ServiceOrderNumber.Empty();
+            OrderNumber = ServiceOrder.Empty();
         }
+
         public EntityId Id { get; }
         public ProjectName Name { get; }
         public ProjectCode Code { get; }
-        
+
         public Money Budget { get; }
-        
+
         public EntityId ClientId { get; }
 
         public DateAndTime StartDate { get; }
-        
+
         public Email Owner { get; }
-        public ServiceOrderNumber OrderNumber { get; }
+        public ServiceOrder OrderNumber { get; }
         public ProjectStatus Status { get; }
-        
+
         public static ProjectAddedEvent For(Project project)
         {
             return new ProjectAddedEvent(
-                project.Id,
+                project.Identity,
                 project.Name,
                 project.Code,
-                project.StartDate, 
-                project.Budget, 
+                project.StartDate,
+                project.Budget,
                 project.ClientId,
                 project.Version);
         }

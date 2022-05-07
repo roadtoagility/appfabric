@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using AppFabric.Business.CommandHandlers.Commands;
+using AppFabric.Business.Framework;
 using FluentMediator;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using AppFabric.API.Mock;
-using AppFabric.API.Models;
 
 namespace AppFabric.API.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class ReleasesController : ControllerBase
@@ -23,41 +19,52 @@ namespace AppFabric.API.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<object>> List([FromQuery] string status)
+        public IAsyncResult List([FromQuery] string status)
         {
-            var releases = ReleaseMock.GetReleases();
-
-            if (!string.IsNullOrEmpty(status))
-                releases = releases.Where(x => x.Status.Contains(status, StringComparison.OrdinalIgnoreCase)).ToList();
-
-            return await Task.FromResult(releases);
+            // var releases = ReleaseMock.GetReleases();
+            //
+            // if (!string.IsNullOrEmpty(status))
+            //     releases = releases.Where(x => x.Status.Contains(status, StringComparison.OrdinalIgnoreCase)).ToList();
+            //
+            // return await Task.FromResult(releases);
+            return Task.CompletedTask;
         }
 
         [HttpGet("list/{clientId}/{status?}")]
-        public async Task<ActionResult<object>> List(int clientId, string status = "")
+        public IAsyncResult List(int clientId, string status = "")
         {
-            var releases = ReleaseMock.GetReleases();
-
-            if (!string.IsNullOrEmpty(status))
-                releases = releases.Where(x => x.Id == clientId && x.Status.Contains(status, StringComparison.OrdinalIgnoreCase)).ToList();
-
-            return await Task.FromResult(releases);
+            // var releases = ReleaseMock.GetReleases();
+            //
+            // if (!string.IsNullOrEmpty(status))
+            //     releases = releases.Where(x =>
+            //         x.Id == clientId && x.Status.Contains(status, StringComparison.OrdinalIgnoreCase)).ToList();
+            //
+            // return await Task.FromResult(releases);
+            return Task.CompletedTask;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<object>> Get(int id)
+        public IAsyncResult Get(int id)
         {
-            var entity = ReleaseMock.GetReleases().FirstOrDefault(x => x.Id == id);
-            return await Task.FromResult(entity);
+            // var entity = ReleaseMock.GetReleases().FirstOrDefault(x => x.Id == id);
+            // return await Task.FromResult(entity);
+            return Task.CompletedTask;
+        }
+        
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] CreateReleaseCommand entity)
+        {
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
         }
 
-        [HttpPost("save")]
-        public async Task<ActionResult<object>> Save([FromBody] ClientDto entity)
+        [HttpPost("add")]
+        public IActionResult Create([FromBody] AddActivityCommand entity)
         {
-            //var query = ActivityByProjectFilter.For(dto.ProjectId);
-            //var result = await _mediator.Send(query);
-            //return result;
-            return await Task.FromResult("");
+            var result = _mediator.Send<ExecutionResult>(entity);
+
+            return Ok(result);
         }
     }
 }

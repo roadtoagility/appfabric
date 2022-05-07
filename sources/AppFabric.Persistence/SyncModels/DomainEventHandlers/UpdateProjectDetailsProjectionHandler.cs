@@ -17,11 +17,13 @@
 //
 
 
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Domain.AggregationProject.Events;
-using AppFabric.Domain.Framework.DomainEvents;
-using AppFabric.Persistence.Framework;
 using AppFabric.Persistence.ReadModel;
 using AppFabric.Persistence.ReadModel.Repositories;
+using DFlow.Domain.Events;
+using DFlow.Persistence;
 
 namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 {
@@ -34,10 +36,10 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
             _projectSession = projectSession;
         }
 
-        protected override void ExecuteHandle(ProjectDetailUpdatedEvent @event)
+        protected override Task ExecuteHandle(ProjectDetailUpdatedEvent @event, CancellationToken cancellationToken)
         {
             var project = _projectSession.Repository.Get(@event.Id);
-            
+
             var projection = new ProjectProjection(
                 project.Id,
                 @event.Name.Value,
@@ -47,13 +49,13 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
                 project.ClientId,
                 project.ClientName,
                 @event.Owner.Value,
-                @event.OrderNumber.Value,
-                project.Status,
+                @event.OrderNumber.Value.Number,
                 project.StatusName,
                 @event.Version.Value);
-            
+
             _projectSession.Repository.Add(projection);
             _projectSession.SaveChanges();
+            return Task.CompletedTask;
         }
     }
 }
