@@ -22,9 +22,10 @@ namespace AppFabric.Domain.AggregationRelease
 
         public void AddActivity(Activity activity, ISpecification<Activity> spec)
         {
+            AggregateRootEntity.AddActivity(activity);
+
             if (spec.IsSatisfiedBy(activity))
             {
-                AggregateRootEntity.AddActivity(activity);
                 Apply(AggregateRootEntity);
                 Raise(ActivityAddedEvent.For(AggregateRootEntity));
             }

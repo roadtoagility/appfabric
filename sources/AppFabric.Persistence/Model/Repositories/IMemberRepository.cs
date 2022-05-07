@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2020  Road to Agility
+// Copyright (C) 2022  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,31 +16,14 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using System;
+
 using AppFabric.Domain.BusinessObjects;
-using DFlow.Domain.BusinessObjects;
-using DFlow.Domain.DomainEvents;
+using DFlow.Persistence.Repositories;
 
-namespace AppFabric.Domain.AggregationActivity.Events
+namespace AppFabric.Persistence.Model.Repositories
 {
-    public class ActivityCreatedEvent : DomainEvent
+    public interface IMemberRepository : IRepository<MemberState, Member>
     {
-        private ActivityCreatedEvent(EntityId id, VersionId version)
-            : base(DateTime.Now, version)
-        {
-            Id = id;
-        }
-
-        public EntityId Id { get; }
-
-        public static ActivityCreatedEvent For(Activity activity)
-        {
-            return new ActivityCreatedEvent(activity.Identity, activity.Version);
-        }
-        
-        public static ActivityCreatedEvent For(EntityId entityId, VersionId version)
-        {
-            return new ActivityCreatedEvent(entityId, version);
-        }
+        Member Get(EntityId entityId);
     }
 }

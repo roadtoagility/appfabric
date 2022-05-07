@@ -7,7 +7,7 @@ using Activity = AppFabric.Domain.BusinessObjects.Activity;
 
 namespace AppFabric.Domain.AggregationActivity
 {
-    public class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId>
+    public sealed class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId>
     {
         public ActivityAggregationRoot(Activity activity)
         {

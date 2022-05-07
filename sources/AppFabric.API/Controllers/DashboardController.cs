@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using AppFabric.API.Mock;
+﻿using System;
+using System.Threading.Tasks;
 using FluentMediator;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,27 +17,31 @@ namespace AppFabric.API.Controllers
         }
 
         [HttpGet("ProjectReleases")]
-        public async Task<ActionResult<object>> ProjectReleases()
+        public IAsyncResult ProjectReleases()
         {
-            return await Task.FromResult(DashboardMock.GetProjectReleases());
+            // return await Task.FromResult(DashboardMock.GetProjectReleases());
+            return Task.CompletedTask;
         }
 
         [HttpGet("FinishedActivities")]
-        public async Task<ActionResult<object>> FinishedActivities()
+        public IAsyncResult FinishedActivities()
         {
-            return await Task.FromResult(DashboardMock.GetFinishedActivities());
+            // return await Task.FromResult(DashboardMock.GetFinishedActivities());
+            return Task.CompletedTask;
         }
 
         [HttpGet("FavoritedProjects")]
-        public async Task<ActionResult<object>> FavoritedProjects()
+        public IAsyncResult FavoritedProjects()
         {
-            return await Task.FromResult(DashboardMock.GetFavoritedProjects());
+            // return await Task.FromResult(DashboardMock.GetFavoritedProjects());
+            return Task.CompletedTask;
         }
 
         [HttpGet("ClientsRevenue")]
-        public async Task<ActionResult<object>> ClientsRevenue()
+        public IAsyncResult ClientsRevenue()
         {
-            return await Task.FromResult(DashboardMock.GetClientsRevenue());
+            // return await Task.FromResult(DashboardMock.GetClientsRevenue());
+            return Task.CompletedTask;
         }
 
         [HttpPost]

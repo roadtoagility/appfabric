@@ -1,5 +1,6 @@
 ﻿// Copyright (C) 2020  Road to Agility
-//
+
+////
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
 // License as published by the Free Software Foundation; either
@@ -14,9 +15,9 @@
 // License along with this library; if not, write to the
 // Free Software Foundation, Inc., 51 Franklin St, Fifth Floor,
 // Boston, MA  02110-1301, USA.
-//
 
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
@@ -36,6 +37,15 @@ namespace AppFabric.Domain.BusinessObjects
             Status = status;
             OrderNumber = orderNumber;
             Owner = owner;
+            
+            AppendValidationResult(name.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(code.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(startDate.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(clientId.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(budget.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(status.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(orderNumber.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(owner.ValidationStatus.Errors.ToImmutableList());
         }
 
         public ProjectName Name { get; }

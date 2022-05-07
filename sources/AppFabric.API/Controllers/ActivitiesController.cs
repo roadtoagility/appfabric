@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
-using AppFabric.API.Mock;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.Framework;
 using FluentMediator;
@@ -21,36 +19,39 @@ namespace AppFabric.API.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<object>> List([FromQuery] string title)
+        public IAsyncResult List([FromQuery] string title)
         {
-            var activities = ActivitiesMock.GetActivities();
-
-            if (!string.IsNullOrEmpty(title))
-                activities = activities.Where(x => x.Titulo.Contains(title)).ToList();
-
-            return await Task.FromResult(activities);
+            // var activities = ActivitiesMock.GetActivities();
+            //
+            // if (!string.IsNullOrEmpty(title))
+            //     activities = activities.Where(x => x.Titulo.Contains(title)).ToList();
+            //
+            //return await Task.FromResult(activities);
+            return Task.CompletedTask;
         }
 
         [HttpGet("list/{projectId}/{title?}")]
-        public async Task<ActionResult<object>> List(int projectId, string title = "")
+        public IAsyncResult List(int projectId, string title = "")
         {
-            var activities = ActivitiesMock.GetActivities();
-
-            activities = activities
-                .Where(x => x.Id == projectId && x.Titulo.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
-
-            return await Task.FromResult(activities);
+            // var activities = ActivitiesMock.GetActivities();
+            //
+            // activities = activities
+            //     .Where(x => x.Id == projectId && x.Titulo.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
+            //
+            // return await Task.FromResult(activities);
+            return Task.CompletedTask;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<object>> Get(int id)
+        public IAsyncResult Get(int id)
         {
-            var entity = ActivitiesMock.GetActivities().FirstOrDefault(x => x.Id == id);
-            return await Task.FromResult(entity);
+            // var entity = ActivitiesMock.GetActivities().FirstOrDefault(x => x.Id == id);
+            // return await Task.FromResult(entity);
+            return Task.CompletedTask;
         }
 
         [HttpPost("save")]
-        public async Task<ActionResult<object>> Save([FromBody] ActivityDto entity)
+        public async Task<ActionResult<object>> Save([FromBody] AddActivityCommand entity)
         {
             //var query = ActivityByProjectFilter.For(dto.ProjectId);
             //var result = await _mediator.Send(query);
