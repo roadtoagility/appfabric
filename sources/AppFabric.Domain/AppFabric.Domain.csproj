@@ -1,18 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <LangVersion>latestmajor</LangVersion>
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DFlow.Domain" Version="0.4.0-pre273"/>
-        <PackageReference Include="FluentValidation" Version="9.3.0"/>
-        <PackageReference Include="ValueOf" Version="2.0.21"/>
+        <PackageReference Include="DFlow.Domain" Version="0.6.3" />
+        <PackageReference Include="DFlow.Domain.Events" Version="0.6.3" />
+        <PackageReference Include="FluentValidation" Version="9.3.0" />
+        <PackageReference Include="ValueOf" Version="2.0.21" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="BusinessObjects\Validations\ActivityRules"/>
-        <Folder Include="BusinessObjects\Validations\ProjectRules"/>
+        <Folder Include="BusinessObjects\Validations\ActivityRules" />
+        <Folder Include="BusinessObjects\Validations\ProjectRules" />
     </ItemGroup>
     <PropertyGroup>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>

@@ -2,11 +2,12 @@
 using AppFabric.Domain.AggregationBilling.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
+using DFlow.Domain.Events;
 using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationBilling
 {
-    public class BillingAggregationRoot : ObjectBasedAggregationRoot<Billing, EntityId>
+    public class BillingAggregationRoot : ObjectBasedAggregationRootWithEvents<Billing, EntityId>
     {
         public BillingAggregationRoot(Billing billing)
         {

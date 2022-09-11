@@ -35,8 +35,14 @@ namespace AppFabric.Tests.Features.Steps
         private ProjectName _projectName;
         private DateAndTime _startDate;
 
-        public NewProjectRequest()
+        public NewProjectRequest(Money budget, EntityId clientId, Project project, ProjectCode projectCode, ProjectName projectName, DateAndTime startDate)
         {
+            _budget = budget;
+            _clientId = clientId;
+            _project = project;
+            _projectCode = projectCode;
+            _projectName = projectName;
+            _startDate = startDate;
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
         }
 

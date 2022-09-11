@@ -51,7 +51,7 @@ namespace AppFabric.Business.CommandHandlers
             UpdateProjectCommand command,
             CancellationToken cancellationToken)
         {
-            var project = _dbSession.Repository.Get(EntityId.From(command.Id));
+            var project = _dbSession.Repository.Get(command.Id);
 
             var agg = _factory.Create(project);
             agg.UpdateDetail(command.ToProjectDetail(), 
@@ -69,7 +69,7 @@ namespace AppFabric.Business.CommandHandlers
                 isSucceed = true;
             }
 
-            return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
+            return new ExecutionResult(isSucceed, agg.Failures);
         }
     }
 }

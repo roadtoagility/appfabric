@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using AppFabric.Persistence;
 using Microsoft.AspNetCore.Hosting;
@@ -20,6 +21,7 @@ namespace AppFabric.Tests.Integration.Support
                     d => d.ServiceType ==
                          typeof(DbContextOptions<AppFabricDbContext>));
 
+                Debug.Assert(descriptor != null, nameof(descriptor) + " != null");
                 services.Remove(descriptor);
 
                 services.AddDbContext<AppFabricDbContext>(options =>

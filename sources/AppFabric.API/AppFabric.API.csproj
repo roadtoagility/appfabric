@@ -2,7 +2,10 @@
 
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
-    <TargetFramework>net5.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <Nullable>enable</Nullable>
+    <LangVersion>latestmajor</LangVersion>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

@@ -62,7 +62,13 @@ namespace AppFabric.Tests.Integration
         public async Task Put_UpdateProjectDetails(string url, Guid id)
         {
             // Arrange
-            var command = new UpdateProjectCommand();
+            var command = new UpdateProjectCommand(   
+                Guid.NewGuid(),
+                "PojectFake",
+                134,
+                "ornwer11@ok.com",
+                "23234234",
+                "ToApprove");
 
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
             {

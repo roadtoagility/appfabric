@@ -68,7 +68,7 @@ namespace AppFabric.Business.CommandHandlers
                 okId = agg.GetChange().Id.Value;
             }
 
-            return new CommandResult<Guid>(isSucceed, okId, agg.Failures.ToImmutableList());
+            return new CommandResult<Guid>(isSucceed, okId, agg.Failures);
         }
     }
 }

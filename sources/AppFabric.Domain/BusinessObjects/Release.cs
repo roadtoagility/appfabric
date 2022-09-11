@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using AppFabric.Domain.ExtensionMethods;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
@@ -30,7 +31,7 @@ namespace AppFabric.Domain.BusinessObjects
             ClientId = clientId;
             Activities = new List<Activity>();
 
-            AppendValidationResult(ClientId.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(ClientId.ValidationStatus.ToFailures());
         }
 
         public EntityId ClientId { get; }

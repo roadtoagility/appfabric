@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Immutable;
 using AppFabric.Domain.BusinessObjects;
+using AppFabric.Domain.ExtensionMethods;
 using DFlow.Domain.Command;
 
 namespace AppFabric.Business.CommandHandlers.Commands
@@ -37,14 +38,14 @@ namespace AppFabric.Business.CommandHandlers.Commands
             ClientId = EntityId.From(clientId);
             Owner = Email.From(owner);
 
-            AppendValidationResult(Name.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(ServiceOrderNumber.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(Status.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(Code.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(StartDate.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(Budget.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(ClientId.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(Owner.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(Name.ValidationStatus.ToFailures());
+            AppendValidationResult(ServiceOrderNumber.ValidationStatus.ToFailures());
+            AppendValidationResult(Status.ValidationStatus.ToFailures());
+            AppendValidationResult(Code.ValidationStatus.ToFailures());
+            AppendValidationResult(StartDate.ValidationStatus.ToFailures());
+            AppendValidationResult(Budget.ValidationStatus.ToFailures());
+            AppendValidationResult(ClientId.ValidationStatus.ToFailures());
+            AppendValidationResult(Owner.ValidationStatus.ToFailures());
         }
 
         public ProjectName Name { get; set; }

@@ -1,15 +1,16 @@
 ﻿using DFlow.Domain.Specifications;
+using DFlow.Domain.Validation;
 using FluentValidation.Results;
 
 namespace AppFabric.Domain.BusinessObjects.Validations.ActivityRules
 {
     public class ActivityEffortSpecification : CompositeSpecification<Activity>
     {
-        private readonly ValidationFailure _effortFailure;
+        private readonly Failure _effortFailure;
 
         public ActivityEffortSpecification()
         {
-            _effortFailure = new ValidationFailure("IsEffortLessOrEqualEightHours"
+            _effortFailure = Failure.For("IsEffortLessOrEqualEightHours"
                 , "Uma atividade não pode ter esforço maior do que 8 horas");
         }
 

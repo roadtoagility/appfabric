@@ -17,18 +17,34 @@
 //
 
 using System;
+using AppFabric.Domain.BusinessObjects;
+using DFlow.Domain.Command;
 
 namespace AppFabric.Business.CommandHandlers.Commands
 {
-    public class UpdateProjectCommand
+    public class UpdateProjectCommand:BaseCommand
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public decimal Budget { get; set; }
-        public string Owner { get; set; }
-        public string OrderNumber { get; set; }
-        public string Status { get; set; }
+        public UpdateProjectCommand(Guid id, string name,
+            decimal budget,
+            string owner,
+            string orderNumber,
+            string status
+        )
+        {
+            Id = EntityId.From(id);
+            Name = ProjectName.From(name);
+            Budget = Money.From(budget);
+            Owner = Email.From(owner);
+            OrderNumber = ServiceOrder.From((orderNumber,false));
+            Status = ProjectStatus.From(status);
+        }
 
-        public int Version { get; set; }
+        public EntityId Id { get; set; }
+        public ProjectName Name { get; set; }
+        public Money Budget { get; set; }
+        public Email Owner { get; set; }
+        public ServiceOrder OrderNumber { get; set; }
+        public ProjectStatus Status { get; set; }
+
     }
 }

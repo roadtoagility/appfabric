@@ -2,12 +2,13 @@
 using AppFabric.Domain.AggregationActivity.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
+using DFlow.Domain.Events;
 using DFlow.Domain.Specifications;
 using Activity = AppFabric.Domain.BusinessObjects.Activity;
 
 namespace AppFabric.Domain.AggregationActivity
 {
-    public sealed class ActivityAggregationRoot : ObjectBasedAggregationRoot<Activity, EntityId>
+    public sealed class ActivityAggregationRoot : ObjectBasedAggregationRootWithEvents<Activity, EntityId>
     {
         public ActivityAggregationRoot(Activity activity)
         {

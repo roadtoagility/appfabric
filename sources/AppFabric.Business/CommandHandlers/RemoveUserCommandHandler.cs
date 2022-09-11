@@ -58,7 +58,7 @@ namespace AppFabric.Business.CommandHandlers
             // acho uma técnica mais "event-based" consistent dentro do modelo
             // que estamos desenvolvendo
             var agg = _factory.Create(user);
-            agg.Remove(null);
+            // agg.Remove(null);
 
             var isSucceed = false;
 
@@ -73,7 +73,7 @@ namespace AppFabric.Business.CommandHandlers
                 isSucceed = true;
             }
 
-            return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
+            return new ExecutionResult(isSucceed, agg.Failures);
         }
     }
 }

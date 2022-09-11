@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
+using DFlow.Domain.Validation;
 using FluentValidation.Results;
 
 namespace AppFabric.Domain.AggregationBilling.Specifications
@@ -19,7 +20,7 @@ namespace AppFabric.Domain.AggregationBilling.Specifications
             var differentClients = candidate.Releases.Select(x => x.ClientId.Equals(_client)).Count();
             if (differentClients > 1)
             {
-                candidate.AppendValidationResult(new ValidationFailure("ClientReleases",
+                candidate.AppendValidationResult(Failure.For("ClientReleases",
                     "Só é possível faturar releases de um mesmo cliente"));
                 return false;
             }

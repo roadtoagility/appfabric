@@ -2,12 +2,13 @@
 using AppFabric.Domain.AggregationRelease.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
+using DFlow.Domain.Events;
 using DFlow.Domain.Specifications;
 using Activity = AppFabric.Domain.BusinessObjects.Activity;
 
 namespace AppFabric.Domain.AggregationRelease
 {
-    public class ReleaseAggregationRoot : ObjectBasedAggregationRoot<Release, EntityId>
+    public class ReleaseAggregationRoot : ObjectBasedAggregationRootWithEvents<Release, EntityId>
     {
         public ReleaseAggregationRoot(Release release)
         {

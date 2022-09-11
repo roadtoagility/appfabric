@@ -76,7 +76,7 @@ namespace AppFabric.Business.CommandHandlers
                 aggregationId = agg.GetChange().Identity.Value;
             }
 
-            return new CommandResult<Guid>(isSucceed, aggregationId, agg.Failures.ToImmutableList());
+            return new CommandResult<Guid>(isSucceed, aggregationId, agg.Failures);
         }
     }
 }

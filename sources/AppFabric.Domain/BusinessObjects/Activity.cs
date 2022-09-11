@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using AppFabric.Domain.ExtensionMethods;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
@@ -32,8 +33,8 @@ namespace AppFabric.Domain.BusinessObjects
             ActivityStatus = ActivityStatus.NotStarted();
             Responsible = Member.Empty();
 
-            AppendValidationResult(Identity.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(projectId.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(Identity.ValidationStatus.ToFailures());
+            AppendValidationResult(projectId.ValidationStatus.ToFailures());
         }
 
         public EntityId ProjectId { get; }

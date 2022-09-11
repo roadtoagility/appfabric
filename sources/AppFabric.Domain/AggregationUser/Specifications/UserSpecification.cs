@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
+using DFlow.Domain.Validation;
 using FluentValidation.Results;
 
 namespace AppFabric.Domain.AggregationUser.Specifications
@@ -13,7 +14,7 @@ namespace AppFabric.Domain.AggregationUser.Specifications
             var isValid = true;
             if (string.IsNullOrEmpty(candidate.Name.Value))
             {
-                candidate.AppendValidationResult(new ValidationFailure("EmptyName",
+                candidate.AppendValidationResult(Failure.For("EmptyName",
                     "O nome do usuário não pode estar vazio."));
                 isValid = false;
             }
@@ -21,14 +22,14 @@ namespace AppFabric.Domain.AggregationUser.Specifications
             //TODO: alterar para CPF
             if (string.IsNullOrEmpty(candidate.Cnpj.Value))
             {
-                candidate.AppendValidationResult(new ValidationFailure("EmptyCnpj",
+                candidate.AppendValidationResult(Failure.For("EmptyCnpj",
                     "O cnpj do usuário não pode estar vazio."));
                 isValid = false;
             }
 
             if (string.IsNullOrEmpty(candidate.CommercialEmail.Value))
             {
-                candidate.AppendValidationResult(new ValidationFailure("EmptyName",
+                candidate.AppendValidationResult(Failure.For("EmptyName",
                     "O email do usuário não pode estar vazio."));
                 isValid = false;
             }
@@ -39,7 +40,7 @@ namespace AppFabric.Domain.AggregationUser.Specifications
                               + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))\z";
                 if (!Regex.IsMatch(candidate.CommercialEmail.Value, pattern))
                 {
-                    candidate.AppendValidationResult(new ValidationFailure("InvalidEmail",
+                    candidate.AppendValidationResult(Failure.For("InvalidEmail",
                         "Endereço de e-mail inválido."));
                     isValid = false;
                 }
