@@ -20,7 +20,7 @@ namespace AppFabric.Domain.AggregationActivity.Specifications
         {
             if (candidate.ProjectId.ValidationStatus.IsValid == false ||
                 candidate.ProjectId.Equals(candidate.Responsible.ProjectId) == false ||
-                candidate.Effort < Effort.MaxEffort())
+                candidate.Effort > Effort.MaxEffort())
             {
                 candidate.AppendValidationResult(_responsibleFailure);
                 return false;

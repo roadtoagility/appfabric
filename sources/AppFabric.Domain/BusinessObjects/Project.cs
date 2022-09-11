@@ -38,14 +38,14 @@ namespace AppFabric.Domain.BusinessObjects
             Status = status;
             OrderNumber = orderNumber;
             Owner = owner;
-            
+
             AppendValidationResult(name.ValidationStatus.ToFailures());
             AppendValidationResult(code.ValidationStatus.ToFailures());
             AppendValidationResult(startDate.ValidationStatus.ToFailures());
             AppendValidationResult(clientId.ValidationStatus.ToFailures());
             AppendValidationResult(budget.ValidationStatus.ToFailures());
             AppendValidationResult(status.ValidationStatus.ToFailures());
-            AppendValidationResult(orderNumber.ValidationStatus.ToFailures());
+            AppendValidationResult(orderNumber.ValidationStatus.Failures);
             AppendValidationResult(owner.ValidationStatus.ToFailures());
         }
 

@@ -39,7 +39,7 @@ namespace AppFabric.Business.CommandHandlers.Commands
             Owner = Email.From(owner);
 
             AppendValidationResult(Name.ValidationStatus.ToFailures());
-            AppendValidationResult(ServiceOrderNumber.ValidationStatus.ToFailures());
+            AppendValidationResult(ServiceOrderNumber.ValidationStatus.Failures);
             AppendValidationResult(Status.ValidationStatus.ToFailures());
             AppendValidationResult(Code.ValidationStatus.ToFailures());
             AppendValidationResult(StartDate.ValidationStatus.ToFailures());

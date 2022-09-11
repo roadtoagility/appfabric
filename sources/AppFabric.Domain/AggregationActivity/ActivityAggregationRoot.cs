@@ -12,12 +12,18 @@ namespace AppFabric.Domain.AggregationActivity
     {
         public ActivityAggregationRoot(Activity activity)
         {
-            Debug.Assert(activity.IsValid);
-            Apply(activity);
-            
-            if (activity.IsNew())
+            if (activity.IsValid)
             {
-                Raise(ActivityCreatedEvent.For(activity));
+                Apply(activity);
+
+                if (activity.IsNew())
+                {
+                    Raise(ActivityCreatedEvent.For(activity));
+                }
+            }
+            else
+            {
+                AppendValidationResult(activity.Failures);
             }
         }
 

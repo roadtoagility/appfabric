@@ -18,15 +18,25 @@
 
 using AppFabric.Domain.BusinessObjects.Validations;
 using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.Validation;
 
 namespace AppFabric.Domain.BusinessObjects
 {
-    public sealed class
-        ServiceOrder : ValueOf<(string Number, bool IsApproved), ServiceOrder, ServiceOrderNumberValidator>
+    public sealed class ServiceOrder : ValueOf<(string Number, bool IsApproved), ServiceOrder>
     {
         public static ServiceOrder Empty()
         {
             return From((string.Empty, false));
+        }
+
+        protected override void Validate()
+        {
+            if (string.IsNullOrEmpty(this.Value.Number) ||
+                string.IsNullOrWhiteSpace(this.Value.Number))
+            {
+                this.ValidationStatus.Append(
+                    Failure.For("Number", "O númeor é de preenchimento obrigatório."));
+            }
         }
     }
 }
