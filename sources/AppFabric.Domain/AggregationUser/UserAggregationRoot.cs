@@ -21,11 +21,12 @@ using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.AggregationUser.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
+using DFlow.Domain.Events;
 using DFlow.Domain.Specifications;
 
 namespace AppFabric.Domain.AggregationUser
 {
-    public sealed class UserAggregationRoot : ObjectBasedAggregationRoot<User, EntityId>
+    public sealed class UserAggregationRoot : ObjectBasedAggregationRootWithEvents<User, EntityId>
     {
 
         public UserAggregationRoot(User user)

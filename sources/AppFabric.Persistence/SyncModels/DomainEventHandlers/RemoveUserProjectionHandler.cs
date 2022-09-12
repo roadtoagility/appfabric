@@ -40,7 +40,7 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
 
             _userSession.Repository.Remove(user);
 
-            _userSession.SaveChanges();
+            _userSession.SaveChangesAsync(cancellationToken);
 
             return Task.CompletedTask;
         }

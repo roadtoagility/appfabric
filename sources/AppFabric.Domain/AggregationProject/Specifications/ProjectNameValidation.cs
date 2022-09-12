@@ -1,19 +1,21 @@
-﻿using FluentValidation.Results;
+﻿using AppFabric.Domain.BusinessObjects;
+using AppFabric.Domain.BusinessObjects.Validations;
+using DFlow.Domain.Validation;
 
-namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
+namespace AppFabric.Domain.AggregationProject.Specifications
 {
     public class ProjectNameValidation : ValidationRule<Project>
     {
-        private readonly ValidationFailure _nameEmptyFailure;
+        private readonly Failure _nameEmptyFailure;
 
         public ProjectNameValidation()
         {
-            _nameEmptyFailure = new ValidationFailure("Project.Name", "O nome do projeto não pode estar vazio");
+            _nameEmptyFailure = Failure.For("Project.Name", "O nome do projeto não pode estar vazio");
         }
 
         public override bool IsValid(Project candidate)
         {
-            if (string.IsNullOrEmpty(candidate.Name.Value))
+            if (candidate.Name.ValidationStatus.IsValid == false)
             {
                 candidate.AppendValidationResult(_nameEmptyFailure);
                 return NotValid;

@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using AppFabric.Domain.ExtensionMethods;
 using DFlow.Domain.BusinessObjects;
 
 namespace AppFabric.Domain.BusinessObjects
@@ -37,15 +38,15 @@ namespace AppFabric.Domain.BusinessObjects
             Status = status;
             OrderNumber = orderNumber;
             Owner = owner;
-            
-            AppendValidationResult(name.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(code.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(startDate.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(clientId.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(budget.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(status.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(orderNumber.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(owner.ValidationStatus.Errors.ToImmutableList());
+
+            AppendValidationResult(name.ValidationStatus.ToFailures());
+            AppendValidationResult(code.ValidationStatus.ToFailures());
+            AppendValidationResult(startDate.ValidationStatus.ToFailures());
+            AppendValidationResult(clientId.ValidationStatus.ToFailures());
+            AppendValidationResult(budget.ValidationStatus.ToFailures());
+            AppendValidationResult(status.ValidationStatus.ToFailures());
+            AppendValidationResult(orderNumber.ValidationStatus.Failures);
+            AppendValidationResult(owner.ValidationStatus.ToFailures());
         }
 
         public ProjectName Name { get; }

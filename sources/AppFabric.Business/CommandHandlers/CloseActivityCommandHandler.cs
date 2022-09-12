@@ -65,7 +65,7 @@ namespace AppFabric.Business.CommandHandlers
 
             if (agg.IsValid)
             {
-                _dbSession.Repository.Add(agg.GetChange());
+                await _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
 
                 agg.GetEvents().ToImmutableList().ForEach(ev => Publisher.Publish(ev, cancellationToken));

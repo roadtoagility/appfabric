@@ -1,21 +1,17 @@
-﻿using FluentValidation.Results;
+﻿using AppFabric.Domain.BusinessObjects;
+using AppFabric.Domain.BusinessObjects.Validations;
+using DFlow.Domain.Validation;
 
-namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
+namespace AppFabric.Domain.AggregationProject.Specifications
 {
     public class ProjectCodeValidation : ValidationRule<Project>
     {
-        private readonly ValidationFailure _codeEmptyFailure;
-
-        public ProjectCodeValidation()
-        {
-            _codeEmptyFailure = new ValidationFailure("Project.Code", "O código do projeto não pode estar vazio");
-        }
-
         public override bool IsValid(Project candidate)
         {
-            if (string.IsNullOrEmpty(candidate.Code.Value))
+            if (candidate.Code.ValidationStatus.IsValid == false)
             {
-                candidate.AppendValidationResult(_codeEmptyFailure);
+                candidate.AppendValidationResult(Failure
+                    .For("Project.Code", "O código do projeto não pode estar vazio"));
                 return NotValid;
             }
 

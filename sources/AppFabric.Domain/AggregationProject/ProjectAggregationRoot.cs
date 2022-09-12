@@ -21,12 +21,14 @@ using System.Diagnostics;
 using AppFabric.Domain.AggregationProject.Events;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Aggregates;
+using DFlow.Domain.Events;
 using DFlow.Domain.Specifications;
+using DFlow.Domain.Validation;
 using FluentValidation.Results;
 
 namespace AppFabric.Domain.AggregationProject
 {
-    public sealed class ProjectAggregationRoot : ObjectBasedAggregationRoot<Project, EntityId>
+    public sealed class ProjectAggregationRoot : ObjectBasedAggregationRootWithEvents<Project, EntityId>
     {
         public ProjectAggregationRoot(Project project)
         {
@@ -63,18 +65,18 @@ namespace AppFabric.Domain.AggregationProject
             }
             else
             {
-                AppendValidationResult(new ValidationFailure("Project", "Can´t be removed!"));
+                AppendValidationResult(Failure.For("Project", "Can´t be removed!"));
             }
         }
 
         public void AddMember(Member member, ISpecification<Project> spec)
         {
-            AppendValidationResult(new ValidationFailure("Member","Not implemented"));      
+            AppendValidationResult(Failure.For("Member","Not implemented"));      
         }
         
         public void RemoveMember(Member member, ISpecification<Project> spec)
         {
-            AppendValidationResult(new ValidationFailure("Member","Not implemented"));
+            AppendValidationResult(Failure.For("Member","Not implemented"));
         }
         
         public void AddProject(User client, ISpecification<Project> spec)
@@ -86,7 +88,7 @@ namespace AppFabric.Domain.AggregationProject
             }
             else
             {
-                AppendValidationResult(new ValidationFailure("Project", "Can´t be added to client!"));
+                AppendValidationResult(Failure.For("Project", "Can´t be added to client!"));
             }
         }
     }

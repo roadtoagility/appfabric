@@ -16,11 +16,17 @@
 // Boston, MA  02110-1301, USA.
 //
 
-using AppFabric.Persistence.Framework.ReadModel.Repositories;
+using System;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+using DFlow.Persistence.Repositories;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
 {
-    public interface IProjectProjectionRepository : IProjectionRepository<ProjectProjection>
+    public interface IProjectProjectionRepository : IRepository<ProjectProjection,ProjectProjection>
     {
+        public Task<ProjectProjection> FindOne(Expression<Func<ProjectProjection, bool>> predicate
+            , CancellationToken cancellation);
     }
 }

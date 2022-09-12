@@ -63,7 +63,7 @@ namespace AppFabric.Business.CommandHandlers
 
             if (!agg.IsValid)
             {
-                _dbSession.Repository.Add(agg.GetChange());
+                await _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
 
                 agg.GetEvents().ToImmutableList()
@@ -72,7 +72,7 @@ namespace AppFabric.Business.CommandHandlers
                 isSucceed = true;
             }
 
-            return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
+            return new ExecutionResult(isSucceed, agg.Failures);
         }
     }
 }

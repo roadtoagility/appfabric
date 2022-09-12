@@ -1,16 +1,17 @@
 ﻿using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
+using DFlow.Domain.Validation;
 using FluentValidation.Results;
 
 namespace AppFabric.Domain.AggregationActivity.Specifications
 {
     public class ActivityCanBeClosed : CompositeSpecification<Activity>
     {
-        private readonly ValidationFailure _cannotCloseFailure;
+        private readonly Failure _cannotCloseFailure;
 
         public ActivityCanBeClosed()
         {
-            _cannotCloseFailure = new ValidationFailure("CanHaveResponsible"
+            _cannotCloseFailure = Failure.For("CanHaveResponsible"
                 , "Não é possível fechar uma atividade com esforço pendente");
         }
 

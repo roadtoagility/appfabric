@@ -1,4 +1,4 @@
-// Copyright (C) 2020  Road to Agility
+﻿// Copyright (C) 2020  Road to Agility
 //
 // This library is free software; you can redistribute it and/or
 // modify it under the terms of the GNU Library General Public
@@ -16,24 +16,21 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using DFlow.Domain.BusinessObjects;
+using FluentValidation;
+using FluentValidation.Results;
 
-using AppFabric.Business.CommandHandlers.Commands;
-using AppFabric.Domain.BusinessObjects;
-
-namespace AppFabric.Business.CommandHandlers.ExtensionMethods
+namespace AppFabric.Domain.BusinessObjects
 {
-    //TODO: update serviceOrder.From to get the value from UpdateProjectCommand
-    public static class CommandExtensions
+    public class ValueOf<TValue,TThis, TValidator> : ValueOf<TValue,TThis>
+        where TThis : ValueOf<TValue,TThis, TValidator>,new()
+        where TValidator: AbstractValidator<TThis>, new()
     {
-        public static Project.ProjectDetail ToProjectDetail(this UpdateProjectCommand command)
+        public ValidationResult ValidationStatus { get; private set; }
+
+        protected override void Validate()
         {
-            return new Project.ProjectDetail(
-                command.Name,
-                command.Budget,
-                command.Owner,
-                command.Status,
-                command.OrderNumber
-            );
+            ValidationStatus = new TValidator().Validate((TThis)this);
         }
     }
 }

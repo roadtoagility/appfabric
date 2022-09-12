@@ -16,7 +16,7 @@ namespace AppFabric.Persistence.Model.Repositories
 
         private AppFabricDbContext DbContext { get; }
 
-        public void Add(Release entity)
+        public Task Add(Release entity)
         {
             throw new NotImplementedException();
         }
@@ -31,13 +31,13 @@ namespace AppFabric.Persistence.Model.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Release>> FindAsync(Expression<Func<ReleaseState, bool>> predicate,
+        public Task<IReadOnlyList<Release>> FindAsync(Expression<Func<ReleaseState, bool>> predicate,
             CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public void Remove(Release entity)
+        public Task Remove(Release entity)
         {
             throw new NotImplementedException();
         }

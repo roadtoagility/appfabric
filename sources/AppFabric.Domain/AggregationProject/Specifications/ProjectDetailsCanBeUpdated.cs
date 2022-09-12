@@ -1,16 +1,17 @@
 ﻿using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.Specifications;
+using DFlow.Domain.Validation;
 using FluentValidation.Results;
 
 namespace AppFabric.Domain.AggregationProject.Specifications
 {
     public class ProjectDetailsCanBeUpdated : CompositeSpecification<Project>
     {
-        private readonly ValidationFailure _codeEmptyFailure;
+        private readonly Failure _codeEmptyFailure;
 
         public ProjectDetailsCanBeUpdated()
         {
-            _codeEmptyFailure = new ValidationFailure("Project.Code",
+            _codeEmptyFailure = Failure.For("Project.Code",
                 "O código do projeto não pode estar vazio");
         }
 

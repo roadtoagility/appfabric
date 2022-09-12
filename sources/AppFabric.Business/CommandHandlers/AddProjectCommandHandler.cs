@@ -65,7 +65,7 @@ namespace AppFabric.Business.CommandHandlers
 
             if (agg.IsValid)
             {
-                _dbSession.Repository.Add(agg.GetChange());
+                await _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
 
                 agg.GetEvents().ToImmutableList()
@@ -76,7 +76,7 @@ namespace AppFabric.Business.CommandHandlers
                 aggregationId = agg.GetChange().Identity.Value;
             }
 
-            return new CommandResult<Guid>(isSucceed, aggregationId, agg.Failures.ToImmutableList());
+            return new CommandResult<Guid>(isSucceed, aggregationId, agg.Failures);
         }
     }
 }

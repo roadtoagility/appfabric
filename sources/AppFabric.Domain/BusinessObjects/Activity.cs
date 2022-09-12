@@ -18,7 +18,10 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using AppFabric.Domain.ExtensionMethods;
 using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.Specifications;
+using DFlow.Domain.Validation;
 
 namespace AppFabric.Domain.BusinessObjects
 {
@@ -32,8 +35,8 @@ namespace AppFabric.Domain.BusinessObjects
             ActivityStatus = ActivityStatus.NotStarted();
             Responsible = Member.Empty();
 
-            AppendValidationResult(Identity.ValidationStatus.Errors.ToImmutableList());
-            AppendValidationResult(projectId.ValidationStatus.Errors.ToImmutableList());
+            AppendValidationResult(Identity.ValidationStatus.ToFailures());
+            AppendValidationResult(projectId.ValidationStatus.ToFailures());
         }
 
         public EntityId ProjectId { get; }
@@ -62,11 +65,16 @@ namespace AppFabric.Domain.BusinessObjects
 
         public void AddMember(Member member)
         {
-            Responsible.UpdateMembership(member.ProjectId);
+            Responsible.UpdateMembership(member.Identity);
         }
 
         public void UpdateEffort(Effort hours)
         {
+            if (hours > Effort.MaxEffort())
+            {
+                AppendValidationResult(Failure.For("Effort", "Esforço acima do limite permitido."));
+            }
+
             Effort = hours;
         }
 

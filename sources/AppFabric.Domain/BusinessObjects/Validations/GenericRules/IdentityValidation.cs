@@ -1,16 +1,17 @@
 ﻿using System;
 using DFlow.Domain.BusinessObjects;
+using DFlow.Domain.Validation;
 using FluentValidation.Results;
 
 namespace AppFabric.Domain.BusinessObjects.Validations.GenericRules
 {
     public class IdentityValidation : ValidationRule<BaseEntity<EntityId>>
     {
-        private readonly ValidationFailure _invalidIdentityFailure;
+        private readonly Failure _invalidIdentityFailure;
 
         public IdentityValidation()
         {
-            _invalidIdentityFailure = new ValidationFailure("InvalidIdentity", "Invalid identity");
+            _invalidIdentityFailure = Failure.For("InvalidIdentity", "Invalid identity");
         }
 
         public override bool IsValid(BaseEntity<EntityId> candidate)

@@ -56,7 +56,7 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
                 @event.Version.Value);
 
             _projectSession.Repository.Add(projection);
-            _projectSession.SaveChanges();
+            _projectSession.SaveChangesAsync(cancellationToken);
 
             return Task.CompletedTask;
         }

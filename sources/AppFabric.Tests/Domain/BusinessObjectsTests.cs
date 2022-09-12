@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using AppFabric.Business.CommandHandlers.Commands;
 using AppFabric.Business.CommandHandlers.Factories;
 using AppFabric.Domain.AggregationActivity.Events;
@@ -13,13 +14,13 @@ namespace AppFabric.Tests.Domain
     public class BusinessObjectsTests
     {
         [Theory]
-        [InlineData("S987987",true)]
+        [InlineData("S987987", true)]
         public void ShouldCreatedServiceOrder(string soNumber, bool soStatus)
         {
-            var bo = ServiceOrder.From((soNumber,soStatus));
+            ServiceOrder bo = ServiceOrder.From((soNumber, soStatus));
             Assert.True(bo.ValidationStatus.IsValid);
         }
-        
+
         // [Fact]
         // public void ServiceOrderShouldNotBeCreate()
         // {

@@ -19,7 +19,7 @@
 using System;
 using AppFabric.Domain.BusinessObjects;
 using DFlow.Domain.BusinessObjects;
-using DFlow.Domain.DomainEvents;
+using DFlow.Domain.Events.DomainEvents;
 
 namespace AppFabric.Domain.AggregationActivity.Events
 {

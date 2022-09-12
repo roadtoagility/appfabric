@@ -5,18 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AppFabric.Persistence
 {
-    public class AppFabricDbContext : AggregateDbContext
+    public class AppFabricDbContext : SoftDeleteDbContext
     {
         public AppFabricDbContext(DbContextOptions<AppFabricDbContext> options)
             : base(options)
         {
         }
-
-        public DbSet<ProjectState> Projects { get; set; }
-        public DbSet<ProjectProjection> ProjectsProjection { get; set; }
-        public DbSet<UserState> Users { get; set; }
-        public DbSet<UserProjection> UsersProjection { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

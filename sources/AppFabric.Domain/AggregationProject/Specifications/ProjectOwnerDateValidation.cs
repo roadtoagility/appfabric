@@ -1,17 +1,18 @@
 ﻿using System.Text.RegularExpressions;
+using DFlow.Domain.Validation;
 using FluentValidation.Results;
 
 namespace AppFabric.Domain.BusinessObjects.Validations.ProjectRules
 {
     public class ProjectOwnerDateValidation : ValidationRule<Project>
     {
-        private readonly ValidationFailure _ownerInvalidFailure;
-        private readonly ValidationFailure _ownerNullFailure;
+        private readonly Failure _ownerInvalidFailure;
+        private readonly Failure _ownerNullFailure;
 
         public ProjectOwnerDateValidation()
         {
-            _ownerNullFailure = new ValidationFailure("Project.Owner", "Owner do projeto deve ser informado");
-            _ownerInvalidFailure = new ValidationFailure("Project.Owner", "Endereço de email do Owner inválido");
+            _ownerNullFailure = Failure.For("Project.Owner", "Owner do projeto deve ser informado");
+            _ownerInvalidFailure = Failure.For("Project.Owner", "Endereço de email do Owner inválido");
         }
 
         public override bool IsValid(Project candidate)

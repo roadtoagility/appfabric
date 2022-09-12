@@ -36,7 +36,7 @@ namespace AppFabric.Persistence.ReadModel.Repositories
 
         public UserProjection Get(EntityId id)
         {
-            var user = _context.UsersProjection
+            var user = _context.Set<UserProjection>()
                 .FirstOrDefault(ac => ac.Id.Equals(id.Value));
 
             if (user == null) UserProjection.Empty();
@@ -47,10 +47,10 @@ namespace AppFabric.Persistence.ReadModel.Repositories
         public void Add(UserProjection entity)
         {
             var oldState =
-                _context.UsersProjection.FirstOrDefault(b => b.Id == entity.Id);
+                _context.Set<UserProjection>().FirstOrDefault(b => b.Id == entity.Id);
 
             if (oldState == null)
-                _context.UsersProjection.Add(entity);
+                _context.Set<UserProjection>().Add(entity);
             else
                 _context.Entry(oldState).CurrentValues.SetValues(entity);
         }
@@ -58,17 +58,17 @@ namespace AppFabric.Persistence.ReadModel.Repositories
         public void Remove(UserProjection entity)
         {
             var oldState =
-                _context.UsersProjection
+                _context.Set<UserProjection>()
                     .OrderByDescending(or => or.RowVersion)
                     .FirstOrDefault(b => b.Id.Equals(entity.Id) &&
                                          b.RowVersion.Equals(entity.RowVersion));
 
-            _context.UsersProjection.Remove(entity);
+            _context.Set<UserProjection>().Remove(entity);
         }
 
         public IReadOnlyList<UserProjection> Find(Expression<Func<UserProjection, bool>> predicate)
         {
-            return _context.UsersProjection.Where(predicate).ToList();
+            return _context.Set<UserProjection>().Where(predicate).ToList();
         }
     }
 }

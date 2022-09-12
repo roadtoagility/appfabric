@@ -41,7 +41,7 @@ namespace AppFabric.Persistence.Model.Repositories
 
         // https://docs.microsoft.com/en-us/ef/core/saving/disconnected-entities
 
-        public void Add(User entity)
+        public Task Add(User entity)
         {
             var entry = entity.ToUserState();
 
@@ -49,7 +49,7 @@ namespace AppFabric.Persistence.Model.Repositories
 
             if (oldState.Equals(User.Empty()))
             {
-                DbContext.Users.Add(entry);
+                DbContext.Set<UserState>().Add(entry);
             }
             else
             {
@@ -58,9 +58,11 @@ namespace AppFabric.Persistence.Model.Repositories
 
                 DbContext.Entry(oldState).CurrentValues.SetValues(entry);
             }
+            
+            return Task.CompletedTask;
         }
 
-        public void Remove(User entity)
+        public Task Remove(User entity)
         {
             var oldState = Get(entity.Id);
 
@@ -69,12 +71,14 @@ namespace AppFabric.Persistence.Model.Repositories
 
             var entry = entity.ToUserState();
 
-            DbContext.Users.Remove(entry);
+            DbContext.Set<UserState>().Remove(entry);
+            
+            return Task.CompletedTask;
         }
 
         public User Get(EntityId id)
         {
-            var user = DbContext.Users.AsNoTracking()
+            var user = DbContext.Set<UserState>().AsNoTracking()
                 .OrderByDescending(ob => ob.Id)
                 .ThenByDescending(ob => ob.RowVersion)
                 .FirstOrDefault(t => t.Id.Equals(id.Value));
@@ -86,7 +90,7 @@ namespace AppFabric.Persistence.Model.Repositories
 
         public IEnumerable<User> Find(Expression<Func<UserState, bool>> predicate)
         {
-            return DbContext.Users.Where(predicate).AsNoTracking()
+            return DbContext.Set<UserState>().Where(predicate).AsNoTracking()
                 .Select(t => t.ToUser());
             ;
         }
@@ -96,7 +100,7 @@ namespace AppFabric.Persistence.Model.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> FindAsync(Expression<Func<UserState, bool>> predicate,
+        public Task<IReadOnlyList<User>> FindAsync(Expression<Func<UserState, bool>> predicate,
             CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

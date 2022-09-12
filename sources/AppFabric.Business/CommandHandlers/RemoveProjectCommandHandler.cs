@@ -59,7 +59,7 @@ namespace AppFabric.Business.CommandHandlers
 
             if (agg.IsValid)
             {
-                _projectDb.Repository.Remove(agg.GetChange());
+                await _projectDb.Repository.Remove(agg.GetChange());
                 await _projectDb.SaveChangesAsync(cancellationToken);
 
                 agg.GetEvents().ToImmutableList()
@@ -68,7 +68,7 @@ namespace AppFabric.Business.CommandHandlers
                 isSucceed = true;
             }
 
-            return new ExecutionResult(isSucceed, agg.Failures.ToImmutableList());
+            return new ExecutionResult(isSucceed, agg.Failures);
         }
     }
 }

@@ -57,7 +57,7 @@ namespace AppFabric.Business.CommandHandlers
 
             if (agg.IsValid)
             {
-                _dbSession.Repository.Add(agg.GetChange());
+                await _dbSession.Repository.Add(agg.GetChange());
                 await _dbSession.SaveChangesAsync(cancellationToken);
 
                 agg.GetEvents().ToImmutableList()
@@ -68,7 +68,7 @@ namespace AppFabric.Business.CommandHandlers
                 okId = agg.GetChange().Id.Value;
             }
 
-            return new CommandResult<Guid>(isSucceed, okId, agg.Failures.ToImmutableList());
+            return new CommandResult<Guid>(isSucceed, okId, agg.Failures);
         }
     }
 }

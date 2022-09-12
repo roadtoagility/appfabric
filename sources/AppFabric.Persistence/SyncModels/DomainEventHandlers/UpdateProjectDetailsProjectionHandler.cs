@@ -36,9 +36,10 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
             _projectSession = projectSession;
         }
 
-        protected override Task ExecuteHandle(ProjectDetailUpdatedEvent @event, CancellationToken cancellationToken)
+        protected override async Task ExecuteHandle(ProjectDetailUpdatedEvent @event, CancellationToken cancellationToken)
         {
-            var project = _projectSession.Repository.Get(@event.Id);
+            var project = await _projectSession.Repository
+                .FindOne(project => project.Id.Equals(@event.Id), cancellationToken);
 
             var projection = new ProjectProjection(
                 project.Id,
@@ -54,8 +55,8 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
                 @event.Version.Value);
 
             _projectSession.Repository.Add(projection);
-            _projectSession.SaveChanges();
-            return Task.CompletedTask;
+            
+            await _projectSession.SaveChangesAsync(cancellationToken);
         }
     }
 }
