@@ -21,12 +21,12 @@ namespace AppFabric.Persistence.Model.Repositories
             throw new NotImplementedException();
         }
 
-        public void Add(Activity entity)
+        public Task Add(Activity entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Remove(Activity entity)
+        public Task Remove(Activity entity)
         {
             throw new NotImplementedException();
         }
@@ -41,7 +41,7 @@ namespace AppFabric.Persistence.Model.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Activity>> FindAsync(Expression<Func<ActivityState, bool>> predicate,
+        public Task<IReadOnlyList<Activity>> FindAsync(Expression<Func<ActivityState, bool>> predicate,
             CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

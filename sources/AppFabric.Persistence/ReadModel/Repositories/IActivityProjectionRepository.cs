@@ -17,10 +17,11 @@
 //
 
 using AppFabric.Persistence.Framework.ReadModel.Repositories;
+using DFlow.Persistence.Repositories;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
 {
-    public interface IActivityProjectionRepository : IProjectionRepository<ActivityProjection>
+    public interface IActivityProjectionRepository : IRepository<ActivityProjection,ActivityProjection>
     {
     }
 }

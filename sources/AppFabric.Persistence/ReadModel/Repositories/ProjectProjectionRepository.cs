@@ -21,7 +21,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Domain.BusinessObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
 {
@@ -36,7 +39,7 @@ namespace AppFabric.Persistence.ReadModel.Repositories
 
         public ProjectProjection Get(EntityId id)
         {
-            var project = _context.ProjectsProjection
+            var project = _context.Set<ProjectProjection>()
                 .FirstOrDefault(ac => ac.Id.Equals(id.Value));
 
             if (project == null) ProjectProjection.Empty();
@@ -44,26 +47,47 @@ namespace AppFabric.Persistence.ReadModel.Repositories
             return project;
         }
 
-        public void Add(ProjectProjection entity)
+        public async Task Add(ProjectProjection entity)
         {
-            var oldState =
-                _context.ProjectsProjection
-                    .FirstOrDefault(b => b.Id == entity.Id);
+            var cancel = new CancellationTokenSource();
+            var oldState = await FindOne(b => b.Id == entity.Id, cancel.Token)
+                .ConfigureAwait(false);
 
             if (oldState == null)
-                _context.ProjectsProjection.Add(entity);
+                _context.Set<ProjectProjection>().Add(entity);
             else
                 _context.Entry(oldState).CurrentValues.SetValues(entity);
         }
 
-        public void Remove(ProjectProjection entity)
+        public Task Remove(ProjectProjection entity)
         {
-            _context.ProjectsProjection.Remove(entity);
+            _context.Set<ProjectProjection>().Remove(entity);
+            return Task.CompletedTask;
         }
 
         public IReadOnlyList<ProjectProjection> Find(Expression<Func<ProjectProjection, bool>> predicate)
         {
-            return _context.ProjectsProjection.Where(predicate).ToList();
+            throw new NotImplementedException();
+        }
+
+        public Task<IReadOnlyList<ProjectProjection>> FindAsync(Expression<Func<ProjectProjection, bool>> predicate)
+        {
+            var cancellation = new CancellationTokenSource();
+            return FindAsync(predicate, cancellation.Token);
+        }
+
+        public async Task<IReadOnlyList<ProjectProjection>> FindAsync(Expression<Func<ProjectProjection, bool>> predicate
+            , CancellationToken cancellationToken)
+        {
+            return await _context.Set<ProjectProjection>().Where(predicate)
+                .ToListAsync(cancellationToken);
+        }
+        
+        public async Task<ProjectProjection> FindOne(Expression<Func<ProjectProjection, bool>> predicate
+            , CancellationToken cancellation)
+        {
+            return await FindAsync(predicate, cancellation)
+                .ContinueWith(result => result.Result.First(),cancellation);
         }
     }
 }

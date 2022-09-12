@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -41,17 +42,17 @@ namespace AppFabric.Persistence.Model.Repositories
 
         // https://docs.microsoft.com/en-us/ef/core/saving/disconnected-entities
 
-        public void Add(Project entity)
+        public Task Add(Project entity)
         {
             var entry = entity.ToProjectState();
-            var oldState = DbContext.Projects
+            var oldState = DbContext.Set<ProjectState>()
                 .OrderByDescending(ob => ob.Id)
                 .ThenByDescending(ob => ob.RowVersion)
                 .FirstOrDefault(t => t.Id == entity.Identity.Value);
 
             if (oldState == null)
             {
-                DbContext.Projects.Add(entry);
+                DbContext.Set<ProjectState>().Add(entry);
             }
             else
             {
@@ -62,9 +63,10 @@ namespace AppFabric.Persistence.Model.Repositories
 
                 DbContext.Entry(oldState).CurrentValues.SetValues(entry);
             }
+            return Task.CompletedTask;
         }
 
-        public void Remove(Project entity)
+        public Task Remove(Project entity)
         {
             var oldState = Get(entity.Identity);
 
@@ -73,12 +75,13 @@ namespace AppFabric.Persistence.Model.Repositories
 
             var entry = entity.ToProjectState();
 
-            DbContext.Projects.Remove(entry);
+            DbContext.Set<ProjectState>().Remove(entry);
+            return Task.CompletedTask;
         }
 
         public Project Get(EntityId id)
         {
-            var project = DbContext.Projects.AsNoTracking()
+            var project = DbContext.Set<ProjectState>().AsNoTracking()
                 .OrderByDescending(ob => ob.Id)
                 .ThenByDescending(ob => ob.RowVersion)
                 .FirstOrDefault(t => t.Id == id.Value);
@@ -88,19 +91,19 @@ namespace AppFabric.Persistence.Model.Repositories
             return project.ToProject();
         }
 
-        public IEnumerable<Project> Find(Expression<Func<ProjectState, bool>> predicate)
+        public IReadOnlyList<Project> Find(Expression<Func<ProjectState, bool>> predicate)
         {
-            return DbContext.Projects.Where(predicate).AsNoTracking()
-                .Select(t => t.ToProject());
+            return DbContext.Set<ProjectState>().Where(predicate).AsNoTracking()
+                .Select(t => t.ToProject()).ToImmutableList();
             ;
         }
 
-        public Task<IEnumerable<Project>> FindAsync(Expression<Func<ProjectState, bool>> predicate)
+        public Task<IReadOnlyList<Project>> FindAsync(Expression<Func<ProjectState, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Project>> FindAsync(Expression<Func<ProjectState, bool>> predicate,
+        public Task<IReadOnlyList<Project>> FindAsync(Expression<Func<ProjectState, bool>> predicate,
             CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

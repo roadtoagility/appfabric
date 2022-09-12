@@ -35,14 +35,14 @@ namespace AppFabric.Persistence.SyncModels.DomainEventHandlers
             _projectSession = projectSession;
         }
 
-        protected override Task ExecuteHandle(ProjectRemovedEvent @event, CancellationToken cancellationToken)
+        protected override async Task ExecuteHandle(ProjectRemovedEvent @event, CancellationToken cancellationToken)
         {
-            var project = _projectSession.Repository.Get(@event.Id);
+            var project = await _projectSession.Repository
+                .FindOne(project => project.Id.Equals(@event.Id), cancellationToken);
 
             _projectSession.Repository.Remove(project);
 
-            _projectSession.SaveChanges();
-            return Task.CompletedTask;
+            await _projectSession.SaveChangesAsync(cancellationToken);
         }
     }
 }

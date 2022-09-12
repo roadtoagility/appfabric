@@ -16,12 +16,12 @@ namespace AppFabric.Persistence.Model.Repositories
 
         private AppFabricDbContext DbContext { get; }
 
-        public void Add(Billing entity)
+        public Task Add(Billing entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Remove(Billing entity)
+        public Task Remove(Billing entity)
         {
             throw new NotImplementedException();
         }
@@ -36,7 +36,7 @@ namespace AppFabric.Persistence.Model.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Billing>> FindAsync(Expression<Func<BillingState, bool>> predicate,
+        public Task<IReadOnlyList<Billing>> FindAsync(Expression<Func<BillingState, bool>> predicate,
             CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using AppFabric.Domain.BusinessObjects;
 
 namespace AppFabric.Persistence.ReadModel.Repositories
@@ -33,22 +35,28 @@ namespace AppFabric.Persistence.ReadModel.Repositories
 
         private AppFabricDbContext Context { get; }
 
-        public void Add(ActivityProjection entity)
+
+        public Task Add(ActivityProjection entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Remove(ActivityProjection entity)
+        public Task Remove(ActivityProjection entity)
         {
             throw new NotImplementedException();
         }
 
-        public IReadOnlyList<ActivityProjection> Find(Expression<Func<ActivityProjection, bool>> predicate)
+        public IEnumerable<ActivityProjection> Find(Expression<Func<ActivityProjection, bool>> predicate)
         {
             throw new NotImplementedException();
         }
 
-        public ActivityProjection Get(EntityId id)
+        public Task<IEnumerable<ActivityProjection>> FindAsync(Expression<Func<ActivityProjection, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IReadOnlyList<ActivityProjection>> FindAsync(Expression<Func<ActivityProjection, bool>> predicate, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

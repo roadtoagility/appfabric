@@ -64,7 +64,7 @@ namespace AppFabric.Business.CommandHandlers
 
             if (agg.IsValid)
             {
-                _userDb.Repository.Remove(agg.GetChange());
+                await _userDb.Repository.Remove(agg.GetChange());
                 await _userDb.SaveChangesAsync(cancellationToken);
 
                 agg.GetEvents().ToImmutableList()

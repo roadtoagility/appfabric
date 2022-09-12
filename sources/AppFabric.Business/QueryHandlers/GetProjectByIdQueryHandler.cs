@@ -16,6 +16,7 @@
 // Boston, MA  02110-1301, USA.
 //
 
+using System.Threading;
 using AppFabric.Business.Framework;
 using AppFabric.Business.QueryHandlers.Filters;
 using AppFabric.Domain.BusinessObjects;
@@ -37,8 +38,9 @@ namespace AppFabric.Business.QueryHandlers
         {
             //we need a validation like a commandhandler here
 
+            var cancel = new CancellationTokenSource();
             var project = _dbSession.Repository
-                .Get(EntityId.From(filter.ProjectId));
+                .FindOne(p=> p.Id.Equals(EntityId.From(filter.ProjectId)), cancel.Token).Result;
 
             return GetProjectResponse.From(true, project);
         }
