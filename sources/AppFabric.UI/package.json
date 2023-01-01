@@ -79,11 +79,11 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1000.6",
+    "@angular-devkit/build-angular": "~15.0.4",
     "@angular/cli": "^10.2.1",
     "@angular/compiler-cli": "^10.0.10",
     "@angular/language-service": "10.0.10",
-    "@compodoc/compodoc": "1.0.1",
+    "@compodoc/compodoc": "1.1.19",
     "@fortawesome/fontawesome-free": "^5.2.0",
     "@types/d3-color": "1.0.5",
     "@types/googlemaps": "^3.39.3",
